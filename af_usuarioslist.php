@@ -1161,7 +1161,7 @@ class caf_usuarios_list extends caf_usuarios {
 		// Export to Csv
 		$item = &$this->ExportOptions->Add("csv");
 		$item->Body = "<a href=\"" . $this->ExportCsvUrl . "\" class=\"ewExportLink ewCsv\" data-caption=\"" . ew_HtmlEncode($Language->Phrase("ExportToCsvText")) . "\">" . $Language->Phrase("ExportToCsv") . "</a>";
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Pdf
 		$item = &$this->ExportOptions->Add("pdf");

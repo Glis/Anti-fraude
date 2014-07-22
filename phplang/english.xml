@@ -371,7 +371,7 @@
 		<phrase id="and" value="and"/>
 		<phrase id="or" value="or"/>
 	</global>
-	<project><phrase id="bodytitle" value="Antifraude - "/>
+	<project><phrase id="bodytitle" value="Antifraude"/>
 <phrase id="footertext" value="&amp;copy;2013 e.World Technology Ltd. All rights reserved."/>
 <menu id="26"><phrase id="menutext" value="af log acciones"/>
 </menu>

@@ -105,7 +105,7 @@ var EW_MOBILE_REFLOW = false;
 <div class="ewLayout">
 <?php if (!ew_IsMobile()) { ?>
 	<!-- header (begin) --><!-- *** Note: Only licensed users are allowed to change the logo *** -->
-  <div id="ewHeaderRow" class="ewHeaderRow"><img src="phpimages/phpmkrlogo10.png" alt="" style="border: 0;"></div>
+  <div id="ewHeaderRow" class="ewHeaderRow"><img src="phpimages/logo.png" alt="" style="border: 0;"></div>
 	<!-- header (end) -->
 <?php } ?>
 <?php if (ew_IsMobile()) { ?>
