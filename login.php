@@ -38,16 +38,18 @@ if(isset($_POST['login'])){
     $_SESSION["PORTAONE"] = trim($_POST['portaone']);
 	
     $registrado = select_sql("select_usuario",$_SESSION["USUARIO"]);
-    if (!isset($registrado[1]["x_Usuario"])) {
+    if (!isset($registrado[1]["c_Usuario"])) {
         $_SESSION = array();
         //session_destroy();
+        echo "<h1>asd</h1>";
         goto fin2;
     }
 
     $activo = select_sql("select_usuario_activo",$_SESSION["USUARIO"]);
-    if (!isset($activo[1]["x_Usuario"])) {
+    if (!isset($activo[1]["c_Usuario"])) {
         $_SESSION = array();
         //session_destroy();
+        echo "<h1>asd</h1>";
         goto fin3;
     }
 
