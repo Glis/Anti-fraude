@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<configuration date="2014/07/21" author="e.World Technology Ltd.">
+<project id="{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}" file="C:\Users\Mystique\Documents\Trabajo\AntiFraude\Antifraude_PHPMaker.pmp" name="Antifraude_PHPMaker" product="PHPMaker" version="10.0" datetime="2014/07/21 23:13:15" languagefolder="phplang" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111">
+<table id="af_acc_cclass" name="af_acc_cclass" caption="Acciones Customer Class" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_acc_clientes" name="af_acc_clientes" caption="Acciones Clientes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_acc_cuentas" name="af_acc_cuentas" caption="Acciones Cuentas" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_acc_plataforma" name="af_acc_plataforma" caption="Acciones Plataforma" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_acc_resellers" name="af_acc_resellers" caption="Acciones Resellers" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_config" name="af_config" caption="Configuraciónes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_config_reportes" name="af_config_reportes" caption="Configuración Reportes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_dominios" name="af_dominios" caption="af dominios" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_id_ejecucion" name="af_id_ejecucion" caption="af id ejecucion" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_log_acciones" name="af_log_acciones" caption="af log acciones" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_log_envio_rep" name="af_log_envio_rep" caption="af log envio rep" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_log_usuario" name="af_log_usuario" caption="af log usuario" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_reportes" name="af_reportes" caption="Reportes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_reportes_usuario" name="af_reportes_usuario" caption="Resellers por Usuario" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_resellers_usuario" name="af_resellers_usuario" caption="Reportes por Usuario" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+<table id="af_umb_cclass" name="af_umb_cclass" caption="Umbrales Customer Class" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_umb_clientes" name="af_umb_clientes" caption="Umbrales Clientes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_umb_cuentas" name="af_umb_cuentas" caption="Umbrales Cuentas" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_umb_destinos" name="af_umb_destinos" caption="Umbrales Destinos" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_umb_resellers" name="af_umb_resellers" caption="Umbrales Resellers" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
+<table id="af_usuarios" name="af_usuarios" caption="af usuarios" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="1"/>
+</project></configuration>
