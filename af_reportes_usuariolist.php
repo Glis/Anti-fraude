@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_reportes_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
 <?php
 
 //
@@ -413,22 +414,8 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 					$option->HideAllOptions();
 			}
 
-			// Get basic search values
-			$this->LoadBasicSearchValues();
-
-			// Restore search parms from Session if not searching / reset
-			if ($this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall" && $this->CheckSearchParms())
-				$this->RestoreSearchParms();
-
-			// Call Recordset SearchValidated event
-			$this->Recordset_SearchValidated();
-
 			// Set up sorting order
 			$this->SetUpSortOrder();
-
-			// Get basic search criteria
-			if ($gsSearchError == "")
-				$sSrchBasic = $this->BasicSearchWhere();
 		}
 
 		// Restore display records
@@ -440,31 +427,6 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 
 		// Load Sorting Order
 		$this->LoadSortOrder();
-
-		// Load search default if no existing search criteria
-		if (!$this->CheckSearchParms()) {
-
-			// Load basic search from default
-			$this->BasicSearch->LoadDefault();
-			if ($this->BasicSearch->Keyword != "")
-				$sSrchBasic = $this->BasicSearchWhere();
-		}
-
-		// Build search criteria
-		ew_AddFilter($this->SearchWhere, $sSrchAdvanced);
-		ew_AddFilter($this->SearchWhere, $sSrchBasic);
-
-		// Call Recordset_Searching event
-		$this->Recordset_Searching($this->SearchWhere);
-
-		// Save search criteria
-		if ($this->Command == "search" && !$this->RestoreSearch) {
-			$this->setSearchWhere($this->SearchWhere); // Save to Session
-			$this->StartRec = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRec);
-		} else {
-			$this->SearchWhere = $this->getSearchWhere();
-		}
 
 		// Build filter
 		$sFilter = "";
@@ -522,96 +484,6 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 		return TRUE;
 	}
 
-	// Return basic search SQL
-	function BasicSearchSQL($Keyword) {
-		$sKeyword = ew_AdjustSql($Keyword);
-		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->c_Usuario, $Keyword);
-		$this->BuildBasicSearchSQL($sWhere, $this->c_IReporte, $Keyword);
-		$this->BuildBasicSearchSQL($sWhere, $this->c_Usuario_Ult_Mod, $Keyword);
-		return $sWhere;
-	}
-
-	// Build basic search SQL
-	function BuildBasicSearchSql(&$Where, &$Fld, $Keyword) {
-		if ($Keyword == EW_NULL_VALUE) {
-			$sWrk = $Fld->FldExpression . " IS NULL";
-		} elseif ($Keyword == EW_NOT_NULL_VALUE) {
-			$sWrk = $Fld->FldExpression . " IS NOT NULL";
-		} else {
-			$sFldExpression = ($Fld->FldVirtualExpression <> $Fld->FldExpression) ? $Fld->FldVirtualExpression : $Fld->FldBasicSearchExpression;
-			$sWrk = $sFldExpression . ew_Like(ew_QuotedValue("%" . $Keyword . "%", EW_DATATYPE_STRING));
-		}
-		if ($Where <> "") $Where .= " OR ";
-		$Where .= $sWrk;
-	}
-
-	// Return basic search WHERE clause based on search keyword and type
-	function BasicSearchWhere() {
-		global $Security;
-		$sSearchStr = "";
-		$sSearchKeyword = $this->BasicSearch->Keyword;
-		$sSearchType = $this->BasicSearch->Type;
-		if ($sSearchKeyword <> "") {
-			$sSearch = trim($sSearchKeyword);
-			if ($sSearchType <> "=") {
-				while (strpos($sSearch, "  ") !== FALSE)
-					$sSearch = str_replace("  ", " ", $sSearch);
-				$arKeyword = explode(" ", trim($sSearch));
-				foreach ($arKeyword as $sKeyword) {
-					if ($sSearchStr <> "") $sSearchStr .= " " . $sSearchType . " ";
-					$sSearchStr .= "(" . $this->BasicSearchSQL($sKeyword) . ")";
-				}
-			} else {
-				$sSearchStr = $this->BasicSearchSQL($sSearch);
-			}
-			$this->Command = "search";
-		}
-		if ($this->Command == "search") {
-			$this->BasicSearch->setKeyword($sSearchKeyword);
-			$this->BasicSearch->setType($sSearchType);
-		}
-		return $sSearchStr;
-	}
-
-	// Check if search parm exists
-	function CheckSearchParms() {
-
-		// Check basic search
-		if ($this->BasicSearch->IssetSession())
-			return TRUE;
-		return FALSE;
-	}
-
-	// Clear all search parameters
-	function ResetSearchParms() {
-
-		// Clear search WHERE clause
-		$this->SearchWhere = "";
-		$this->setSearchWhere($this->SearchWhere);
-
-		// Clear basic search parameters
-		$this->ResetBasicSearchParms();
-	}
-
-	// Load advanced search default values
-	function LoadAdvancedSearchDefault() {
-		return FALSE;
-	}
-
-	// Clear all basic search parameters
-	function ResetBasicSearchParms() {
-		$this->BasicSearch->UnsetSession();
-	}
-
-	// Restore all search parameters
-	function RestoreSearchParms() {
-		$this->RestoreSearch = TRUE;
-
-		// Restore basic search values
-		$this->BasicSearch->Load();
-	}
-
 	// Set up sort parameters
 	function SetUpSortOrder() {
 
@@ -647,10 +519,6 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 
 		// Check if reset command
 		if (substr($this->Command,0,5) == "reset") {
-
-			// Reset search criteria
-			if ($this->Command == "reset" || $this->Command == "resetall")
-				$this->ResetSearchParms();
 
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
@@ -864,13 +732,6 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 		}
 	}
 
-	// Load basic search values
-	function LoadBasicSearchValues() {
-		$this->BasicSearch->Keyword = @$_GET[EW_TABLE_BASIC_SEARCH];
-		if ($this->BasicSearch->Keyword <> "") $this->Command = "search";
-		$this->BasicSearch->Type = @$_GET[EW_TABLE_BASIC_SEARCH_TYPE];
-	}
-
 	// Load recordset
 	function LoadRecordset($offset = -1, $rowcnt = -1) {
 		global $conn;
@@ -1030,7 +891,7 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 			} else {
 			if (strval($this->c_IReporte->CurrentValue) <> "") {
 				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, `x_NbReporte` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
@@ -1041,7 +902,8 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					/*$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');*/
+					$this->c_IReporte->ViewValue = /*ew_ValueSeparator(1,$this->c_IReporte) . */$rswrk->fields('Disp2Fld');
 					$rswrk->Close();
 				} else {
 					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
@@ -1065,15 +927,11 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 			$this->c_Usuario->LinkCustomAttributes = "";
 			$this->c_Usuario->HrefValue = "";
 			$this->c_Usuario->TooltipValue = "";
-			if ($this->Export == "")
-				$this->c_Usuario->ViewValue = ew_Highlight($this->HighlightName(), $this->c_Usuario->ViewValue, $this->BasicSearch->getKeyword(), $this->BasicSearch->getType(), "", "");
 
 			// c_IReporte
 			$this->c_IReporte->LinkCustomAttributes = "";
 			$this->c_IReporte->HrefValue = "";
 			$this->c_IReporte->TooltipValue = "";
-			if ($this->Export == "")
-				$this->c_IReporte->ViewValue = ew_Highlight($this->HighlightName(), $this->c_IReporte->ViewValue, $this->BasicSearch->getKeyword(), $this->BasicSearch->getType(), "", "");
 		}
 
 		// Call Row Rendered event
@@ -1358,10 +1216,9 @@ faf_reportes_usuariolist.ValidateRequired = false;
 
 // Dynamic selection lists
 faf_reportes_usuariolist.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_reportes_usuariolist.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_reportes_usuariolist.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","x_x_NbReporte","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
-var faf_reportes_usuariolistsrch = new ew_Form("faf_reportes_usuariolistsrch");
 </script>
 <script type="text/javascript">
 
@@ -1391,50 +1248,46 @@ var faf_reportes_usuariolistsrch = new ew_Form("faf_reportes_usuariolistsrch");
 		$af_reportes_usuario_list->Recordset = $af_reportes_usuario_list->LoadRecordset($af_reportes_usuario_list->StartRec-1, $af_reportes_usuario_list->DisplayRecs);
 $af_reportes_usuario_list->RenderOtherOptions();
 ?>
-<?php if ($af_reportes_usuario->Export == "" && $af_reportes_usuario->CurrentAction == "") { ?>
-<form name="faf_reportes_usuariolistsrch" id="faf_reportes_usuariolistsrch" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
-<div class="accordion ewDisplayTable ewSearchTable" id="faf_reportes_usuariolistsrch_SearchGroup">
-	<div class="accordion-group">
-		<div class="accordion-heading">
-<a class="accordion-toggle" data-toggle="collapse" data-parent="#faf_reportes_usuariolistsrch_SearchGroup" href="#faf_reportes_usuariolistsrch_SearchBody"><?php echo $Language->Phrase("Search") ?></a>
-		</div>
-		<div id="faf_reportes_usuariolistsrch_SearchBody" class="accordion-body collapse in">
-			<div class="accordion-inner">
-<div id="faf_reportes_usuariolistsrch_SearchPanel">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="af_reportes_usuario">
-<div class="ewBasicSearch">
-<div id="xsr_1" class="ewRow">
-	<div class="btn-group ewButtonGroup">
-	<div class="input-append">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="input-large" value="<?php echo ew_HtmlEncode($af_reportes_usuario_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("QuickSearchBtn") ?></button>
-	</div>
-	</div>
-	<div class="btn-group ewButtonGroup">
-	<a class="btn ewShowAll" href="<?php echo $af_reportes_usuario_list->PageUrl() ?>cmd=reset"><?php echo $Language->Phrase("ShowAll") ?></a>
-	<?php if ($af_reportes_usuario_list->SearchWhere <> "" && $af_reportes_usuario_list->TotalRecs > 0) { ?>
-	<a class="btn ewHideHighlight" href="javascript:void(0);" onclick="ewForms(this).ToggleHighlight(this, '<?php echo $af_reportes_usuario->HighlightName() ?>');"><?php echo $Language->Phrase("HideHighlight") ?></a>
-	<?php } ?>
-	</div>
-</div>
-<div id="xsr_2" class="ewRow">
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="="<?php if ($af_reportes_usuario_list->BasicSearch->getType() == "=") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("ExactPhrase") ?></label>
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="AND"<?php if ($af_reportes_usuario_list->BasicSearch->getType() == "AND") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("AllWord") ?></label>
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="OR"<?php if ($af_reportes_usuario_list->BasicSearch->getType() == "OR") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("AnyWord") ?></label>
-</div>
-</div>
-</div>
-			</div>
-		</div>
-	</div>
-</div>
-</form>
-<?php } ?>
 <?php $af_reportes_usuario_list->ShowPageHeader(); ?>
 <?php
 $af_reportes_usuario_list->ShowMessage();
 ?>
+
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+<script type="text/javascript">
+$(document).on('change', '#select_usuarios', function() { 
+
+	if($(this).val() != 100){
+	$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
+	$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
+	}else{
+		$("#tbl_af_reportes_usuariolist tbody tr").show();
+	}
+});
+</script>
+
+<label class= "filtro_label">Filtro Usuario</label>
+<select id= "select_usuarios" class= "filtro_select">
+	<option value = 100>Seleccione un Usuario</option>
+<? $users = select_sql('select_usuarios');
+	$count = count($users);
+	$k = 1;
+	while ($k <= $count){
+		echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
+		$k++;
+	}
+
+?>
+
+</select>
+
+							<?/******************************************************
+							************************ENDFILTROS***********************
+							*********************************************************/?>
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_reportes_usuariolist" id="faf_reportes_usuariolist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_reportes_usuario">
@@ -1626,7 +1479,6 @@ if ($af_reportes_usuario_list->Recordset)
 </td></tr></table>
 <?php if ($af_reportes_usuario->Export == "") { ?>
 <script type="text/javascript">
-faf_reportes_usuariolistsrch.Init();
 faf_reportes_usuariolist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();

@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_resellers_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
 <?php
 
 //
@@ -415,22 +416,8 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 					$option->HideAllOptions();
 			}
 
-			// Get basic search values
-			$this->LoadBasicSearchValues();
-
-			// Restore search parms from Session if not searching / reset
-			if ($this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall" && $this->CheckSearchParms())
-				$this->RestoreSearchParms();
-
-			// Call Recordset SearchValidated event
-			$this->Recordset_SearchValidated();
-
 			// Set up sorting order
 			$this->SetUpSortOrder();
-
-			// Get basic search criteria
-			if ($gsSearchError == "")
-				$sSrchBasic = $this->BasicSearchWhere();
 		}
 
 		// Restore display records
@@ -442,31 +429,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 
 		// Load Sorting Order
 		$this->LoadSortOrder();
-
-		// Load search default if no existing search criteria
-		if (!$this->CheckSearchParms()) {
-
-			// Load basic search from default
-			$this->BasicSearch->LoadDefault();
-			if ($this->BasicSearch->Keyword != "")
-				$sSrchBasic = $this->BasicSearchWhere();
-		}
-
-		// Build search criteria
-		ew_AddFilter($this->SearchWhere, $sSrchAdvanced);
-		ew_AddFilter($this->SearchWhere, $sSrchBasic);
-
-		// Call Recordset_Searching event
-		$this->Recordset_Searching($this->SearchWhere);
-
-		// Save search criteria
-		if ($this->Command == "search" && !$this->RestoreSearch) {
-			$this->setSearchWhere($this->SearchWhere); // Save to Session
-			$this->StartRec = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRec);
-		} else {
-			$this->SearchWhere = $this->getSearchWhere();
-		}
 
 		// Build filter
 		$sFilter = "";
@@ -522,96 +484,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 		return TRUE;
 	}
 
-	// Return basic search SQL
-	function BasicSearchSQL($Keyword) {
-		$sKeyword = ew_AdjustSql($Keyword);
-		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->c_Usuario, $Keyword);
-		$this->BuildBasicSearchSQL($sWhere, $this->c_IReseller, $Keyword);
-		$this->BuildBasicSearchSQL($sWhere, $this->c_Usuario_Ult_Mod, $Keyword);
-		return $sWhere;
-	}
-
-	// Build basic search SQL
-	function BuildBasicSearchSql(&$Where, &$Fld, $Keyword) {
-		if ($Keyword == EW_NULL_VALUE) {
-			$sWrk = $Fld->FldExpression . " IS NULL";
-		} elseif ($Keyword == EW_NOT_NULL_VALUE) {
-			$sWrk = $Fld->FldExpression . " IS NOT NULL";
-		} else {
-			$sFldExpression = ($Fld->FldVirtualExpression <> $Fld->FldExpression) ? $Fld->FldVirtualExpression : $Fld->FldBasicSearchExpression;
-			$sWrk = $sFldExpression . ew_Like(ew_QuotedValue("%" . $Keyword . "%", EW_DATATYPE_STRING));
-		}
-		if ($Where <> "") $Where .= " OR ";
-		$Where .= $sWrk;
-	}
-
-	// Return basic search WHERE clause based on search keyword and type
-	function BasicSearchWhere() {
-		global $Security;
-		$sSearchStr = "";
-		$sSearchKeyword = $this->BasicSearch->Keyword;
-		$sSearchType = $this->BasicSearch->Type;
-		if ($sSearchKeyword <> "") {
-			$sSearch = trim($sSearchKeyword);
-			if ($sSearchType <> "=") {
-				while (strpos($sSearch, "  ") !== FALSE)
-					$sSearch = str_replace("  ", " ", $sSearch);
-				$arKeyword = explode(" ", trim($sSearch));
-				foreach ($arKeyword as $sKeyword) {
-					if ($sSearchStr <> "") $sSearchStr .= " " . $sSearchType . " ";
-					$sSearchStr .= "(" . $this->BasicSearchSQL($sKeyword) . ")";
-				}
-			} else {
-				$sSearchStr = $this->BasicSearchSQL($sSearch);
-			}
-			$this->Command = "search";
-		}
-		if ($this->Command == "search") {
-			$this->BasicSearch->setKeyword($sSearchKeyword);
-			$this->BasicSearch->setType($sSearchType);
-		}
-		return $sSearchStr;
-	}
-
-	// Check if search parm exists
-	function CheckSearchParms() {
-
-		// Check basic search
-		if ($this->BasicSearch->IssetSession())
-			return TRUE;
-		return FALSE;
-	}
-
-	// Clear all search parameters
-	function ResetSearchParms() {
-
-		// Clear search WHERE clause
-		$this->SearchWhere = "";
-		$this->setSearchWhere($this->SearchWhere);
-
-		// Clear basic search parameters
-		$this->ResetBasicSearchParms();
-	}
-
-	// Load advanced search default values
-	function LoadAdvancedSearchDefault() {
-		return FALSE;
-	}
-
-	// Clear all basic search parameters
-	function ResetBasicSearchParms() {
-		$this->BasicSearch->UnsetSession();
-	}
-
-	// Restore all search parameters
-	function RestoreSearchParms() {
-		$this->RestoreSearch = TRUE;
-
-		// Restore basic search values
-		$this->BasicSearch->Load();
-	}
-
 	// Set up sort parameters
 	function SetUpSortOrder() {
 
@@ -649,10 +521,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 
 		// Check if reset command
 		if (substr($this->Command,0,5) == "reset") {
-
-			// Reset search criteria
-			if ($this->Command == "reset" || $this->Command == "resetall")
-				$this->ResetSearchParms();
 
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
@@ -868,13 +736,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 		}
 	}
 
-	// Load basic search values
-	function LoadBasicSearchValues() {
-		$this->BasicSearch->Keyword = @$_GET[EW_TABLE_BASIC_SEARCH];
-		if ($this->BasicSearch->Keyword <> "") $this->Command = "search";
-		$this->BasicSearch->Type = @$_GET[EW_TABLE_BASIC_SEARCH_TYPE];
-	}
-
 	// Load recordset
 	function LoadRecordset($offset = -1, $rowcnt = -1) {
 		global $conn;
@@ -931,6 +792,11 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 			$this->c_Usuario->VirtualValue = ""; // Clear value
 		}
 		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
+		if (array_key_exists('EV__c_IReseller', $rs->fields)) {
+			$this->c_IReseller->VirtualValue = $rs->fields('EV__c_IReseller'); // Set up virtual field value
+		} else {
+			$this->c_IReseller->VirtualValue = ""; // Clear value
+		}
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -999,7 +865,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 			if ($this->c_Usuario->VirtualValue <> "") {
 				$this->c_Usuario->ViewValue = $this->c_Usuario->VirtualValue;
 			} else {
-				$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
 			if (strval($this->c_Usuario->CurrentValue) <> "") {
 				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_Usuario->CurrentValue, EW_DATATYPE_STRING);
 			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
@@ -1025,7 +890,31 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 			$this->c_Usuario->ViewCustomAttributes = "";
 
 			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			if ($this->c_IReseller->VirtualValue <> "") {
+				$this->c_IReseller->ViewValue = $this->c_IReseller->VirtualValue;
+			} else {
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->ViewValue = NULL;
+			}
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
@@ -1041,15 +930,11 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 			$this->c_Usuario->LinkCustomAttributes = "";
 			$this->c_Usuario->HrefValue = "";
 			$this->c_Usuario->TooltipValue = "";
-			if ($this->Export == "")
-				$this->c_Usuario->ViewValue = ew_Highlight($this->HighlightName(), $this->c_Usuario->ViewValue, $this->BasicSearch->getKeyword(), $this->BasicSearch->getType(), "", "");
 
 			// c_IReseller
 			$this->c_IReseller->LinkCustomAttributes = "";
 			$this->c_IReseller->HrefValue = "";
 			$this->c_IReseller->TooltipValue = "";
-			if ($this->Export == "")
-				$this->c_IReseller->ViewValue = ew_Highlight($this->HighlightName(), $this->c_IReseller->ViewValue, $this->BasicSearch->getKeyword(), $this->BasicSearch->getType(), "", "");
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->LinkCustomAttributes = "";
@@ -1060,8 +945,6 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 			$this->c_Usuario_Ult_Mod->LinkCustomAttributes = "";
 			$this->c_Usuario_Ult_Mod->HrefValue = "";
 			$this->c_Usuario_Ult_Mod->TooltipValue = "";
-			if ($this->Export == "")
-				$this->c_Usuario_Ult_Mod->ViewValue = ew_Highlight($this->HighlightName(), $this->c_Usuario_Ult_Mod->ViewValue, $this->BasicSearch->getKeyword(), $this->BasicSearch->getType(), "", "");
 		}
 
 		// Call Row Rendered event
@@ -1345,10 +1228,10 @@ faf_resellers_usuariolist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-faf_resellers_usuariolist.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":true,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuariolist.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuariolist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
-var faf_resellers_usuariolistsrch = new ew_Form("faf_resellers_usuariolistsrch");
 </script>
 <script type="text/javascript">
 
@@ -1378,50 +1261,45 @@ var faf_resellers_usuariolistsrch = new ew_Form("faf_resellers_usuariolistsrch")
 		$af_resellers_usuario_list->Recordset = $af_resellers_usuario_list->LoadRecordset($af_resellers_usuario_list->StartRec-1, $af_resellers_usuario_list->DisplayRecs);
 $af_resellers_usuario_list->RenderOtherOptions();
 ?>
-<?php if ($af_resellers_usuario->Export == "" && $af_resellers_usuario->CurrentAction == "") { ?>
-<form name="faf_resellers_usuariolistsrch" id="faf_resellers_usuariolistsrch" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
-<div class="accordion ewDisplayTable ewSearchTable" id="faf_resellers_usuariolistsrch_SearchGroup">
-	<div class="accordion-group">
-		<div class="accordion-heading">
-<a class="accordion-toggle" data-toggle="collapse" data-parent="#faf_resellers_usuariolistsrch_SearchGroup" href="#faf_resellers_usuariolistsrch_SearchBody"><?php echo $Language->Phrase("Search") ?></a>
-		</div>
-		<div id="faf_resellers_usuariolistsrch_SearchBody" class="accordion-body collapse in">
-			<div class="accordion-inner">
-<div id="faf_resellers_usuariolistsrch_SearchPanel">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="af_resellers_usuario">
-<div class="ewBasicSearch">
-<div id="xsr_1" class="ewRow">
-	<div class="btn-group ewButtonGroup">
-	<div class="input-append">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="input-large" value="<?php echo ew_HtmlEncode($af_resellers_usuario_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("QuickSearchBtn") ?></button>
-	</div>
-	</div>
-	<div class="btn-group ewButtonGroup">
-	<a class="btn ewShowAll" href="<?php echo $af_resellers_usuario_list->PageUrl() ?>cmd=reset"><?php echo $Language->Phrase("ShowAll") ?></a>
-	<?php if ($af_resellers_usuario_list->SearchWhere <> "" && $af_resellers_usuario_list->TotalRecs > 0) { ?>
-	<a class="btn ewHideHighlight" href="javascript:void(0);" onclick="ewForms(this).ToggleHighlight(this, '<?php echo $af_resellers_usuario->HighlightName() ?>');"><?php echo $Language->Phrase("HideHighlight") ?></a>
-	<?php } ?>
-	</div>
-</div>
-<div id="xsr_2" class="ewRow">
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="="<?php if ($af_resellers_usuario_list->BasicSearch->getType() == "=") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("ExactPhrase") ?></label>
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="AND"<?php if ($af_resellers_usuario_list->BasicSearch->getType() == "AND") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("AllWord") ?></label>
-	<label class="inline radio ewRadio" style="white-space: nowrap;"><input type="radio" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="OR"<?php if ($af_resellers_usuario_list->BasicSearch->getType() == "OR") { ?> checked="checked"<?php } ?>><?php echo $Language->Phrase("AnyWord") ?></label>
-</div>
-</div>
-</div>
-			</div>
-		</div>
-	</div>
-</div>
-</form>
-<?php } ?>
 <?php $af_resellers_usuario_list->ShowPageHeader(); ?>
 <?php
 $af_resellers_usuario_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+<script type="text/javascript">
+$(document).on('change', '#select_usuarios', function() { 
+
+	if($(this).val() != 100){
+	$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
+	if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();
+	}else{
+		$("#tbl_af_resellers_usuariolist tbody tr").show();
+	}
+});
+</script>
+
+<label class= "filtro_label">Filtro Usuario</label>
+<select id= "select_usuarios" class= "filtro_select">
+	<option value = 100>Seleccione una Usuario</option>
+<? $users = select_sql('select_usuarios');
+	$count = count($users);
+	$k = 1;
+	while ($k <= $count){
+		echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
+		$k++;
+	}
+
+?>
+
+</select>
+
+							<?/******************************************************
+							************************ENDFILTROS***********************
+							*********************************************************/?>
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_resellers_usuariolist" id="faf_resellers_usuariolist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_resellers_usuario">
@@ -1444,7 +1322,7 @@ $af_resellers_usuario_list->ListOptions->Render("header", "left");
 		<td><div id="elh_af_resellers_usuario_c_Usuario" class="af_resellers_usuario_c_Usuario"><div class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario->FldCaption() ?></div></div></td>
 	<?php } else { ?>
 		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_resellers_usuario->SortUrl($af_resellers_usuario->c_Usuario) ?>',2);"><div id="elh_af_resellers_usuario_c_Usuario" class="af_resellers_usuario_c_Usuario">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_Usuario->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_Usuario->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_Usuario->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_Usuario->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
@@ -1453,7 +1331,7 @@ $af_resellers_usuario_list->ListOptions->Render("header", "left");
 		<td><div id="elh_af_resellers_usuario_c_IReseller" class="af_resellers_usuario_c_IReseller"><div class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_IReseller->FldCaption() ?></div></div></td>
 	<?php } else { ?>
 		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_resellers_usuario->SortUrl($af_resellers_usuario->c_IReseller) ?>',2);"><div id="elh_af_resellers_usuario_c_IReseller" class="af_resellers_usuario_c_IReseller">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_IReseller->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_IReseller->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_IReseller->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_IReseller->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_IReseller->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
@@ -1471,7 +1349,7 @@ $af_resellers_usuario_list->ListOptions->Render("header", "left");
 		<td><div id="elh_af_resellers_usuario_c_Usuario_Ult_Mod" class="af_resellers_usuario_c_Usuario_Ult_Mod"><div class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario_Ult_Mod->FldCaption() ?></div></div></td>
 	<?php } else { ?>
 		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_resellers_usuario->SortUrl($af_resellers_usuario->c_Usuario_Ult_Mod) ?>',2);"><div id="elh_af_resellers_usuario_c_Usuario_Ult_Mod" class="af_resellers_usuario_c_Usuario_Ult_Mod">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario_Ult_Mod->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_Usuario_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_Usuario_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_resellers_usuario->c_Usuario_Ult_Mod->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_resellers_usuario->c_Usuario_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_resellers_usuario->c_Usuario_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
@@ -1643,7 +1521,6 @@ if ($af_resellers_usuario_list->Recordset)
 </td></tr></table>
 <?php if ($af_resellers_usuario->Export == "") { ?>
 <script type="text/javascript">
-faf_resellers_usuariolistsrch.Init();
 faf_resellers_usuariolist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();

@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_configinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
 <?php
 
 //
@@ -1201,331 +1202,28 @@ faf_configlist.ValidateRequired = false;
 <?php if ($af_config->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($af_config_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_config_list->ExportOptions->Render("body") ?></div>
-<?php } ?>
-<?php
-	$bSelectLimit = EW_SELECT_LIMIT;
-	if ($bSelectLimit) {
-		$af_config_list->TotalRecs = $af_config->SelectRecordCount();
-	} else {
-		if ($af_config_list->Recordset = $af_config_list->LoadRecordset())
-			$af_config_list->TotalRecs = $af_config_list->Recordset->RecordCount();
-	}
-	$af_config_list->StartRec = 1;
-	if ($af_config_list->DisplayRecs <= 0 || ($af_config->Export <> "" && $af_config->ExportAll)) // Display all records
-		$af_config_list->DisplayRecs = $af_config_list->TotalRecs;
-	if (!($af_config->Export <> "" && $af_config->ExportAll))
-		$af_config_list->SetUpStartRec(); // Set up start record position
-	if ($bSelectLimit)
-		$af_config_list->Recordset = $af_config_list->LoadRecordset($af_config_list->StartRec-1, $af_config_list->DisplayRecs);
-$af_config_list->RenderOtherOptions();
-?>
+
 <?php $af_config_list->ShowPageHeader(); ?>
 <?php
 $af_config_list->ShowMessage();
 ?>
-<table class="ewGrid"><tr><td class="ewGridContent">
-<form name="faf_configlist" id="faf_configlist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_config">
-<div id="gmp_af_config" class="ewGridMiddlePanel">
-<?php if ($af_config_list->TotalRecs > 0) { ?>
-<table id="tbl_af_configlist" class="ewTable ewTableSeparate">
-<?php echo $af_config->TableCustomInnerHtml ?>
-<thead><!-- Table header -->
-	<tr class="ewTableHeader">
-<?php
-
-// Render list options
-$af_config_list->RenderListOptions();
-
-// Render list options (header, left)
-$af_config_list->ListOptions->Render("header", "left");
-?>
-<?php if ($af_config->q_Min_Chequeo->Visible) { // q_Min_Chequeo ?>
-	<?php if ($af_config->SortUrl($af_config->q_Min_Chequeo) == "") { ?>
-		<td><div id="elh_af_config_q_Min_Chequeo" class="af_config_q_Min_Chequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->q_Min_Chequeo->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->q_Min_Chequeo) ?>',2);"><div id="elh_af_config_q_Min_Chequeo" class="af_config_q_Min_Chequeo">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->q_Min_Chequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->q_Min_Chequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->q_Min_Chequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->q_Min_VentChequeo->Visible) { // q_Min_VentChequeo ?>
-	<?php if ($af_config->SortUrl($af_config->q_Min_VentChequeo) == "") { ?>
-		<td><div id="elh_af_config_q_Min_VentChequeo" class="af_config_q_Min_VentChequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->q_Min_VentChequeo->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->q_Min_VentChequeo) ?>',2);"><div id="elh_af_config_q_Min_VentChequeo" class="af_config_q_Min_VentChequeo">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->q_Min_VentChequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->q_Min_VentChequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->q_Min_VentChequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->f_Ult_Chequeo->Visible) { // f_Ult_Chequeo ?>
-	<?php if ($af_config->SortUrl($af_config->f_Ult_Chequeo) == "") { ?>
-		<td><div id="elh_af_config_f_Ult_Chequeo" class="af_config_f_Ult_Chequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Chequeo->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->f_Ult_Chequeo) ?>',2);"><div id="elh_af_config_f_Ult_Chequeo" class="af_config_f_Ult_Chequeo">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Chequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->f_Ult_Chequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->f_Ult_Chequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->x_Usuario_Api->Visible) { // x_Usuario_Api ?>
-	<?php if ($af_config->SortUrl($af_config->x_Usuario_Api) == "") { ?>
-		<td><div id="elh_af_config_x_Usuario_Api" class="af_config_x_Usuario_Api"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Usuario_Api->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Usuario_Api) ?>',2);"><div id="elh_af_config_x_Usuario_Api" class="af_config_x_Usuario_Api">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Usuario_Api->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Usuario_Api->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Usuario_Api->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->x_Passw_Api->Visible) { // x_Passw_Api ?>
-	<?php if ($af_config->SortUrl($af_config->x_Passw_Api) == "") { ?>
-		<td><div id="elh_af_config_x_Passw_Api" class="af_config_x_Passw_Api"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Passw_Api->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Passw_Api) ?>',2);"><div id="elh_af_config_x_Passw_Api" class="af_config_x_Passw_Api">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Passw_Api->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Passw_Api->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Passw_Api->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->x_Url_Wsdl->Visible) { // x_Url_Wsdl ?>
-	<?php if ($af_config->SortUrl($af_config->x_Url_Wsdl) == "") { ?>
-		<td><div id="elh_af_config_x_Url_Wsdl" class="af_config_x_Url_Wsdl"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Url_Wsdl->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Url_Wsdl) ?>',2);"><div id="elh_af_config_x_Url_Wsdl" class="af_config_x_Url_Wsdl">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Url_Wsdl->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Url_Wsdl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Url_Wsdl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->f_Ult_Mod->Visible) { // f_Ult_Mod ?>
-	<?php if ($af_config->SortUrl($af_config->f_Ult_Mod) == "") { ?>
-		<td><div id="elh_af_config_f_Ult_Mod" class="af_config_f_Ult_Mod"><div class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Mod->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->f_Ult_Mod) ?>',2);"><div id="elh_af_config_f_Ult_Mod" class="af_config_f_Ult_Mod">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Mod->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->f_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->f_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_config->c_Usuario_Ult_Mod->Visible) { // c_Usuario_Ult_Mod ?>
-	<?php if ($af_config->SortUrl($af_config->c_Usuario_Ult_Mod) == "") { ?>
-		<td><div id="elh_af_config_c_Usuario_Ult_Mod" class="af_config_c_Usuario_Ult_Mod"><div class="ewTableHeaderCaption"><?php echo $af_config->c_Usuario_Ult_Mod->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->c_Usuario_Ult_Mod) ?>',2);"><div id="elh_af_config_c_Usuario_Ult_Mod" class="af_config_c_Usuario_Ult_Mod">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->c_Usuario_Ult_Mod->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->c_Usuario_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->c_Usuario_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php
-
-// Render list options (header, right)
-$af_config_list->ListOptions->Render("header", "right");
-?>
-	</tr>
-</thead>
-<tbody>
-<?php
-if ($af_config->ExportAll && $af_config->Export <> "") {
-	$af_config_list->StopRec = $af_config_list->TotalRecs;
-} else {
-
-	// Set the last record to display
-	if ($af_config_list->TotalRecs > $af_config_list->StartRec + $af_config_list->DisplayRecs - 1)
-		$af_config_list->StopRec = $af_config_list->StartRec + $af_config_list->DisplayRecs - 1;
-	else
-		$af_config_list->StopRec = $af_config_list->TotalRecs;
-}
-$af_config_list->RecCnt = $af_config_list->StartRec - 1;
-if ($af_config_list->Recordset && !$af_config_list->Recordset->EOF) {
-	$af_config_list->Recordset->MoveFirst();
-	if (!$bSelectLimit && $af_config_list->StartRec > 1)
-		$af_config_list->Recordset->Move($af_config_list->StartRec - 1);
-} elseif (!$af_config->AllowAddDeleteRow && $af_config_list->StopRec == 0) {
-	$af_config_list->StopRec = $af_config->GridAddRowCount;
-}
-
-// Initialize aggregate
-$af_config->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$af_config->ResetAttrs();
-$af_config_list->RenderRow();
-while ($af_config_list->RecCnt < $af_config_list->StopRec) {
-	$af_config_list->RecCnt++;
-	if (intval($af_config_list->RecCnt) >= intval($af_config_list->StartRec)) {
-		$af_config_list->RowCnt++;
-
-		// Set up key count
-		$af_config_list->KeyCount = $af_config_list->RowIndex;
-
-		// Init row class and style
-		$af_config->ResetAttrs();
-		$af_config->CssClass = "";
-		if ($af_config->CurrentAction == "gridadd") {
-		} else {
-			$af_config_list->LoadRowValues($af_config_list->Recordset); // Load row values
-		}
-		$af_config->RowType = EW_ROWTYPE_VIEW; // Render view
-
-		// Set up row id / data-rowindex
-		$af_config->RowAttrs = array_merge($af_config->RowAttrs, array('data-rowindex'=>$af_config_list->RowCnt, 'id'=>'r' . $af_config_list->RowCnt . '_af_config', 'data-rowtype'=>$af_config->RowType));
-
-		// Render row
-		$af_config_list->RenderRow();
-
-		// Render list options
-		$af_config_list->RenderListOptions();
-?>
-	<tr<?php echo $af_config->RowAttributes() ?>>
-<?php
-
-// Render list options (body, left)
-$af_config_list->ListOptions->Render("body", "left", $af_config_list->RowCnt);
-?>
-	<?php if ($af_config->q_Min_Chequeo->Visible) { // q_Min_Chequeo ?>
-		<td<?php echo $af_config->q_Min_Chequeo->CellAttributes() ?>>
-<span<?php echo $af_config->q_Min_Chequeo->ViewAttributes() ?>>
-<?php echo $af_config->q_Min_Chequeo->ListViewValue() ?></span>
-<a id="<?php echo $af_config_list->PageObjName . "_row_" . $af_config_list->RowCnt ?>"></a></td>
-	<?php } ?>
-	<?php if ($af_config->q_Min_VentChequeo->Visible) { // q_Min_VentChequeo ?>
-		<td<?php echo $af_config->q_Min_VentChequeo->CellAttributes() ?>>
-<span<?php echo $af_config->q_Min_VentChequeo->ViewAttributes() ?>>
-<?php echo $af_config->q_Min_VentChequeo->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->f_Ult_Chequeo->Visible) { // f_Ult_Chequeo ?>
-		<td<?php echo $af_config->f_Ult_Chequeo->CellAttributes() ?>>
-<span<?php echo $af_config->f_Ult_Chequeo->ViewAttributes() ?>>
-<?php echo $af_config->f_Ult_Chequeo->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->x_Usuario_Api->Visible) { // x_Usuario_Api ?>
-		<td<?php echo $af_config->x_Usuario_Api->CellAttributes() ?>>
-<span<?php echo $af_config->x_Usuario_Api->ViewAttributes() ?>>
-<?php echo $af_config->x_Usuario_Api->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->x_Passw_Api->Visible) { // x_Passw_Api ?>
-		<td<?php echo $af_config->x_Passw_Api->CellAttributes() ?>>
-<span<?php echo $af_config->x_Passw_Api->ViewAttributes() ?>>
-<?php echo $af_config->x_Passw_Api->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->x_Url_Wsdl->Visible) { // x_Url_Wsdl ?>
-		<td<?php echo $af_config->x_Url_Wsdl->CellAttributes() ?>>
-<span<?php echo $af_config->x_Url_Wsdl->ViewAttributes() ?>>
-<?php echo $af_config->x_Url_Wsdl->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->f_Ult_Mod->Visible) { // f_Ult_Mod ?>
-		<td<?php echo $af_config->f_Ult_Mod->CellAttributes() ?>>
-<span<?php echo $af_config->f_Ult_Mod->ViewAttributes() ?>>
-<?php echo $af_config->f_Ult_Mod->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_config->c_Usuario_Ult_Mod->Visible) { // c_Usuario_Ult_Mod ?>
-		<td<?php echo $af_config->c_Usuario_Ult_Mod->CellAttributes() ?>>
-<span<?php echo $af_config->c_Usuario_Ult_Mod->ViewAttributes() ?>>
-<?php echo $af_config->c_Usuario_Ult_Mod->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-<?php
-
-// Render list options (body, right)
-$af_config_list->ListOptions->Render("body", "right", $af_config_list->RowCnt);
-?>
-	</tr>
-<?php
-	}
-	if ($af_config->CurrentAction <> "gridadd")
-		$af_config_list->Recordset->MoveNext();
-}
-?>
-</tbody>
-</table>
-<?php } ?>
-<?php if ($af_config->CurrentAction == "") { ?>
-<input type="hidden" name="a_list" id="a_list" value="">
-<?php } ?>
-</div>
+<form>
+	<?php $res = select_sql('select_config_data'); ?>
+	<label>Frecuencia Chequeo (min)</label>
+	<input type="number" name="freq_chq_min" value= <?echo($res[1]['q_Min_Chequeo'])?> >
+	<label>Ventana Chequeo (min)</label>
+	<input type= "number" name="ventana_chq_min" value= <?echo($res[1]['q_Min_VentChequeo'])?> >
+	<label>Fecha de Ult Chequeo</label>
+	<input type="text" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
+	<label>Usuario API</label>
+	<input type= "text" name="user_api" value= <?echo($res[1]['x_Usuario_Api'])?> >
+	<label>Contraseña API</label>
+	<input type= "text" name="pw_api" value= <?echo($res[1]['x_Passw_Api'])?> >
+	<label>URL wsdl API</label>
+	<input type= "url" name="url_api" value= <?echo($res[1]['x_Url_Wsdl'])?> >
+	<label>Usuario Ult Modif</label>
+	<input type="text" readonly value= <?echo($res[1]['c_Usuario_Ult_Mod'])?> >
+	<label>Fecha Ult Modif</label>
+	<input type="text" readonly value= <?echo($res[1]['f_Ult_Mod'])?> >
 </form>
-<?php
 
-// Close recordset
-if ($af_config_list->Recordset)
-	$af_config_list->Recordset->Close();
-?>
-<?php if ($af_config->Export == "") { ?>
-<div class="ewGridLowerPanel">
-<?php if ($af_config->CurrentAction <> "gridadd" && $af_config->CurrentAction <> "gridedit") { ?>
-<form name="ewPagerForm" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
-<table class="ewPager">
-<tr><td>
-<?php if (!isset($af_config_list->Pager)) $af_config_list->Pager = new cNumericPager($af_config_list->StartRec, $af_config_list->DisplayRecs, $af_config_list->TotalRecs, $af_config_list->RecRange) ?>
-<?php if ($af_config_list->Pager->RecordCount > 0) { ?>
-<table class="ewStdTable"><tbody><tr><td>
-<div class="pagination"><ul>
-	<?php if ($af_config_list->Pager->FirstButton->Enabled) { ?>
-	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
-	<?php } ?>
-	<?php if ($af_config_list->Pager->PrevButton->Enabled) { ?>
-	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
-	<?php } ?>
-	<?php foreach ($af_config_list->Pager->Items as $PagerItem) { ?>
-		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_config_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
-	<?php } ?>
-	<?php if ($af_config_list->Pager->NextButton->Enabled) { ?>
-	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
-	<?php } ?>
-	<?php if ($af_config_list->Pager->LastButton->Enabled) { ?>
-	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
-	<?php } ?>
-</ul></div>
-</td>
-<td>
-	<?php if ($af_config_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
-	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_config_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_config_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_config_list->Pager->RecordCount ?>
-</td>
-</tr></tbody></table>
-<?php } else { ?>
-	<?php if ($af_config_list->SearchWhere == "0=101") { ?>
-	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
-	<?php } else { ?>
-	<p><?php echo $Language->Phrase("NoRecord") ?></p>
-	<?php } ?>
-<?php } ?>
-</td>
-</tr></table>
-</form>
-<?php } ?>
-<div class="ewListOtherOptions">
-<?php
-	foreach ($af_config_list->OtherOptions as &$option)
-		$option->Render("body", "bottom");
-?>
-</div>
-</div>
-<?php } ?>
-</td></tr></table>
-<?php if ($af_config->Export == "") { ?>
-<script type="text/javascript">
-faf_configlist.Init();
-<?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
-ew_Reflow();
-<?php } ?>
-</script>
-<?php } ?>
-<?php
-$af_config_list->ShowPageFooter();
-if (EW_DEBUG_ENABLED)
-	echo ew_DebugMsg();
-?>
-<?php if ($af_config->Export == "") { ?>
-<script type="text/javascript">
-
-// Write your table-specific startup script here
-// document.write("page loaded");
-
-</script>
-<?php } ?>
-<?php include_once "footer.php" ?>
-<?php
-$af_config_list->Page_Terminate();
-?>

@@ -482,7 +482,27 @@ class caf_acc_resellers_edit extends caf_acc_resellers {
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
 			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->ViewValue = NULL;
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// cl_Accion
@@ -605,7 +625,27 @@ class caf_acc_resellers_edit extends caf_acc_resellers {
 
 			// c_IReseller
 			$this->c_IReseller->EditCustomAttributes = "";
-			$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->EditValue = NULL;
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// cl_Accion
@@ -1024,6 +1064,7 @@ faf_acc_resellersedit.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
+faf_acc_resellersedit.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_acc_resellersedit.Lists["x_cl_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_acc_resellersedit.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 

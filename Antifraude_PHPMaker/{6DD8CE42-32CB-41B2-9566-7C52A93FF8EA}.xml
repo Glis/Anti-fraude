@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0"?>
-<configuration date="2014/07/22" author="e.World Technology Ltd.">
-<project id="{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}" file="C:\Users\Mystique\Documents\Trabajo\AntiFraude\Antifraude_PHPMaker.pmp" name="Antifraude_PHPMaker" product="PHPMaker" version="10.0" datetime="2014/07/22 18:23:36" languagefolder="phplang" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111">
+<configuration date="2014/07/23" author="e.World Technology Ltd.">
+<project id="{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}" file="C:\Users\Mystique\Documents\Trabajo\AntiFraude\Antifraude_PHPMaker.pmp" name="Antifraude_PHPMaker" product="PHPMaker" version="10.0" datetime="2014/07/23 14:52:22" languagefolder="phplang" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111">
 <table id="af_acc_cclass" name="af_acc_cclass" caption="Acciones Customer Class" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
 <table id="af_acc_clientes" name="af_acc_clientes" caption="Acciones Clientes" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>
 <table id="af_acc_cuentas" name="af_acc_cuentas" caption="Acciones Cuentas" userlevel="0,&quot;Default&quot;,0;1,&quot;Configurador&quot;,111" priv="0"/>

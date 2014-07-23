@@ -502,15 +502,83 @@ class caf_config_reportes_view extends caf_config_reportes {
 			$this->c_IConfig->ViewCustomAttributes = "";
 
 			// c_IReporte
-			$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
+			if (strval($this->c_IReporte->CurrentValue) <> "") {
+				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `c_IReporte`, `x_NbReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReporte, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
+				}
+			} else {
+				$this->c_IReporte->ViewValue = NULL;
+			}
 			$this->c_IReporte->ViewCustomAttributes = "";
 
 			// frec_Envio
-			$this->frec_Envio->ViewValue = $this->frec_Envio->CurrentValue;
+			if (strval($this->frec_Envio->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->frec_Envio->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_FREC_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->frec_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->frec_Envio->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->frec_Envio->ViewValue = $this->frec_Envio->CurrentValue;
+				}
+			} else {
+				$this->frec_Envio->ViewValue = NULL;
+			}
 			$this->frec_Envio->ViewCustomAttributes = "";
 
 			// i_Dia_Envio
-			$this->i_Dia_Envio->ViewValue = $this->i_Dia_Envio->CurrentValue;
+			if (strval($this->i_Dia_Envio->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Dia_Envio->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_DIA_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Dia_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->i_Dia_Envio->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->i_Dia_Envio->ViewValue = $this->i_Dia_Envio->CurrentValue;
+				}
+			} else {
+				$this->i_Dia_Envio->ViewValue = NULL;
+			}
 			$this->i_Dia_Envio->ViewCustomAttributes = "";
 
 			// x_Hora_Envio
@@ -518,15 +586,79 @@ class caf_config_reportes_view extends caf_config_reportes {
 			$this->x_Hora_Envio->ViewCustomAttributes = "";
 
 			// p_Destino
-			$this->p_Destino->ViewValue = $this->p_Destino->CurrentValue;
+			if (strval($this->p_Destino->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->p_Destino->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_PARREP_DESTINO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Destino, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_Destino->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_Destino->ViewValue = $this->p_Destino->CurrentValue;
+				}
+			} else {
+				$this->p_Destino->ViewValue = NULL;
+			}
 			$this->p_Destino->ViewCustomAttributes = "";
 
 			// p_Reseller
-			$this->p_Reseller->ViewValue = $this->p_Reseller->CurrentValue;
+			if (strval($this->p_Reseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->p_Reseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Reseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_Reseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_Reseller->ViewValue = $this->p_Reseller->CurrentValue;
+				}
+			} else {
+				$this->p_Reseller->ViewValue = NULL;
+			}
 			$this->p_Reseller->ViewCustomAttributes = "";
 
 			// p_CClass
-			$this->p_CClass->ViewValue = $this->p_CClass->CurrentValue;
+			if (strval($this->p_CClass->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->p_CClass->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_CClass, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_CClass->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_CClass->ViewValue = $this->p_CClass->CurrentValue;
+				}
+			} else {
+				$this->p_CClass->ViewValue = NULL;
+			}
 			$this->p_CClass->ViewCustomAttributes = "";
 
 			// x_DirCorreo
@@ -736,8 +868,14 @@ faf_config_reportesview.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+faf_config_reportesview.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesview.Lists["x_frec_Envio"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesview.Lists["x_i_Dia_Envio"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesview.Lists["x_p_Destino"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesview.Lists["x_p_Reseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesview.Lists["x_p_CClass"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
+// Form object for search
 </script>
 <script type="text/javascript">
 

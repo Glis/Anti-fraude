@@ -501,7 +501,7 @@ class caf_reportes_usuario_add extends caf_reportes_usuario {
 			} else {
 			if (strval($this->c_IReporte->CurrentValue) <> "") {
 				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, `x_NbReporte` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
@@ -513,6 +513,7 @@ class caf_reportes_usuario_add extends caf_reportes_usuario {
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					$this->c_IReporte->ViewValue .= ew_ValueSeparator(1,$this->c_IReporte) . $rswrk->fields('Disp2Fld');
 					$rswrk->Close();
 				} else {
 					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
@@ -574,7 +575,7 @@ class caf_reportes_usuario_add extends caf_reportes_usuario {
 			// c_IReporte
 			$this->c_IReporte->EditCustomAttributes = "";
 			$sFilterWrk = "";
-			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_reportes`";
+			$sSqlWrk = "SELECT `c_IReporte`, `x_NbReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_reportes`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
@@ -892,7 +893,7 @@ faf_reportes_usuarioadd.ValidateRequired = false;
 
 // Dynamic selection lists
 faf_reportes_usuarioadd.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_reportes_usuarioadd.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_reportes_usuarioadd.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","x_x_NbReporte","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -957,6 +958,9 @@ if (is_array($af_reportes_usuario->c_IReporte->EditValue)) {
 ?>
 <option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
 <?php echo $arwrk[$rowcntwrk][1] ?>
+<?php if ($arwrk[$rowcntwrk][2] <> "") { ?>
+<?php echo ew_ValueSeparator(1,$af_reportes_usuario->c_IReporte) ?><?php echo $arwrk[$rowcntwrk][2] ?>
+<?php } ?>
 </option>
 <?php
 	}

@@ -5,18 +5,17 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_acc_cuentasinfo.php" ?>
+<?php include_once "af_configinfo.php" ?>
 <?php include_once "userfn10.php" ?>
-<?php include_once "lib/libreriaBD.php" ?>
 <?php
 
 //
 // Page class
 //
 
-$af_acc_cuentas_list = NULL; // Initialize page object first
+$af_config_list = NULL; // Initialize page object first
 
-class caf_acc_cuentas_list extends caf_acc_cuentas {
+class caf_config_list extends caf_config {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +24,13 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_acc_cuentas';
+	var $TableName = 'af_config';
 
 	// Page object name
-	var $PageObjName = 'af_acc_cuentas_list';
+	var $PageObjName = 'af_config_list';
 
 	// Grid form hidden field names
-	var $FormName = 'faf_acc_cuentaslist';
+	var $FormName = 'faf_configlist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -202,10 +201,10 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_acc_cuentas)
-		if (!isset($GLOBALS["af_acc_cuentas"]) || get_class($GLOBALS["af_acc_cuentas"]) == "caf_acc_cuentas") {
-			$GLOBALS["af_acc_cuentas"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_acc_cuentas"];
+		// Table object (af_config)
+		if (!isset($GLOBALS["af_config"]) || get_class($GLOBALS["af_config"]) == "caf_config") {
+			$GLOBALS["af_config"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_config"];
 		}
 
 		// Initialize URLs
@@ -216,12 +215,12 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "af_acc_cuentasadd.php";
+		$this->AddUrl = "af_configadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "af_acc_cuentasdelete.php";
-		$this->MultiUpdateUrl = "af_acc_cuentasupdate.php";
+		$this->MultiDeleteUrl = "af_configdelete.php";
+		$this->MultiUpdateUrl = "af_configupdate.php";
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -229,7 +228,7 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_acc_cuentas', TRUE);
+			define("EW_TABLE_NAME", 'af_config', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -287,6 +286,8 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 
 		// Setup export options
 		$this->SetupExportOptions();
+		$this->f_Ult_Mod->Visible = !$this->IsAddOrEdit();
+		$this->c_Usuario_Ult_Mod->Visible = !$this->IsAddOrEdit();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -365,7 +366,6 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 	var $MultiSelectKey;
 	var $Command;
 	var $RestoreSearch = FALSE;
-	var $HashValue; // Hash value
 	var $Recordset;
 	var $OldRecordset;
 
@@ -476,15 +476,7 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 	// Set up key values
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
-		if (count($arrKeyFlds) >= 4) {
-			$this->cl_Accion->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->cl_Accion->FormValue))
-				return FALSE;
-			$this->t_Accion->setFormValue($arrKeyFlds[1]);
-			if (!is_numeric($this->t_Accion->FormValue))
-				return FALSE;
-			$this->c_IReseller->setFormValue($arrKeyFlds[2]);
-			$this->c_ICClass->setFormValue($arrKeyFlds[3]);
+		if (count($arrKeyFlds) >= 0) {
 		}
 		return TRUE;
 	}
@@ -499,10 +491,14 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->cl_Accion, $bCtrl); // cl_Accion
-			$this->UpdateSort($this->t_Accion, $bCtrl); // t_Accion
-			$this->UpdateSort($this->c_IReseller, $bCtrl); // c_IReseller
-			$this->UpdateSort($this->c_ICClass, $bCtrl); // c_ICClass
+			$this->UpdateSort($this->q_Min_Chequeo, $bCtrl); // q_Min_Chequeo
+			$this->UpdateSort($this->q_Min_VentChequeo, $bCtrl); // q_Min_VentChequeo
+			$this->UpdateSort($this->f_Ult_Chequeo, $bCtrl); // f_Ult_Chequeo
+			$this->UpdateSort($this->x_Usuario_Api, $bCtrl); // x_Usuario_Api
+			$this->UpdateSort($this->x_Passw_Api, $bCtrl); // x_Passw_Api
+			$this->UpdateSort($this->x_Url_Wsdl, $bCtrl); // x_Url_Wsdl
+			$this->UpdateSort($this->f_Ult_Mod, $bCtrl); // f_Ult_Mod
+			$this->UpdateSort($this->c_Usuario_Ult_Mod, $bCtrl); // c_Usuario_Ult_Mod
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -531,10 +527,14 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->cl_Accion->setSort("");
-				$this->t_Accion->setSort("");
-				$this->c_IReseller->setSort("");
-				$this->c_ICClass->setSort("");
+				$this->q_Min_Chequeo->setSort("");
+				$this->q_Min_VentChequeo->setSort("");
+				$this->f_Ult_Chequeo->setSort("");
+				$this->x_Usuario_Api->setSort("");
+				$this->x_Passw_Api->setSort("");
+				$this->x_Url_Wsdl->setSort("");
+				$this->f_Ult_Mod->setSort("");
+				$this->c_Usuario_Ult_Mod->setSort("");
 			}
 
 			// Reset start position
@@ -553,21 +553,9 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		$item->OnLeft = FALSE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->Add("view");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = TRUE;
-		$item->OnLeft = FALSE;
-
-		// "edit"
-		$item = &$this->ListOptions->Add("edit");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = TRUE;
-		$item->OnLeft = FALSE;
-
 		// "checkbox"
 		$item = &$this->ListOptions->Add("checkbox");
-		$item->Visible = TRUE;
+		$item->Visible = FALSE;
 		$item->OnLeft = FALSE;
 		$item->Header = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key\" id=\"key\" onclick=\"ew_SelectAllKey(this);\"></label>";
 		$item->ShowInDropDown = FALSE;
@@ -590,24 +578,8 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		global $Security, $Language, $objForm;
 		$this->ListOptions->LoadDefault();
 
-		// "view"
-		$oListOpt = &$this->ListOptions->Items["view"];
-		if (TRUE)
-			$oListOpt->Body = "<a class=\"ewRowLink ewView\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("ViewLink")) . "\" href=\"" . ew_HtmlEncode($this->ViewUrl) . "\">" . $Language->Phrase("ViewLink") . "</a>";
-		else
-			$oListOpt->Body = "";
-
-		// "edit"
-		$oListOpt = &$this->ListOptions->Items["edit"];
-		if (TRUE) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewEdit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("EditLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->cl_Accion->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->t_Accion->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IReseller->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_ICClass->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -618,18 +590,7 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 	function SetupOtherOptions() {
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
-		$option = $options["addedit"];
-
-		// Add
-		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAddEdit ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
-		$item->Visible = ($this->AddUrl <> "");
 		$option = $options["action"];
-
-		// Add multi delete
-		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_acc_cuentaslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
-		$item->Visible = (TRUE);
 
 		// Set up options default
 		foreach ($options as &$option) {
@@ -654,7 +615,7 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 
 				// Add custom action
 				$item = &$option->Add("custom_" . $action);
-				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_acc_cuentaslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
+				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_configlist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
 			}
 
 			// Hide grid edit, multi-delete and multi-update
@@ -803,13 +764,12 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		// Call Row Selected event
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
-		$this->cl_Accion->setDbValue($rs->fields('cl_Accion'));
-		$this->t_Accion->setDbValue($rs->fields('t_Accion'));
-		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
-		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
-		$this->x_DirCorreo->setDbValue($rs->fields('x_DirCorreo'));
-		$this->x_Titulo->setDbValue($rs->fields('x_Titulo'));
-		$this->x_Mensaje->setDbValue($rs->fields('x_Mensaje'));
+		$this->q_Min_Chequeo->setDbValue($rs->fields('q_Min_Chequeo'));
+		$this->q_Min_VentChequeo->setDbValue($rs->fields('q_Min_VentChequeo'));
+		$this->f_Ult_Chequeo->setDbValue($rs->fields('f_Ult_Chequeo'));
+		$this->x_Usuario_Api->setDbValue($rs->fields('x_Usuario_Api'));
+		$this->x_Passw_Api->setDbValue($rs->fields('x_Passw_Api'));
+		$this->x_Url_Wsdl->setDbValue($rs->fields('x_Url_Wsdl'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -818,13 +778,12 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 	function LoadDbValues(&$rs) {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->cl_Accion->DbValue = $row['cl_Accion'];
-		$this->t_Accion->DbValue = $row['t_Accion'];
-		$this->c_IReseller->DbValue = $row['c_IReseller'];
-		$this->c_ICClass->DbValue = $row['c_ICClass'];
-		$this->x_DirCorreo->DbValue = $row['x_DirCorreo'];
-		$this->x_Titulo->DbValue = $row['x_Titulo'];
-		$this->x_Mensaje->DbValue = $row['x_Mensaje'];
+		$this->q_Min_Chequeo->DbValue = $row['q_Min_Chequeo'];
+		$this->q_Min_VentChequeo->DbValue = $row['q_Min_VentChequeo'];
+		$this->f_Ult_Chequeo->DbValue = $row['f_Ult_Chequeo'];
+		$this->x_Usuario_Api->DbValue = $row['x_Usuario_Api'];
+		$this->x_Passw_Api->DbValue = $row['x_Passw_Api'];
+		$this->x_Url_Wsdl->DbValue = $row['x_Url_Wsdl'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
 	}
@@ -834,22 +793,6 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("cl_Accion")) <> "")
-			$this->cl_Accion->CurrentValue = $this->getKey("cl_Accion"); // cl_Accion
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("t_Accion")) <> "")
-			$this->t_Accion->CurrentValue = $this->getKey("t_Accion"); // t_Accion
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("c_IReseller")) <> "")
-			$this->c_IReseller->CurrentValue = $this->getKey("c_IReseller"); // c_IReseller
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("c_ICClass")) <> "")
-			$this->c_ICClass->CurrentValue = $this->getKey("c_ICClass"); // c_ICClass
-		else
-			$bValidKey = FALSE;
 
 		// Load old recordset
 		if ($bValidKey) {
@@ -880,129 +823,41 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// cl_Accion
-		// t_Accion
-		// c_IReseller
-		// c_ICClass
-		// x_DirCorreo
-		// x_Titulo
-		// x_Mensaje
+		// q_Min_Chequeo
+		// q_Min_VentChequeo
+		// f_Ult_Chequeo
+		// x_Usuario_Api
+		// x_Passw_Api
+		// x_Url_Wsdl
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-			// cl_Accion
-			if (strval($this->cl_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->cl_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_CLASE_ACCION'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
+			// q_Min_Chequeo
+			$this->q_Min_Chequeo->ViewValue = $this->q_Min_Chequeo->CurrentValue;
+			$this->q_Min_Chequeo->ViewCustomAttributes = "";
 
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->cl_Accion, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->cl_Accion->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->cl_Accion->ViewValue = $this->cl_Accion->CurrentValue;
-				}
-			} else {
-				$this->cl_Accion->ViewValue = NULL;
-			}
-			$this->cl_Accion->ViewCustomAttributes = "";
+			// q_Min_VentChequeo
+			$this->q_Min_VentChequeo->ViewValue = $this->q_Min_VentChequeo->CurrentValue;
+			$this->q_Min_VentChequeo->ViewCustomAttributes = "";
 
-			// t_Accion
-			if (strval($this->t_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
+			// f_Ult_Chequeo
+			$this->f_Ult_Chequeo->ViewValue = $this->f_Ult_Chequeo->CurrentValue;
+			$this->f_Ult_Chequeo->ViewValue = ew_FormatDateTime($this->f_Ult_Chequeo->ViewValue, 7);
+			$this->f_Ult_Chequeo->ViewCustomAttributes = "";
 
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->t_Accion, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->t_Accion->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->t_Accion->ViewValue = $this->t_Accion->CurrentValue;
-				}
-			} else {
-				$this->t_Accion->ViewValue = NULL;
-			}
-			$this->t_Accion->ViewCustomAttributes = "";
+			// x_Usuario_Api
+			$this->x_Usuario_Api->ViewValue = $this->x_Usuario_Api->CurrentValue;
+			$this->x_Usuario_Api->ViewCustomAttributes = "";
 
-			// c_IReseller
-			if (strval($this->c_IReseller->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
-			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
-			$sWhereWrk = "";
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
+			// x_Passw_Api
+			$this->x_Passw_Api->ViewValue = $this->x_Passw_Api->CurrentValue;
+			$this->x_Passw_Api->ViewCustomAttributes = "";
 
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-				}
-			} else {
-				$this->c_IReseller->ViewValue = NULL;
-			}
-			$this->c_IReseller->ViewCustomAttributes = "";
-
-			// c_ICClass
-			if (strval($this->c_ICClass->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICClass->CurrentValue, EW_DATATYPE_STRING);
-			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
-			$sWhereWrk = "";
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_ICClass, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
-				}
-			} else {
-				$this->c_ICClass->ViewValue = NULL;
-			}
-			$this->c_ICClass->ViewCustomAttributes = "";
-
-			// x_DirCorreo
-			$this->x_DirCorreo->ViewValue = $this->x_DirCorreo->CurrentValue;
-			$this->x_DirCorreo->ViewCustomAttributes = "";
-
-			// x_Titulo
-			$this->x_Titulo->ViewValue = $this->x_Titulo->CurrentValue;
-			$this->x_Titulo->ViewCustomAttributes = "";
+			// x_Url_Wsdl
+			$this->x_Url_Wsdl->ViewValue = $this->x_Url_Wsdl->CurrentValue;
+			$this->x_Url_Wsdl->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
@@ -1013,25 +868,45 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 			$this->c_Usuario_Ult_Mod->ViewValue = $this->c_Usuario_Ult_Mod->CurrentValue;
 			$this->c_Usuario_Ult_Mod->ViewCustomAttributes = "";
 
-			// cl_Accion
-			$this->cl_Accion->LinkCustomAttributes = "";
-			$this->cl_Accion->HrefValue = "";
-			$this->cl_Accion->TooltipValue = "";
+			// q_Min_Chequeo
+			$this->q_Min_Chequeo->LinkCustomAttributes = "";
+			$this->q_Min_Chequeo->HrefValue = "";
+			$this->q_Min_Chequeo->TooltipValue = "";
 
-			// t_Accion
-			$this->t_Accion->LinkCustomAttributes = "";
-			$this->t_Accion->HrefValue = "";
-			$this->t_Accion->TooltipValue = "";
+			// q_Min_VentChequeo
+			$this->q_Min_VentChequeo->LinkCustomAttributes = "";
+			$this->q_Min_VentChequeo->HrefValue = "";
+			$this->q_Min_VentChequeo->TooltipValue = "";
 
-			// c_IReseller
-			$this->c_IReseller->LinkCustomAttributes = "";
-			$this->c_IReseller->HrefValue = "";
-			$this->c_IReseller->TooltipValue = "";
+			// f_Ult_Chequeo
+			$this->f_Ult_Chequeo->LinkCustomAttributes = "";
+			$this->f_Ult_Chequeo->HrefValue = "";
+			$this->f_Ult_Chequeo->TooltipValue = "";
 
-			// c_ICClass
-			$this->c_ICClass->LinkCustomAttributes = "";
-			$this->c_ICClass->HrefValue = "";
-			$this->c_ICClass->TooltipValue = "";
+			// x_Usuario_Api
+			$this->x_Usuario_Api->LinkCustomAttributes = "";
+			$this->x_Usuario_Api->HrefValue = "";
+			$this->x_Usuario_Api->TooltipValue = "";
+
+			// x_Passw_Api
+			$this->x_Passw_Api->LinkCustomAttributes = "";
+			$this->x_Passw_Api->HrefValue = "";
+			$this->x_Passw_Api->TooltipValue = "";
+
+			// x_Url_Wsdl
+			$this->x_Url_Wsdl->LinkCustomAttributes = "";
+			$this->x_Url_Wsdl->HrefValue = "";
+			$this->x_Url_Wsdl->TooltipValue = "";
+
+			// f_Ult_Mod
+			$this->f_Ult_Mod->LinkCustomAttributes = "";
+			$this->f_Ult_Mod->HrefValue = "";
+			$this->f_Ult_Mod->TooltipValue = "";
+
+			// c_Usuario_Ult_Mod
+			$this->c_Usuario_Ult_Mod->LinkCustomAttributes = "";
+			$this->c_Usuario_Ult_Mod->HrefValue = "";
+			$this->c_Usuario_Ult_Mod->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1080,7 +955,7 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
-		$item->Body = "<a id=\"emf_af_acc_cuentas\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_acc_cuentas',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_acc_cuentaslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a id=\"emf_af_config\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_config',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_configlist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1272,35 +1147,35 @@ class caf_acc_cuentas_list extends caf_acc_cuentas {
 <?php
 
 // Create page object
-if (!isset($af_acc_cuentas_list)) $af_acc_cuentas_list = new caf_acc_cuentas_list();
+if (!isset($af_config_list)) $af_config_list = new caf_config_list();
 
 // Page init
-$af_acc_cuentas_list->Page_Init();
+$af_config_list->Page_Init();
 
 // Page main
-$af_acc_cuentas_list->Page_Main();
+$af_config_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_acc_cuentas_list->Page_Render();
+$af_config_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($af_acc_cuentas->Export == "") { ?>
+<?php if ($af_config->Export == "") { ?>
 <script type="text/javascript">
 
 // Page object
-var af_acc_cuentas_list = new ew_Page("af_acc_cuentas_list");
-af_acc_cuentas_list.PageID = "list"; // Page ID
-var EW_PAGE_ID = af_acc_cuentas_list.PageID; // For backward compatibility
+var af_config_list = new ew_Page("af_config_list");
+af_config_list.PageID = "list"; // Page ID
+var EW_PAGE_ID = af_config_list.PageID; // For backward compatibility
 
 // Form object
-var faf_acc_cuentaslist = new ew_Form("faf_acc_cuentaslist");
-faf_acc_cuentaslist.FormKeyCountName = '<?php echo $af_acc_cuentas_list->FormKeyCountName ?>';
+var faf_configlist = new ew_Form("faf_configlist");
+faf_configlist.FormKeyCountName = '<?php echo $af_config_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-faf_acc_cuentaslist.Form_CustomValidate = 
+faf_configlist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1309,274 +1184,264 @@ faf_acc_cuentaslist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_acc_cuentaslist.ValidateRequired = true;
+faf_configlist.ValidateRequired = true;
 <?php } else { ?>
-faf_acc_cuentaslist.ValidateRequired = false; 
+faf_configlist.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_acc_cuentaslist.Lists["x_cl_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_acc_cuentaslist.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_acc_cuentaslist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_acc_cuentaslist.Lists["x_c_ICClass"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($af_acc_cuentas->Export == "") { ?>
+<?php if ($af_config->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($af_acc_cuentas_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_acc_cuentas_list->ExportOptions->Render("body") ?></div>
+<?php if ($af_config_list->ExportOptions->Visible()) { ?>
+<div class="ewListExportOptions"><?php $af_config_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
 	if ($bSelectLimit) {
-		$af_acc_cuentas_list->TotalRecs = $af_acc_cuentas->SelectRecordCount();
+		$af_config_list->TotalRecs = $af_config->SelectRecordCount();
 	} else {
-		if ($af_acc_cuentas_list->Recordset = $af_acc_cuentas_list->LoadRecordset())
-			$af_acc_cuentas_list->TotalRecs = $af_acc_cuentas_list->Recordset->RecordCount();
+		if ($af_config_list->Recordset = $af_config_list->LoadRecordset())
+			$af_config_list->TotalRecs = $af_config_list->Recordset->RecordCount();
 	}
-	$af_acc_cuentas_list->StartRec = 1;
-	if ($af_acc_cuentas_list->DisplayRecs <= 0 || ($af_acc_cuentas->Export <> "" && $af_acc_cuentas->ExportAll)) // Display all records
-		$af_acc_cuentas_list->DisplayRecs = $af_acc_cuentas_list->TotalRecs;
-	if (!($af_acc_cuentas->Export <> "" && $af_acc_cuentas->ExportAll))
-		$af_acc_cuentas_list->SetUpStartRec(); // Set up start record position
+	$af_config_list->StartRec = 1;
+	if ($af_config_list->DisplayRecs <= 0 || ($af_config->Export <> "" && $af_config->ExportAll)) // Display all records
+		$af_config_list->DisplayRecs = $af_config_list->TotalRecs;
+	if (!($af_config->Export <> "" && $af_config->ExportAll))
+		$af_config_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$af_acc_cuentas_list->Recordset = $af_acc_cuentas_list->LoadRecordset($af_acc_cuentas_list->StartRec-1, $af_acc_cuentas_list->DisplayRecs);
-$af_acc_cuentas_list->RenderOtherOptions();
+		$af_config_list->Recordset = $af_config_list->LoadRecordset($af_config_list->StartRec-1, $af_config_list->DisplayRecs);
+$af_config_list->RenderOtherOptions();
 ?>
-<?php $af_acc_cuentas_list->ShowPageHeader(); ?>
+<?php $af_config_list->ShowPageHeader(); ?>
 <?php
-$af_acc_cuentas_list->ShowMessage();
+$af_config_list->ShowMessage();
 ?>
-
-							<?/******************************************************
-							************************FILTROS**************************
-							*********************************************************/?>
-<script type="text/javascript">
-$(document).on('change', '#select_accion', function() { 
-	if($(this).val() != 100){
-	$("#tbl_af_acc_cuentaslist tbody tr").hide();
-	$("#tbl_af_acc_cuentaslist" ).find( "span:contains('"+$(this).val()+ "')" ).parent().parent().show();
-	}else{
-		$("#tbl_af_acc_cuentaslist tbody tr").show();
-	}
-});
-</script>
-
-<label class= "filtro_label">Filtro Clase Acción</label>
-<select id= "select_accion" class= "filtro_select">
-	<option value = 100>Seleccione una Acción</option>
-<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-	$count = count($dom_accion);
-	$k = 1;
-	while ($k <= $count){
-		echo "<option value= ".$dom_accion[$k]['rv_Meaning']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-		$k++;
-	}
-
-?>
-
-</select>
-<br>
-
-<script type="text/javascript">
-$(document).on('change', '#select_tipo_accion', function() { 
-	if($(this).val() != 100){
-	$("#tbl_af_acc_cuentaslist tbody tr").hide();
-	$("#tbl_af_acc_cuentaslist" ).find( "span:contains('"+$(this).val().replace(/_/g , " ")+"')" ).parent().parent().show();
-	}else{
-		$("#tbl_af_acc_cuentaslist tbody tr").show();
-	}
-});
-</script>
-
-<label class= "filtro_label">Filtro Tipo Acción</label>
-<select id= "select_tipo_accion" class= "filtro_select">
-	<option value = 100>Seleccione un Tipo de Acción</option>
-<? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
-	$count = count($dom_tipo_accion);
-	$k = 1;
-	while ($k <= $count){
-		echo "<option value= ".str_replace(" ", "_", $dom_tipo_accion[$k]['rv_Meaning']). ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
-		$k++;
-	}
-
-?>
-
-</select>
-
-							<?/******************************************************
-							************************ENDFILTROS***********************
-							*********************************************************/?>
-
-
-
-							
-
-
 <table class="ewGrid"><tr><td class="ewGridContent">
-<form name="faf_acc_cuentaslist" id="faf_acc_cuentaslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_acc_cuentas">
-<div id="gmp_af_acc_cuentas" class="ewGridMiddlePanel">
-<?php if ($af_acc_cuentas_list->TotalRecs > 0) { ?>
-<table id="tbl_af_acc_cuentaslist" class="ewTable ewTableSeparate">
-<?php echo $af_acc_cuentas->TableCustomInnerHtml ?>
+<form name="faf_configlist" id="faf_configlist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_config">
+<div id="gmp_af_config" class="ewGridMiddlePanel">
+<?php if ($af_config_list->TotalRecs > 0) { ?>
+<table id="tbl_af_configlist" class="ewTable ewTableSeparate">
+<?php echo $af_config->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Render list options
-$af_acc_cuentas_list->RenderListOptions();
+$af_config_list->RenderListOptions();
 
 // Render list options (header, left)
-$af_acc_cuentas_list->ListOptions->Render("header", "left");
+$af_config_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($af_acc_cuentas->cl_Accion->Visible) { // cl_Accion ?>
-	<?php if ($af_acc_cuentas->SortUrl($af_acc_cuentas->cl_Accion) == "") { ?>
-		<td><div id="elh_af_acc_cuentas_cl_Accion" class="af_acc_cuentas_cl_Accion"><div class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->cl_Accion->FldCaption() ?></div></div></td>
+<?php if ($af_config->q_Min_Chequeo->Visible) { // q_Min_Chequeo ?>
+	<?php if ($af_config->SortUrl($af_config->q_Min_Chequeo) == "") { ?>
+		<td><div id="elh_af_config_q_Min_Chequeo" class="af_config_q_Min_Chequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->q_Min_Chequeo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_acc_cuentas->SortUrl($af_acc_cuentas->cl_Accion) ?>',2);"><div id="elh_af_acc_cuentas_cl_Accion" class="af_acc_cuentas_cl_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->cl_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_acc_cuentas->cl_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_acc_cuentas->cl_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->q_Min_Chequeo) ?>',2);"><div id="elh_af_config_q_Min_Chequeo" class="af_config_q_Min_Chequeo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->q_Min_Chequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->q_Min_Chequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->q_Min_Chequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_acc_cuentas->t_Accion->Visible) { // t_Accion ?>
-	<?php if ($af_acc_cuentas->SortUrl($af_acc_cuentas->t_Accion) == "") { ?>
-		<td><div id="elh_af_acc_cuentas_t_Accion" class="af_acc_cuentas_t_Accion"><div class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->t_Accion->FldCaption() ?></div></div></td>
+<?php if ($af_config->q_Min_VentChequeo->Visible) { // q_Min_VentChequeo ?>
+	<?php if ($af_config->SortUrl($af_config->q_Min_VentChequeo) == "") { ?>
+		<td><div id="elh_af_config_q_Min_VentChequeo" class="af_config_q_Min_VentChequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->q_Min_VentChequeo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_acc_cuentas->SortUrl($af_acc_cuentas->t_Accion) ?>',2);"><div id="elh_af_acc_cuentas_t_Accion" class="af_acc_cuentas_t_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->t_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_acc_cuentas->t_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_acc_cuentas->t_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->q_Min_VentChequeo) ?>',2);"><div id="elh_af_config_q_Min_VentChequeo" class="af_config_q_Min_VentChequeo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->q_Min_VentChequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->q_Min_VentChequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->q_Min_VentChequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_acc_cuentas->c_IReseller->Visible) { // c_IReseller ?>
-	<?php if ($af_acc_cuentas->SortUrl($af_acc_cuentas->c_IReseller) == "") { ?>
-		<td><div id="elh_af_acc_cuentas_c_IReseller" class="af_acc_cuentas_c_IReseller"><div class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->c_IReseller->FldCaption() ?></div></div></td>
+<?php if ($af_config->f_Ult_Chequeo->Visible) { // f_Ult_Chequeo ?>
+	<?php if ($af_config->SortUrl($af_config->f_Ult_Chequeo) == "") { ?>
+		<td><div id="elh_af_config_f_Ult_Chequeo" class="af_config_f_Ult_Chequeo"><div class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Chequeo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_acc_cuentas->SortUrl($af_acc_cuentas->c_IReseller) ?>',2);"><div id="elh_af_acc_cuentas_c_IReseller" class="af_acc_cuentas_c_IReseller">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->c_IReseller->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_acc_cuentas->c_IReseller->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_acc_cuentas->c_IReseller->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->f_Ult_Chequeo) ?>',2);"><div id="elh_af_config_f_Ult_Chequeo" class="af_config_f_Ult_Chequeo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Chequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->f_Ult_Chequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->f_Ult_Chequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_acc_cuentas->c_ICClass->Visible) { // c_ICClass ?>
-	<?php if ($af_acc_cuentas->SortUrl($af_acc_cuentas->c_ICClass) == "") { ?>
-		<td><div id="elh_af_acc_cuentas_c_ICClass" class="af_acc_cuentas_c_ICClass"><div class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->c_ICClass->FldCaption() ?></div></div></td>
+<?php if ($af_config->x_Usuario_Api->Visible) { // x_Usuario_Api ?>
+	<?php if ($af_config->SortUrl($af_config->x_Usuario_Api) == "") { ?>
+		<td><div id="elh_af_config_x_Usuario_Api" class="af_config_x_Usuario_Api"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Usuario_Api->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_acc_cuentas->SortUrl($af_acc_cuentas->c_ICClass) ?>',2);"><div id="elh_af_acc_cuentas_c_ICClass" class="af_acc_cuentas_c_ICClass">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_acc_cuentas->c_ICClass->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_acc_cuentas->c_ICClass->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_acc_cuentas->c_ICClass->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Usuario_Api) ?>',2);"><div id="elh_af_config_x_Usuario_Api" class="af_config_x_Usuario_Api">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Usuario_Api->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Usuario_Api->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Usuario_Api->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></td>
+	<?php } ?>
+<?php } ?>		
+<?php if ($af_config->x_Passw_Api->Visible) { // x_Passw_Api ?>
+	<?php if ($af_config->SortUrl($af_config->x_Passw_Api) == "") { ?>
+		<td><div id="elh_af_config_x_Passw_Api" class="af_config_x_Passw_Api"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Passw_Api->FldCaption() ?></div></div></td>
+	<?php } else { ?>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Passw_Api) ?>',2);"><div id="elh_af_config_x_Passw_Api" class="af_config_x_Passw_Api">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Passw_Api->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Passw_Api->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Passw_Api->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></td>
+	<?php } ?>
+<?php } ?>		
+<?php if ($af_config->x_Url_Wsdl->Visible) { // x_Url_Wsdl ?>
+	<?php if ($af_config->SortUrl($af_config->x_Url_Wsdl) == "") { ?>
+		<td><div id="elh_af_config_x_Url_Wsdl" class="af_config_x_Url_Wsdl"><div class="ewTableHeaderCaption"><?php echo $af_config->x_Url_Wsdl->FldCaption() ?></div></div></td>
+	<?php } else { ?>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->x_Url_Wsdl) ?>',2);"><div id="elh_af_config_x_Url_Wsdl" class="af_config_x_Url_Wsdl">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->x_Url_Wsdl->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->x_Url_Wsdl->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->x_Url_Wsdl->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></td>
+	<?php } ?>
+<?php } ?>		
+<?php if ($af_config->f_Ult_Mod->Visible) { // f_Ult_Mod ?>
+	<?php if ($af_config->SortUrl($af_config->f_Ult_Mod) == "") { ?>
+		<td><div id="elh_af_config_f_Ult_Mod" class="af_config_f_Ult_Mod"><div class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Mod->FldCaption() ?></div></div></td>
+	<?php } else { ?>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->f_Ult_Mod) ?>',2);"><div id="elh_af_config_f_Ult_Mod" class="af_config_f_Ult_Mod">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->f_Ult_Mod->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->f_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->f_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></td>
+	<?php } ?>
+<?php } ?>		
+<?php if ($af_config->c_Usuario_Ult_Mod->Visible) { // c_Usuario_Ult_Mod ?>
+	<?php if ($af_config->SortUrl($af_config->c_Usuario_Ult_Mod) == "") { ?>
+		<td><div id="elh_af_config_c_Usuario_Ult_Mod" class="af_config_c_Usuario_Ult_Mod"><div class="ewTableHeaderCaption"><?php echo $af_config->c_Usuario_Ult_Mod->FldCaption() ?></div></div></td>
+	<?php } else { ?>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_config->SortUrl($af_config->c_Usuario_Ult_Mod) ?>',2);"><div id="elh_af_config_c_Usuario_Ult_Mod" class="af_config_c_Usuario_Ult_Mod">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_config->c_Usuario_Ult_Mod->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_config->c_Usuario_Ult_Mod->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_config->c_Usuario_Ult_Mod->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$af_acc_cuentas_list->ListOptions->Render("header", "right");
+$af_config_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($af_acc_cuentas->ExportAll && $af_acc_cuentas->Export <> "") {
-	$af_acc_cuentas_list->StopRec = $af_acc_cuentas_list->TotalRecs;
+if ($af_config->ExportAll && $af_config->Export <> "") {
+	$af_config_list->StopRec = $af_config_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($af_acc_cuentas_list->TotalRecs > $af_acc_cuentas_list->StartRec + $af_acc_cuentas_list->DisplayRecs - 1)
-		$af_acc_cuentas_list->StopRec = $af_acc_cuentas_list->StartRec + $af_acc_cuentas_list->DisplayRecs - 1;
+	if ($af_config_list->TotalRecs > $af_config_list->StartRec + $af_config_list->DisplayRecs - 1)
+		$af_config_list->StopRec = $af_config_list->StartRec + $af_config_list->DisplayRecs - 1;
 	else
-		$af_acc_cuentas_list->StopRec = $af_acc_cuentas_list->TotalRecs;
+		$af_config_list->StopRec = $af_config_list->TotalRecs;
 }
-$af_acc_cuentas_list->RecCnt = $af_acc_cuentas_list->StartRec - 1;
-if ($af_acc_cuentas_list->Recordset && !$af_acc_cuentas_list->Recordset->EOF) {
-	$af_acc_cuentas_list->Recordset->MoveFirst();
-	if (!$bSelectLimit && $af_acc_cuentas_list->StartRec > 1)
-		$af_acc_cuentas_list->Recordset->Move($af_acc_cuentas_list->StartRec - 1);
-} elseif (!$af_acc_cuentas->AllowAddDeleteRow && $af_acc_cuentas_list->StopRec == 0) {
-	$af_acc_cuentas_list->StopRec = $af_acc_cuentas->GridAddRowCount;
+$af_config_list->RecCnt = $af_config_list->StartRec - 1;
+if ($af_config_list->Recordset && !$af_config_list->Recordset->EOF) {
+	$af_config_list->Recordset->MoveFirst();
+	if (!$bSelectLimit && $af_config_list->StartRec > 1)
+		$af_config_list->Recordset->Move($af_config_list->StartRec - 1);
+} elseif (!$af_config->AllowAddDeleteRow && $af_config_list->StopRec == 0) {
+	$af_config_list->StopRec = $af_config->GridAddRowCount;
 }
 
 // Initialize aggregate
-$af_acc_cuentas->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$af_acc_cuentas->ResetAttrs();
-$af_acc_cuentas_list->RenderRow();
-while ($af_acc_cuentas_list->RecCnt < $af_acc_cuentas_list->StopRec) {
-	$af_acc_cuentas_list->RecCnt++;
-	if (intval($af_acc_cuentas_list->RecCnt) >= intval($af_acc_cuentas_list->StartRec)) {
-		$af_acc_cuentas_list->RowCnt++;
+$af_config->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$af_config->ResetAttrs();
+$af_config_list->RenderRow();
+while ($af_config_list->RecCnt < $af_config_list->StopRec) {
+	$af_config_list->RecCnt++;
+	if (intval($af_config_list->RecCnt) >= intval($af_config_list->StartRec)) {
+		$af_config_list->RowCnt++;
 
 		// Set up key count
-		$af_acc_cuentas_list->KeyCount = $af_acc_cuentas_list->RowIndex;
+		$af_config_list->KeyCount = $af_config_list->RowIndex;
 
 		// Init row class and style
-		$af_acc_cuentas->ResetAttrs();
-		$af_acc_cuentas->CssClass = "";
-		if ($af_acc_cuentas->CurrentAction == "gridadd") {
+		$af_config->ResetAttrs();
+		$af_config->CssClass = "";
+		if ($af_config->CurrentAction == "gridadd") {
 		} else {
-			$af_acc_cuentas_list->LoadRowValues($af_acc_cuentas_list->Recordset); // Load row values
+			$af_config_list->LoadRowValues($af_config_list->Recordset); // Load row values
 		}
-		$af_acc_cuentas->RowType = EW_ROWTYPE_VIEW; // Render view
+		$af_config->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$af_acc_cuentas->RowAttrs = array_merge($af_acc_cuentas->RowAttrs, array('data-rowindex'=>$af_acc_cuentas_list->RowCnt, 'id'=>'r' . $af_acc_cuentas_list->RowCnt . '_af_acc_cuentas', 'data-rowtype'=>$af_acc_cuentas->RowType));
+		$af_config->RowAttrs = array_merge($af_config->RowAttrs, array('data-rowindex'=>$af_config_list->RowCnt, 'id'=>'r' . $af_config_list->RowCnt . '_af_config', 'data-rowtype'=>$af_config->RowType));
 
 		// Render row
-		$af_acc_cuentas_list->RenderRow();
+		$af_config_list->RenderRow();
 
 		// Render list options
-		$af_acc_cuentas_list->RenderListOptions();
+		$af_config_list->RenderListOptions();
 ?>
-	<tr<?php echo $af_acc_cuentas->RowAttributes() ?>>
+	<tr<?php echo $af_config->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$af_acc_cuentas_list->ListOptions->Render("body", "left", $af_acc_cuentas_list->RowCnt);
+$af_config_list->ListOptions->Render("body", "left", $af_config_list->RowCnt);
 ?>
-	<?php if ($af_acc_cuentas->cl_Accion->Visible) { // cl_Accion ?>
-		<td<?php echo $af_acc_cuentas->cl_Accion->CellAttributes() ?>>
-<span<?php echo $af_acc_cuentas->cl_Accion->ViewAttributes() ?>>
-<?php echo $af_acc_cuentas->cl_Accion->ListViewValue() ?></span>
-<a id="<?php echo $af_acc_cuentas_list->PageObjName . "_row_" . $af_acc_cuentas_list->RowCnt ?>"></a></td>
+	<?php if ($af_config->q_Min_Chequeo->Visible) { // q_Min_Chequeo ?>
+		<td<?php echo $af_config->q_Min_Chequeo->CellAttributes() ?>>
+<span<?php echo $af_config->q_Min_Chequeo->ViewAttributes() ?>>
+<?php echo $af_config->q_Min_Chequeo->ListViewValue() ?></span>
+<a id="<?php echo $af_config_list->PageObjName . "_row_" . $af_config_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($af_acc_cuentas->t_Accion->Visible) { // t_Accion ?>
-		<td<?php echo $af_acc_cuentas->t_Accion->CellAttributes() ?>>
-<span<?php echo $af_acc_cuentas->t_Accion->ViewAttributes() ?>>
-<?php echo $af_acc_cuentas->t_Accion->ListViewValue() ?></span>
+	<?php if ($af_config->q_Min_VentChequeo->Visible) { // q_Min_VentChequeo ?>
+		<td<?php echo $af_config->q_Min_VentChequeo->CellAttributes() ?>>
+<span<?php echo $af_config->q_Min_VentChequeo->ViewAttributes() ?>>
+<?php echo $af_config->q_Min_VentChequeo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_acc_cuentas->c_IReseller->Visible) { // c_IReseller ?>
-		<td<?php echo $af_acc_cuentas->c_IReseller->CellAttributes() ?>>
-<span<?php echo $af_acc_cuentas->c_IReseller->ViewAttributes() ?>>
-<?php echo $af_acc_cuentas->c_IReseller->ListViewValue() ?></span>
+	<?php if ($af_config->f_Ult_Chequeo->Visible) { // f_Ult_Chequeo ?>
+		<td<?php echo $af_config->f_Ult_Chequeo->CellAttributes() ?>>
+<span<?php echo $af_config->f_Ult_Chequeo->ViewAttributes() ?>>
+<?php echo $af_config->f_Ult_Chequeo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_acc_cuentas->c_ICClass->Visible) { // c_ICClass ?>
-		<td<?php echo $af_acc_cuentas->c_ICClass->CellAttributes() ?>>
-<span<?php echo $af_acc_cuentas->c_ICClass->ViewAttributes() ?>>
-<?php echo $af_acc_cuentas->c_ICClass->ListViewValue() ?></span>
+	<?php if ($af_config->x_Usuario_Api->Visible) { // x_Usuario_Api ?>
+		<td<?php echo $af_config->x_Usuario_Api->CellAttributes() ?>>
+<span<?php echo $af_config->x_Usuario_Api->ViewAttributes() ?>>
+<?php echo $af_config->x_Usuario_Api->ListViewValue() ?></span>
+</td>
+	<?php } ?>
+	<?php if ($af_config->x_Passw_Api->Visible) { // x_Passw_Api ?>
+		<td<?php echo $af_config->x_Passw_Api->CellAttributes() ?>>
+<span<?php echo $af_config->x_Passw_Api->ViewAttributes() ?>>
+<?php echo $af_config->x_Passw_Api->ListViewValue() ?></span>
+</td>
+	<?php } ?>
+	<?php if ($af_config->x_Url_Wsdl->Visible) { // x_Url_Wsdl ?>
+		<td<?php echo $af_config->x_Url_Wsdl->CellAttributes() ?>>
+<span<?php echo $af_config->x_Url_Wsdl->ViewAttributes() ?>>
+<?php echo $af_config->x_Url_Wsdl->ListViewValue() ?></span>
+</td>
+	<?php } ?>
+	<?php if ($af_config->f_Ult_Mod->Visible) { // f_Ult_Mod ?>
+		<td<?php echo $af_config->f_Ult_Mod->CellAttributes() ?>>
+<span<?php echo $af_config->f_Ult_Mod->ViewAttributes() ?>>
+<?php echo $af_config->f_Ult_Mod->ListViewValue() ?></span>
+</td>
+	<?php } ?>
+	<?php if ($af_config->c_Usuario_Ult_Mod->Visible) { // c_Usuario_Ult_Mod ?>
+		<td<?php echo $af_config->c_Usuario_Ult_Mod->CellAttributes() ?>>
+<span<?php echo $af_config->c_Usuario_Ult_Mod->ViewAttributes() ?>>
+<?php echo $af_config->c_Usuario_Ult_Mod->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$af_acc_cuentas_list->ListOptions->Render("body", "right", $af_acc_cuentas_list->RowCnt);
+$af_config_list->ListOptions->Render("body", "right", $af_config_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($af_acc_cuentas->CurrentAction <> "gridadd")
-		$af_acc_cuentas_list->Recordset->MoveNext();
+	if ($af_config->CurrentAction <> "gridadd")
+		$af_config_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($af_acc_cuentas->CurrentAction == "") { ?>
+<?php if ($af_config->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -1584,43 +1449,43 @@ $af_acc_cuentas_list->ListOptions->Render("body", "right", $af_acc_cuentas_list-
 <?php
 
 // Close recordset
-if ($af_acc_cuentas_list->Recordset)
-	$af_acc_cuentas_list->Recordset->Close();
+if ($af_config_list->Recordset)
+	$af_config_list->Recordset->Close();
 ?>
-<?php if ($af_acc_cuentas->Export == "") { ?>
+<?php if ($af_config->Export == "") { ?>
 <div class="ewGridLowerPanel">
-<?php if ($af_acc_cuentas->CurrentAction <> "gridadd" && $af_acc_cuentas->CurrentAction <> "gridedit") { ?>
+<?php if ($af_config->CurrentAction <> "gridadd" && $af_config->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
 <table class="ewPager">
 <tr><td>
-<?php if (!isset($af_acc_cuentas_list->Pager)) $af_acc_cuentas_list->Pager = new cNumericPager($af_acc_cuentas_list->StartRec, $af_acc_cuentas_list->DisplayRecs, $af_acc_cuentas_list->TotalRecs, $af_acc_cuentas_list->RecRange) ?>
-<?php if ($af_acc_cuentas_list->Pager->RecordCount > 0) { ?>
+<?php if (!isset($af_config_list->Pager)) $af_config_list->Pager = new cNumericPager($af_config_list->StartRec, $af_config_list->DisplayRecs, $af_config_list->TotalRecs, $af_config_list->RecRange) ?>
+<?php if ($af_config_list->Pager->RecordCount > 0) { ?>
 <table class="ewStdTable"><tbody><tr><td>
 <div class="pagination"><ul>
-	<?php if ($af_acc_cuentas_list->Pager->FirstButton->Enabled) { ?>
-	<li><a href="<?php echo $af_acc_cuentas_list->PageUrl() ?>start=<?php echo $af_acc_cuentas_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php if ($af_config_list->Pager->FirstButton->Enabled) { ?>
+	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
 	<?php } ?>
-	<?php if ($af_acc_cuentas_list->Pager->PrevButton->Enabled) { ?>
-	<li><a href="<?php echo $af_acc_cuentas_list->PageUrl() ?>start=<?php echo $af_acc_cuentas_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php if ($af_config_list->Pager->PrevButton->Enabled) { ?>
+	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
 	<?php } ?>
-	<?php foreach ($af_acc_cuentas_list->Pager->Items as $PagerItem) { ?>
-		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_acc_cuentas_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
+	<?php foreach ($af_config_list->Pager->Items as $PagerItem) { ?>
+		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_config_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
 	<?php } ?>
-	<?php if ($af_acc_cuentas_list->Pager->NextButton->Enabled) { ?>
-	<li><a href="<?php echo $af_acc_cuentas_list->PageUrl() ?>start=<?php echo $af_acc_cuentas_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php if ($af_config_list->Pager->NextButton->Enabled) { ?>
+	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
 	<?php } ?>
-	<?php if ($af_acc_cuentas_list->Pager->LastButton->Enabled) { ?>
-	<li><a href="<?php echo $af_acc_cuentas_list->PageUrl() ?>start=<?php echo $af_acc_cuentas_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php if ($af_config_list->Pager->LastButton->Enabled) { ?>
+	<li><a href="<?php echo $af_config_list->PageUrl() ?>start=<?php echo $af_config_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
 	<?php } ?>
 </ul></div>
 </td>
 <td>
-	<?php if ($af_acc_cuentas_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
-	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_acc_cuentas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_acc_cuentas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_acc_cuentas_list->Pager->RecordCount ?>
+	<?php if ($af_config_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
+	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_config_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_config_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_config_list->Pager->RecordCount ?>
 </td>
 </tr></tbody></table>
 <?php } else { ?>
-	<?php if ($af_acc_cuentas_list->SearchWhere == "0=101") { ?>
+	<?php if ($af_config_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
 	<p><?php echo $Language->Phrase("NoRecord") ?></p>
@@ -1632,27 +1497,27 @@ if ($af_acc_cuentas_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($af_acc_cuentas_list->OtherOptions as &$option)
+	foreach ($af_config_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
 </div>
 <?php } ?>
 </td></tr></table>
-<?php if ($af_acc_cuentas->Export == "") { ?>
+<?php if ($af_config->Export == "") { ?>
 <script type="text/javascript">
-faf_acc_cuentaslist.Init();
+faf_configlist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php } ?>
 <?php
-$af_acc_cuentas_list->ShowPageFooter();
+$af_config_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($af_acc_cuentas->Export == "") { ?>
+<?php if ($af_config->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1662,5 +1527,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$af_acc_cuentas_list->Page_Terminate();
+$af_config_list->Page_Terminate();
 ?>

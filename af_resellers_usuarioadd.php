@@ -404,6 +404,11 @@ class caf_resellers_usuario_add extends caf_resellers_usuario {
 			$this->c_Usuario->VirtualValue = ""; // Clear value
 		}
 		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
+		if (array_key_exists('EV__c_IReseller', $rs->fields)) {
+			$this->c_IReseller->VirtualValue = $rs->fields('EV__c_IReseller'); // Set up virtual field value
+		} else {
+			$this->c_IReseller->VirtualValue = ""; // Clear value
+		}
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -466,7 +471,6 @@ class caf_resellers_usuario_add extends caf_resellers_usuario {
 			if ($this->c_Usuario->VirtualValue <> "") {
 				$this->c_Usuario->ViewValue = $this->c_Usuario->VirtualValue;
 			} else {
-				$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
 			if (strval($this->c_Usuario->CurrentValue) <> "") {
 				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_Usuario->CurrentValue, EW_DATATYPE_STRING);
 			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
@@ -492,7 +496,31 @@ class caf_resellers_usuario_add extends caf_resellers_usuario {
 			$this->c_Usuario->ViewCustomAttributes = "";
 
 			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			if ($this->c_IReseller->VirtualValue <> "") {
+				$this->c_IReseller->ViewValue = $this->c_IReseller->VirtualValue;
+			} else {
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->ViewValue = NULL;
+			}
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
@@ -527,13 +555,39 @@ class caf_resellers_usuario_add extends caf_resellers_usuario {
 
 			// c_Usuario
 			$this->c_Usuario->EditCustomAttributes = "";
-			$this->c_Usuario->EditValue = ew_HtmlEncode($this->c_Usuario->CurrentValue);
-			$this->c_Usuario->PlaceHolder = ew_RemoveHtml($this->c_Usuario->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_Usuario, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_Usuario->EditValue = $arwrk;
 
 			// c_IReseller
 			$this->c_IReseller->EditCustomAttributes = "";
-			$this->c_IReseller->EditValue = ew_HtmlEncode($this->c_IReseller->CurrentValue);
-			$this->c_IReseller->PlaceHolder = ew_RemoveHtml($this->c_IReseller->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_IReseller->EditValue = $arwrk;
 
 			// f_Ult_Mod
 			// c_Usuario_Ult_Mod
@@ -837,7 +891,8 @@ faf_resellers_usuarioadd.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-faf_resellers_usuarioadd.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":true,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuarioadd.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuarioadd.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -860,29 +915,26 @@ $af_resellers_usuario_add->ShowMessage();
 		<td><span id="elh_af_resellers_usuario_c_Usuario"><?php echo $af_resellers_usuario->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_resellers_usuario->c_Usuario->CellAttributes() ?>>
 <span id="el_af_resellers_usuario_c_Usuario" class="control-group">
+<select data-field="x_c_Usuario" id="x_c_Usuario" name="x_c_Usuario"<?php echo $af_resellers_usuario->c_Usuario->EditAttributes() ?>>
 <?php
-	$wrkonchange = trim(" " . @$af_resellers_usuario->c_Usuario->EditAttrs["onchange"]);
-	if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
-	$af_resellers_usuario->c_Usuario->EditAttrs["onchange"] = "";
+if (is_array($af_resellers_usuario->c_Usuario->EditValue)) {
+	$arwrk = $af_resellers_usuario->c_Usuario->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_resellers_usuario->c_Usuario->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
 ?>
-<span id="as_x_c_Usuario" style="white-space: nowrap; z-index: 8990">
-	<input type="text" name="sv_x_c_Usuario" id="sv_x_c_Usuario" value="<?php echo $af_resellers_usuario->c_Usuario->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($af_resellers_usuario->c_Usuario->PlaceHolder) ?>"<?php echo $af_resellers_usuario->c_Usuario->EditAttributes() ?>>&nbsp;<span id="em_x_c_Usuario" class="ewMessage" style="display: none"><?php echo str_replace("%f", "phpimages/", $Language->Phrase("UnmatchedValue")) ?></span>
-	<div id="sc_x_c_Usuario" style="display: inline; z-index: 8990"></div>
-</span>
-<input type="hidden" data-field="x_c_Usuario" name="x_c_Usuario" id="x_c_Usuario" value="<?php echo ew_HtmlEncode($af_resellers_usuario->c_Usuario->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
 <?php
-$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld` FROM `af_usuarios`";
-$sWhereWrk = "`c_Usuario` LIKE '{query_value}%'";
-
-// Call Lookup selecting
-$af_resellers_usuario->Lookup_Selecting($af_resellers_usuario->c_Usuario, $sWhereWrk);
-if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+	}
+}
 ?>
-<input type="hidden" name="q_x_c_Usuario" id="q_x_c_Usuario" value="s=<?php echo ew_Encrypt($sSqlWrk) ?>">
+</select>
 <script type="text/javascript">
-var oas = new ew_AutoSuggest("x_c_Usuario", faf_resellers_usuarioadd, false, EW_AUTO_SUGGEST_MAX_ENTRIES);
-faf_resellers_usuarioadd.AutoSuggests["x_c_Usuario"] = oas;
+faf_resellers_usuarioadd.Lists["x_c_Usuario"].Options = <?php echo (is_array($af_resellers_usuario->c_Usuario->EditValue)) ? ew_ArrayToJson($af_resellers_usuario->c_Usuario->EditValue, 1) : "[]" ?>;
 </script>
 </span>
 <?php echo $af_resellers_usuario->c_Usuario->CustomMsg ?></td>
@@ -893,7 +945,27 @@ faf_resellers_usuarioadd.AutoSuggests["x_c_Usuario"] = oas;
 		<td><span id="elh_af_resellers_usuario_c_IReseller"><?php echo $af_resellers_usuario->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_resellers_usuario->c_IReseller->CellAttributes() ?>>
 <span id="el_af_resellers_usuario_c_IReseller" class="control-group">
-<input type="text" data-field="x_c_IReseller" name="x_c_IReseller" id="x_c_IReseller" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_resellers_usuario->c_IReseller->PlaceHolder) ?>" value="<?php echo $af_resellers_usuario->c_IReseller->EditValue ?>"<?php echo $af_resellers_usuario->c_IReseller->EditAttributes() ?>>
+<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_resellers_usuario->c_IReseller->EditAttributes() ?>>
+<?php
+if (is_array($af_resellers_usuario->c_IReseller->EditValue)) {
+	$arwrk = $af_resellers_usuario->c_IReseller->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_resellers_usuario->c_IReseller->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_resellers_usuarioadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_resellers_usuario->c_IReseller->EditValue)) ? ew_ArrayToJson($af_resellers_usuario->c_IReseller->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_resellers_usuario->c_IReseller->CustomMsg ?></td>
 	</tr>

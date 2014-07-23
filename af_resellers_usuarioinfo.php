@@ -37,11 +37,11 @@ class caf_resellers_usuario extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// c_Usuario
-		$this->c_Usuario = new cField('af_resellers_usuario', 'af_resellers_usuario', 'x_c_Usuario', 'c_Usuario', '`c_Usuario`', '`c_Usuario`', 200, -1, FALSE, '`EV__c_Usuario`', TRUE, FALSE, TRUE, 'FORMATTED TEXT');
+		$this->c_Usuario = new cField('af_resellers_usuario', 'af_resellers_usuario', 'x_c_Usuario', 'c_Usuario', '`c_Usuario`', '`c_Usuario`', 200, -1, FALSE, '`EV__c_Usuario`', TRUE, TRUE, TRUE, 'FORMATTED TEXT');
 		$this->fields['c_Usuario'] = &$this->c_Usuario;
 
 		// c_IReseller
-		$this->c_IReseller = new cField('af_resellers_usuario', 'af_resellers_usuario', 'x_c_IReseller', 'c_IReseller', '`c_IReseller`', '`c_IReseller`', 200, -1, FALSE, '`c_IReseller`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_IReseller = new cField('af_resellers_usuario', 'af_resellers_usuario', 'x_c_IReseller', 'c_IReseller', '`c_IReseller`', '`c_IReseller`', 200, -1, FALSE, '`EV__c_IReseller`', TRUE, TRUE, TRUE, 'FORMATTED TEXT');
 		$this->fields['c_IReseller'] = &$this->c_IReseller;
 
 		// f_Ult_Mod
@@ -115,7 +115,7 @@ class caf_resellers_usuario extends cTable {
 
 	function SqlSelectList() { // Select for List page
 		return "SELECT * FROM (" .
-			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario` FROM `af_resellers_usuario`" .
+			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario`, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_IReseller` LIMIT 1) AS `EV__c_IReseller` FROM `af_resellers_usuario`" .
 			") `EW_TMP_TABLE`";
 	}
 
@@ -247,6 +247,12 @@ class caf_resellers_usuario extends cTable {
 			strpos($sWhere, " " . $this->c_Usuario->FldVirtualExpression . " ") !== FALSE)
 			return TRUE;
 		if (strpos($sOrderBy, " " . $this->c_Usuario->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if ($this->c_IReseller->AdvancedSearch->SearchValue <> "" ||
+			$this->c_IReseller->AdvancedSearch->SearchValue2 <> "" ||
+			strpos($sWhere, " " . $this->c_IReseller->FldVirtualExpression . " ") !== FALSE)
+			return TRUE;
+		if (strpos($sOrderBy, " " . $this->c_IReseller->FldVirtualExpression . " ") !== FALSE)
 			return TRUE;
 		return FALSE;
 	}
@@ -570,7 +576,6 @@ class caf_resellers_usuario extends cTable {
 		if ($this->c_Usuario->VirtualValue <> "") {
 			$this->c_Usuario->ViewValue = $this->c_Usuario->VirtualValue;
 		} else {
-			$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
 		if (strval($this->c_Usuario->CurrentValue) <> "") {
 			$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_Usuario->CurrentValue, EW_DATATYPE_STRING);
 		$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
@@ -596,7 +601,31 @@ class caf_resellers_usuario extends cTable {
 		$this->c_Usuario->ViewCustomAttributes = "";
 
 		// c_IReseller
-		$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+		if ($this->c_IReseller->VirtualValue <> "") {
+			$this->c_IReseller->ViewValue = $this->c_IReseller->VirtualValue;
+		} else {
+		if (strval($this->c_IReseller->CurrentValue) <> "") {
+			$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+		$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+		$sWhereWrk = "";
+		if ($sFilterWrk <> "") {
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+		}
+
+		// Call Lookup selecting
+		$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+				$rswrk->Close();
+			} else {
+				$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			}
+		} else {
+			$this->c_IReseller->ViewValue = NULL;
+		}
+		}
 		$this->c_IReseller->ViewCustomAttributes = "";
 
 		// f_Ult_Mod

@@ -398,7 +398,7 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 			} else {
 			if (strval($this->c_IReporte->CurrentValue) <> "") {
 				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, `x_NbReporte` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
@@ -410,6 +410,7 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					$this->c_IReporte->ViewValue .= ew_ValueSeparator(1,$this->c_IReporte) . $rswrk->fields('Disp2Fld');
 					$rswrk->Close();
 				} else {
 					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
@@ -640,7 +641,7 @@ faf_reportes_usuariodelete.ValidateRequired = false;
 
 // Dynamic selection lists
 faf_reportes_usuariodelete.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_reportes_usuariodelete.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_reportes_usuariodelete.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","x_x_NbReporte","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>

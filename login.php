@@ -117,7 +117,7 @@ date_default_timezone_set('America/Caracas');
                 
                 $registrado = select_sql("select_usuario",$_SESSION["USUARIO"]);
                 $activo = select_sql("select_usuario_activo",$_SESSION["USUARIO"]);
-                
+                print_r($activo);
                 if ((!isset($registrado[1]["c_Usuario"])) || (!isset($activo[1]["c_Usuario"]))) {
                     $_SESSION = array();
                     echo "<h5 id='error'>ERROR: Login o password inv&aacute;lido<br><br></h5>";

@@ -327,6 +327,11 @@ class caf_resellers_usuario_delete extends caf_resellers_usuario {
 			$this->c_Usuario->VirtualValue = ""; // Clear value
 		}
 		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
+		if (array_key_exists('EV__c_IReseller', $rs->fields)) {
+			$this->c_IReseller->VirtualValue = $rs->fields('EV__c_IReseller'); // Set up virtual field value
+		} else {
+			$this->c_IReseller->VirtualValue = ""; // Clear value
+		}
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -363,7 +368,6 @@ class caf_resellers_usuario_delete extends caf_resellers_usuario {
 			if ($this->c_Usuario->VirtualValue <> "") {
 				$this->c_Usuario->ViewValue = $this->c_Usuario->VirtualValue;
 			} else {
-				$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
 			if (strval($this->c_Usuario->CurrentValue) <> "") {
 				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_Usuario->CurrentValue, EW_DATATYPE_STRING);
 			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
@@ -389,7 +393,31 @@ class caf_resellers_usuario_delete extends caf_resellers_usuario {
 			$this->c_Usuario->ViewCustomAttributes = "";
 
 			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			if ($this->c_IReseller->VirtualValue <> "") {
+				$this->c_IReseller->ViewValue = $this->c_IReseller->VirtualValue;
+			} else {
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->ViewValue = NULL;
+			}
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
@@ -621,7 +649,8 @@ faf_resellers_usuariodelete.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-faf_resellers_usuariodelete.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":true,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuariodelete.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_resellers_usuariodelete.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>

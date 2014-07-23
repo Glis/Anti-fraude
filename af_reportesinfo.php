@@ -236,6 +236,8 @@ class caf_reportes extends cTable {
 			$sWhere = " " . str_replace(array("(",")"), array("",""), $sWhere) . " ";
 		if ($sOrderBy <> "")
 			$sOrderBy = " " . str_replace(array("(",")"), array("",""), $sOrderBy) . " ";
+		if ($this->BasicSearch->getKeyword() <> "")
+			return TRUE;
 		if ($this->c_IReporte->AdvancedSearch->SearchValue <> "" ||
 			$this->c_IReporte->AdvancedSearch->SearchValue2 <> "" ||
 			strpos($sWhere, " " . $this->c_IReporte->FldVirtualExpression . " ") !== FALSE)

@@ -116,7 +116,7 @@ class caf_reportes_usuario extends cTable {
 
 	function SqlSelectList() { // Select for List page
 		return "SELECT * FROM (" .
-			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_reportes_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario`, (SELECT `c_IReporte` FROM `af_reportes` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_IReporte` = `af_reportes_usuario`.`c_IReporte` LIMIT 1) AS `EV__c_IReporte` FROM `af_reportes_usuario`" .
+			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_reportes_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario`, (SELECT CONCAT(`c_IReporte`,'" . ew_ValueSeparator(1, $this->c_IReporte) . "',`x_NbReporte`) FROM `af_reportes` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_IReporte` = `af_reportes_usuario`.`c_IReporte` LIMIT 1) AS `EV__c_IReporte` FROM `af_reportes_usuario`" .
 			") `EW_TMP_TABLE`";
 	}
 
@@ -611,7 +611,7 @@ class caf_reportes_usuario extends cTable {
 		} else {
 		if (strval($this->c_IReporte->CurrentValue) <> "") {
 			$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
-		$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+		$sSqlWrk = "SELECT `c_IReporte`, `c_IReporte` AS `DispFld`, `x_NbReporte` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
 		$sWhereWrk = "";
 		if ($sFilterWrk <> "") {
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
@@ -623,6 +623,7 @@ class caf_reportes_usuario extends cTable {
 			$rswrk = $conn->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+				$this->c_IReporte->ViewValue .= ew_ValueSeparator(1,$this->c_IReporte) . $rswrk->fields('Disp2Fld');
 				$rswrk->Close();
 			} else {
 				$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;

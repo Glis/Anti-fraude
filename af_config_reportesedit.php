@@ -511,15 +511,83 @@ class caf_config_reportes_edit extends caf_config_reportes {
 			$this->c_IConfig->ViewCustomAttributes = "";
 
 			// c_IReporte
-			$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
+			if (strval($this->c_IReporte->CurrentValue) <> "") {
+				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `c_IReporte`, `x_NbReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReporte, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
+				}
+			} else {
+				$this->c_IReporte->ViewValue = NULL;
+			}
 			$this->c_IReporte->ViewCustomAttributes = "";
 
 			// frec_Envio
-			$this->frec_Envio->ViewValue = $this->frec_Envio->CurrentValue;
+			if (strval($this->frec_Envio->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->frec_Envio->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_FREC_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->frec_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->frec_Envio->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->frec_Envio->ViewValue = $this->frec_Envio->CurrentValue;
+				}
+			} else {
+				$this->frec_Envio->ViewValue = NULL;
+			}
 			$this->frec_Envio->ViewCustomAttributes = "";
 
 			// i_Dia_Envio
-			$this->i_Dia_Envio->ViewValue = $this->i_Dia_Envio->CurrentValue;
+			if (strval($this->i_Dia_Envio->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Dia_Envio->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_DIA_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Dia_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->i_Dia_Envio->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->i_Dia_Envio->ViewValue = $this->i_Dia_Envio->CurrentValue;
+				}
+			} else {
+				$this->i_Dia_Envio->ViewValue = NULL;
+			}
 			$this->i_Dia_Envio->ViewCustomAttributes = "";
 
 			// x_Hora_Envio
@@ -527,15 +595,79 @@ class caf_config_reportes_edit extends caf_config_reportes {
 			$this->x_Hora_Envio->ViewCustomAttributes = "";
 
 			// p_Destino
-			$this->p_Destino->ViewValue = $this->p_Destino->CurrentValue;
+			if (strval($this->p_Destino->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->p_Destino->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_PARREP_DESTINO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Destino, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_Destino->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_Destino->ViewValue = $this->p_Destino->CurrentValue;
+				}
+			} else {
+				$this->p_Destino->ViewValue = NULL;
+			}
 			$this->p_Destino->ViewCustomAttributes = "";
 
 			// p_Reseller
-			$this->p_Reseller->ViewValue = $this->p_Reseller->CurrentValue;
+			if (strval($this->p_Reseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->p_Reseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Reseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_Reseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_Reseller->ViewValue = $this->p_Reseller->CurrentValue;
+				}
+			} else {
+				$this->p_Reseller->ViewValue = NULL;
+			}
 			$this->p_Reseller->ViewCustomAttributes = "";
 
 			// p_CClass
-			$this->p_CClass->ViewValue = $this->p_CClass->CurrentValue;
+			if (strval($this->p_CClass->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->p_CClass->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_CClass, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->p_CClass->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->p_CClass->ViewValue = $this->p_CClass->CurrentValue;
+				}
+			} else {
+				$this->p_CClass->ViewValue = NULL;
+			}
 			$this->p_CClass->ViewCustomAttributes = "";
 
 			// x_DirCorreo
@@ -632,18 +764,65 @@ class caf_config_reportes_edit extends caf_config_reportes {
 
 			// c_IReporte
 			$this->c_IReporte->EditCustomAttributes = "";
-			$this->c_IReporte->EditValue = ew_HtmlEncode($this->c_IReporte->CurrentValue);
-			$this->c_IReporte->PlaceHolder = ew_RemoveHtml($this->c_IReporte->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_IReporte`, `x_NbReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_reportes`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReporte, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_IReporte->EditValue = $arwrk;
 
 			// frec_Envio
 			$this->frec_Envio->EditCustomAttributes = "";
-			$this->frec_Envio->EditValue = ew_HtmlEncode($this->frec_Envio->CurrentValue);
-			$this->frec_Envio->PlaceHolder = ew_RemoveHtml($this->frec_Envio->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_FREC_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->frec_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->frec_Envio->EditValue = $arwrk;
 
 			// i_Dia_Envio
 			$this->i_Dia_Envio->EditCustomAttributes = "";
-			$this->i_Dia_Envio->EditValue = ew_HtmlEncode($this->i_Dia_Envio->CurrentValue);
-			$this->i_Dia_Envio->PlaceHolder = ew_RemoveHtml($this->i_Dia_Envio->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_DIA_ENVIO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Dia_Envio, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->i_Dia_Envio->EditValue = $arwrk;
 
 			// x_Hora_Envio
 			$this->x_Hora_Envio->EditCustomAttributes = "";
@@ -652,18 +831,61 @@ class caf_config_reportes_edit extends caf_config_reportes {
 
 			// p_Destino
 			$this->p_Destino->EditCustomAttributes = "";
-			$this->p_Destino->EditValue = ew_HtmlEncode($this->p_Destino->CurrentValue);
-			$this->p_Destino->PlaceHolder = ew_RemoveHtml($this->p_Destino->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_PARREP_DESTINO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Destino, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->p_Destino->EditValue = $arwrk;
 
 			// p_Reseller
 			$this->p_Reseller->EditCustomAttributes = "";
-			$this->p_Reseller->EditValue = ew_HtmlEncode($this->p_Reseller->CurrentValue);
-			$this->p_Reseller->PlaceHolder = ew_RemoveHtml($this->p_Reseller->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_Reseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->p_Reseller->EditValue = $arwrk;
 
 			// p_CClass
 			$this->p_CClass->EditCustomAttributes = "";
-			$this->p_CClass->EditValue = ew_HtmlEncode($this->p_CClass->CurrentValue);
-			$this->p_CClass->PlaceHolder = ew_RemoveHtml($this->p_CClass->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->p_CClass, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->p_CClass->EditValue = $arwrk;
 
 			// x_DirCorreo
 			$this->x_DirCorreo->EditCustomAttributes = "";
@@ -753,20 +975,11 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		if (!$this->c_IReporte->FldIsDetailKey && !is_null($this->c_IReporte->FormValue) && $this->c_IReporte->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_IReporte->FldCaption());
 		}
-		if (!ew_CheckInteger($this->c_IReporte->FormValue)) {
-			ew_AddMessage($gsFormError, $this->c_IReporte->FldErrMsg());
-		}
 		if (!$this->frec_Envio->FldIsDetailKey && !is_null($this->frec_Envio->FormValue) && $this->frec_Envio->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->frec_Envio->FldCaption());
 		}
-		if (!ew_CheckInteger($this->frec_Envio->FormValue)) {
-			ew_AddMessage($gsFormError, $this->frec_Envio->FldErrMsg());
-		}
 		if (!$this->i_Dia_Envio->FldIsDetailKey && !is_null($this->i_Dia_Envio->FormValue) && $this->i_Dia_Envio->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->i_Dia_Envio->FldCaption());
-		}
-		if (!ew_CheckInteger($this->i_Dia_Envio->FormValue)) {
-			ew_AddMessage($gsFormError, $this->i_Dia_Envio->FldErrMsg());
 		}
 		if (!$this->x_Hora_Envio->FldIsDetailKey && !is_null($this->x_Hora_Envio->FormValue) && $this->x_Hora_Envio->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->x_Hora_Envio->FldCaption());
@@ -837,7 +1050,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 			$this->x_Hora_Envio->SetDbValueDef($rsnew, $this->x_Hora_Envio->CurrentValue, "", $this->x_Hora_Envio->ReadOnly);
 
 			// p_Destino
-			$this->p_Destino->SetDbValueDef($rsnew, $this->p_Destino->CurrentValue, "", $this->p_Destino->ReadOnly);
+			$this->p_Destino->SetDbValueDef($rsnew, $this->p_Destino->CurrentValue, 0, $this->p_Destino->ReadOnly);
 
 			// p_Reseller
 			$this->p_Reseller->SetDbValueDef($rsnew, $this->p_Reseller->CurrentValue, "", $this->p_Reseller->ReadOnly);
@@ -1062,21 +1275,12 @@ faf_config_reportesedit.Validate = function() {
 			elm = this.GetElements("x" + infix + "_c_IReporte");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->c_IReporte->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_c_IReporte");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($af_config_reportes->c_IReporte->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_frec_Envio");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->frec_Envio->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_frec_Envio");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($af_config_reportes->frec_Envio->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_i_Dia_Envio");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->i_Dia_Envio->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_i_Dia_Envio");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($af_config_reportes->i_Dia_Envio->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_x_Hora_Envio");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->x_Hora_Envio->FldCaption()) ?>");
@@ -1134,8 +1338,14 @@ faf_config_reportesedit.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+faf_config_reportesedit.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesedit.Lists["x_frec_Envio"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesedit.Lists["x_i_Dia_Envio"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesedit.Lists["x_p_Destino"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesedit.Lists["x_p_Reseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_config_reportesedit.Lists["x_p_CClass"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
@@ -1169,7 +1379,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_c_IReporte"><?php echo $af_config_reportes->c_IReporte->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->c_IReporte->CellAttributes() ?>>
 <span id="el_af_config_reportes_c_IReporte" class="control-group">
-<input type="text" data-field="x_c_IReporte" name="x_c_IReporte" id="x_c_IReporte" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->c_IReporte->PlaceHolder) ?>" value="<?php echo $af_config_reportes->c_IReporte->EditValue ?>"<?php echo $af_config_reportes->c_IReporte->EditAttributes() ?>>
+<select data-field="x_c_IReporte" id="x_c_IReporte" name="x_c_IReporte"<?php echo $af_config_reportes->c_IReporte->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->c_IReporte->EditValue)) {
+	$arwrk = $af_config_reportes->c_IReporte->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->c_IReporte->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_c_IReporte"].Options = <?php echo (is_array($af_config_reportes->c_IReporte->EditValue)) ? ew_ArrayToJson($af_config_reportes->c_IReporte->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->c_IReporte->CustomMsg ?></td>
 	</tr>
@@ -1179,7 +1409,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_frec_Envio"><?php echo $af_config_reportes->frec_Envio->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->frec_Envio->CellAttributes() ?>>
 <span id="el_af_config_reportes_frec_Envio" class="control-group">
-<input type="text" data-field="x_frec_Envio" name="x_frec_Envio" id="x_frec_Envio" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->frec_Envio->PlaceHolder) ?>" value="<?php echo $af_config_reportes->frec_Envio->EditValue ?>"<?php echo $af_config_reportes->frec_Envio->EditAttributes() ?>>
+<select data-field="x_frec_Envio" id="x_frec_Envio" name="x_frec_Envio"<?php echo $af_config_reportes->frec_Envio->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->frec_Envio->EditValue)) {
+	$arwrk = $af_config_reportes->frec_Envio->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->frec_Envio->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_frec_Envio"].Options = <?php echo (is_array($af_config_reportes->frec_Envio->EditValue)) ? ew_ArrayToJson($af_config_reportes->frec_Envio->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->frec_Envio->CustomMsg ?></td>
 	</tr>
@@ -1189,7 +1439,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_i_Dia_Envio"><?php echo $af_config_reportes->i_Dia_Envio->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->i_Dia_Envio->CellAttributes() ?>>
 <span id="el_af_config_reportes_i_Dia_Envio" class="control-group">
-<input type="text" data-field="x_i_Dia_Envio" name="x_i_Dia_Envio" id="x_i_Dia_Envio" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->i_Dia_Envio->PlaceHolder) ?>" value="<?php echo $af_config_reportes->i_Dia_Envio->EditValue ?>"<?php echo $af_config_reportes->i_Dia_Envio->EditAttributes() ?>>
+<select data-field="x_i_Dia_Envio" id="x_i_Dia_Envio" name="x_i_Dia_Envio"<?php echo $af_config_reportes->i_Dia_Envio->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->i_Dia_Envio->EditValue)) {
+	$arwrk = $af_config_reportes->i_Dia_Envio->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->i_Dia_Envio->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_i_Dia_Envio"].Options = <?php echo (is_array($af_config_reportes->i_Dia_Envio->EditValue)) ? ew_ArrayToJson($af_config_reportes->i_Dia_Envio->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->i_Dia_Envio->CustomMsg ?></td>
 	</tr>
@@ -1209,7 +1479,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_p_Destino"><?php echo $af_config_reportes->p_Destino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_Destino->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_Destino" class="control-group">
-<input type="text" data-field="x_p_Destino" name="x_p_Destino" id="x_p_Destino" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->p_Destino->PlaceHolder) ?>" value="<?php echo $af_config_reportes->p_Destino->EditValue ?>"<?php echo $af_config_reportes->p_Destino->EditAttributes() ?>>
+<select data-field="x_p_Destino" id="x_p_Destino" name="x_p_Destino"<?php echo $af_config_reportes->p_Destino->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->p_Destino->EditValue)) {
+	$arwrk = $af_config_reportes->p_Destino->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->p_Destino->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_p_Destino"].Options = <?php echo (is_array($af_config_reportes->p_Destino->EditValue)) ? ew_ArrayToJson($af_config_reportes->p_Destino->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->p_Destino->CustomMsg ?></td>
 	</tr>
@@ -1219,7 +1509,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_p_Reseller"><?php echo $af_config_reportes->p_Reseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_Reseller->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_Reseller" class="control-group">
-<input type="text" data-field="x_p_Reseller" name="x_p_Reseller" id="x_p_Reseller" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->p_Reseller->PlaceHolder) ?>" value="<?php echo $af_config_reportes->p_Reseller->EditValue ?>"<?php echo $af_config_reportes->p_Reseller->EditAttributes() ?>>
+<select data-field="x_p_Reseller" id="x_p_Reseller" name="x_p_Reseller"<?php echo $af_config_reportes->p_Reseller->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->p_Reseller->EditValue)) {
+	$arwrk = $af_config_reportes->p_Reseller->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->p_Reseller->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_p_Reseller"].Options = <?php echo (is_array($af_config_reportes->p_Reseller->EditValue)) ? ew_ArrayToJson($af_config_reportes->p_Reseller->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->p_Reseller->CustomMsg ?></td>
 	</tr>
@@ -1229,7 +1539,27 @@ $af_config_reportes_edit->ShowMessage();
 		<td><span id="elh_af_config_reportes_p_CClass"><?php echo $af_config_reportes->p_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_CClass->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_CClass" class="control-group">
-<input type="text" data-field="x_p_CClass" name="x_p_CClass" id="x_p_CClass" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->p_CClass->PlaceHolder) ?>" value="<?php echo $af_config_reportes->p_CClass->EditValue ?>"<?php echo $af_config_reportes->p_CClass->EditAttributes() ?>>
+<select data-field="x_p_CClass" id="x_p_CClass" name="x_p_CClass"<?php echo $af_config_reportes->p_CClass->EditAttributes() ?>>
+<?php
+if (is_array($af_config_reportes->p_CClass->EditValue)) {
+	$arwrk = $af_config_reportes->p_CClass->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_config_reportes->p_CClass->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_config_reportesedit.Lists["x_p_CClass"].Options = <?php echo (is_array($af_config_reportes->p_CClass->EditValue)) ? ew_ArrayToJson($af_config_reportes->p_CClass->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_config_reportes->p_CClass->CustomMsg ?></td>
 	</tr>
