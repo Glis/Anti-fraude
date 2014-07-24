@@ -436,7 +436,7 @@
 </field>
 <field id="x_dircorreo"><phrase id="fldcaption" value="Dirección Correo"/>
 </field>
-<field id="x_titulo"><phrase id="fldcaption" value="Tíitulo Correo"/>
+<field id="x_titulo"><phrase id="fldcaption" value="Título Correo"/>
 </field>
 <field id="x_mensaje"><phrase id="fldcaption" value="Mensaje Correo"/>
 </field>

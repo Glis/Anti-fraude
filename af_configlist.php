@@ -1207,7 +1207,7 @@ faf_configlist.ValidateRequired = false;
 <?php
 $af_config_list->ShowMessage();
 ?>
-<form>
+<form action='' method='POST'>
 	<?php $res = select_sql('select_config_data'); ?>
 	<table class="ewGrid"><tbody><tr><td>
 	<table class="table table-bordered table-striped">
@@ -1238,7 +1238,7 @@ $af_config_list->ShowMessage();
 				</td>
 				<td>
 					<span class="control-group">
-						<input type="text" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
+						<input type="date" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
 					</span>
 				</td>
 			</tr>
@@ -1295,6 +1295,13 @@ $af_config_list->ShowMessage();
 		</tbody>
 	</table>
 	</td></tr></tbody></table>
-	<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit">Modificar</button>
+	<button class="btn btn-primary ewButton" name="submit" id="btnAction" type="submit">Modificar</button>
 </form>
 
+<?
+if(isset($_POST['submit'])){
+	date_default_timezone_set('America/Caracas');
+	$res= update_sql('update_config', array($_POST['freq_chq_min'], $_POST['ventana_chq_min'], $_POST['fecha_ult_chq'], $_POST['user_api'], $_POST['pw_api'], $_POST['url_api'], date("Y/m/d"), $_SESSION['USUARIO']));
+	echo "<script>parent.window.location.reload();</script>";
+}	
+?>

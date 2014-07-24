@@ -104,6 +104,29 @@ function select_sql($nombre, $x = NULL){
     cerrarConexion();
 }
 
+function update_sql ($nombre, $Params){
+
+    switch ($nombre) {
+        case 'update_config':
+            $sql = "Update netuno.af_config set q_Min_Chequeo=".$Params[0]. ", q_Min_VentChequeo=" .$Params[1] .
+            ", f_Ult_Chequeo='". $Params[2] . "' , x_Usuario_Api ='" .$Params[3]. "' , x_Passw_Api='" .$Params[4]. 
+            "', x_Url_Wsdl='" .$Params[5]. "' , f_Ult_Mod='" .$Params[6]. "' , c_Usuario_Ult_Mod='".$Params[7]."'";
+            break;
+        
+        default:
+            break;
+    }
+     abrirConexion();
+    $ejecutar_sql = mysql_query($sql);
+    if (!$ejecutar_sql) {
+        return 'update_sql:false:' . $nombre . '. Error:' . mysql_error();
+    } else {
+        return 'update_sql:true';
+    }
+    
+    cerrarConexion();
+}
+
 
 
 ?>

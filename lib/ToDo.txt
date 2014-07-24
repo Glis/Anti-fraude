@@ -1,0 +1,14 @@
+ToDo:
+
+1.- Los filtros que usan la otra BD
+2.- Los campos que dan hacia una tabla de la otra BD
+4.- Poner el menú de forma horizontal (php maker lo genera vertical)
+5.- Pag: Config Env Reportes manejar el campo Código como un consecutivo
+6.- Pantallas de Monitor (*)
+7.- Pantallas de Log
+8.- Pantallas de Reportes
+9.- Pantalla de Bitacora (*)
+
+
+-------------------------
+* Mayor dificultad
