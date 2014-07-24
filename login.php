@@ -19,7 +19,7 @@ date_default_timezone_set('America/Caracas');
         <link rel="stylesheet" type="text/css" media="all" href="css/index.css"/>
 
         <!-- Bootstrap -->
-        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="bootstrap/css/bootstrap-NEW.css" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -52,39 +52,40 @@ date_default_timezone_set('America/Caracas');
             <div id="logo"><a href="/Anti-fraude"><img src="img/logo-login.png" alt="" class="center-block"></a></div>
             <div id="cuerpo">
                 <h1 id="titulo">Módulo de Reportes de PortaOne</h1>
-                <div class="jumbotron row">
-                    <p class="lead">Accede al modulo de administración</p>
-                    <form class="/*form-horizontal*/" role="form" action="" method="POST" onsubmit="return validar(this)">
-                      <div id="centradoProvisional" class="center-block">
-                        <div id="campo1_Fact" class="form-group">
-                          <label for="usuario" id="label_usuario" class="col-sm-2 control-label">Login</label>
-                          <div class="col-sm-10">
-                            <input type="text" name="usuario" id="usuario" class="form-control" value="" placeholder="netunoUser"> </input>
-                          </div>
-                        </div><br>
-                        <div id="campo2" class="form-group">
-                          <label for="clave" id="label_clave" class="col-sm-2 control-label">Password</label>
-                          <div class="col-sm-10">
-                            <input type="password" name="clave" id="clave" class="form-control" placeholder="Password">
-                          </div>
-                        </div><br>
-                        <div id="campo3" class="form-group">
-                          <label for="portaone" id="label_select" class="col-sm-2 control-label">PortaOne</label>
-                          <div class="col-sm-10">
-                            <select name="portaone" id="portaone" class="form-control">
-                                <option value="1">Costa Rica (CR)</option>
-                                <option value="2">Panama (PA)</option>
-                            </select>
-                          </div>
-                        </div><br>
-                        <div id="boton" class="form-group">
-                          <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" value="Login" id="login" class="btn btn-default" name="login"/>
-                            <!-- <button type="submit" id="login" name="login" class="btn btn-default">Login</button> -->
-                          </div>
-                        </div>    
-                      </div>
-                    </form>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div id="login-box" class="jumbotron">
+                            <form class="form-horizontal" role="form" action="" method="POST" onsubmit="return validar(this)">
+                                <div id="campo1_Fact" class="form-group">
+                                  <label for="usuario" id="label_usuario" class="col-sm-2 control-label">Login</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" name="usuario" id="usuario" class="form-control" value="" placeholder="netunoUser"> </input>
+                                  </div>
+                                </div><br>
+                                <div id="campo2" class="form-group">
+                                  <label for="clave" id="label_clave" class="col-sm-2 control-label">Password</label>
+                                  <div class="col-sm-10">
+                                    <input type="password" name="clave" id="clave" class="form-control" placeholder="Password">
+                                  </div>
+                                </div><br>
+                                <div id="campo3" class="form-group">
+                                  <label for="portaone" id="label_select" class="col-sm-2 control-label">PortaOne</label>
+                                  <div class="col-sm-10">
+                                    <select name="portaone" id="portaone" class="form-control">
+                                        <option value="1">Costa Rica (CR)</option>
+                                        <option value="2">Panama (PA)</option>
+                                    </select>
+                                  </div>
+                                </div><br>
+                                <div id="boton" class="form-group">
+                                  <div class="col-sm-offset-2 col-sm-8">
+                                    <input type="submit" value="Login" id="loginBut" class="btn btn-default" name="login"/>
+                                    <!-- <button type="submit" id="login" name="login" class="btn btn-default">Login</button> -->
+                                  </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- <form action="" method="POST" onsubmit="return validar(this)">
@@ -141,7 +142,7 @@ date_default_timezone_set('America/Caracas');
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min-NEW.js"></script>
 
     </body>
 </html>
