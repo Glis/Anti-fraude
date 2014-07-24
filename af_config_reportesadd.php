@@ -1361,7 +1361,7 @@ $af_config_reportes_add->ShowMessage();
 		<td><span id="elh_af_config_reportes_c_IConfig"><?php echo $af_config_reportes->c_IConfig->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->c_IConfig->CellAttributes() ?>>
 <span id="el_af_config_reportes_c_IConfig" class="control-group">
-<input type="text" data-field="x_c_IConfig" name="x_c_IConfig" id="x_c_IConfig" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->c_IConfig->PlaceHolder) ?>" value="<?php echo $af_config_reportes->c_IConfig->EditValue ?>"<?php echo $af_config_reportes->c_IConfig->EditAttributes() ?>>
+<input type="text" readonly data-field="x_c_IConfig" name="x_c_IConfig" id="x_c_IConfig" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->c_IConfig->PlaceHolder) ?>" value="<?php echo $af_config_reportes->c_IConfig->EditValue ?>"<?php echo $af_config_reportes->c_IConfig->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->c_IConfig->CustomMsg ?></td>
 	</tr>
@@ -1561,7 +1561,7 @@ faf_config_reportesadd.Lists["x_p_CClass"].Options = <?php echo (is_array($af_co
 		<td><span id="elh_af_config_reportes_x_DirCorreo"><?php echo $af_config_reportes->x_DirCorreo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_DirCorreo" class="control-group">
-<input type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
+<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_DirCorreo->CustomMsg ?></td>
 	</tr>

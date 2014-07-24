@@ -1229,7 +1229,7 @@ $af_acc_cclass_edit->ShowMessage();
 		<td><span id="elh_af_acc_cclass_x_DirCorreo"><?php echo $af_acc_cclass->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_DirCorreo" class="control-group">
-<input type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
+<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_cclass->x_DirCorreo->CustomMsg ?></td>
 	</tr>

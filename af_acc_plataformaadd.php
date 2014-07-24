@@ -1060,7 +1060,7 @@ faf_acc_plataformaadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc
 		<td><span id="elh_af_acc_plataforma_x_DirCorreo"><?php echo $af_acc_plataforma->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_plataforma->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_x_DirCorreo" class="control-group">
-<input type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_DirCorreo->EditValue ?>"<?php echo $af_acc_plataforma->x_DirCorreo->EditAttributes() ?>>
+<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_DirCorreo->EditValue ?>"<?php echo $af_acc_plataforma->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_plataforma->x_DirCorreo->CustomMsg ?></td>
 	</tr>

@@ -1209,21 +1209,92 @@ $af_config_list->ShowMessage();
 ?>
 <form>
 	<?php $res = select_sql('select_config_data'); ?>
-	<label>Frecuencia Chequeo (min)</label>
-	<input type="number" name="freq_chq_min" value= <?echo($res[1]['q_Min_Chequeo'])?> >
-	<label>Ventana Chequeo (min)</label>
-	<input type= "number" name="ventana_chq_min" value= <?echo($res[1]['q_Min_VentChequeo'])?> >
-	<label>Fecha de Ult Chequeo</label>
-	<input type="text" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
-	<label>Usuario API</label>
-	<input type= "text" name="user_api" value= <?echo($res[1]['x_Usuario_Api'])?> >
-	<label>Contraseña API</label>
-	<input type= "text" name="pw_api" value= <?echo($res[1]['x_Passw_Api'])?> >
-	<label>URL wsdl API</label>
-	<input type= "url" name="url_api" value= <?echo($res[1]['x_Url_Wsdl'])?> >
-	<label>Usuario Ult Modif</label>
-	<input type="text" readonly value= <?echo($res[1]['c_Usuario_Ult_Mod'])?> >
-	<label>Fecha Ult Modif</label>
-	<input type="text" readonly value= <?echo($res[1]['f_Ult_Mod'])?> >
+	<table class="ewGrid"><tbody><tr><td>
+	<table class="table table-bordered table-striped">
+		<tbody>
+			<tr>
+				<td>
+					<label>Frecuencia Chequeo (min)</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type="number" name="freq_chq_min" value= <?echo($res[1]['q_Min_Chequeo'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Ventana Chequeo (min)</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type= "number" name="ventana_chq_min" value= <?echo($res[1]['q_Min_VentChequeo'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Fecha de Ult Chequeo</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type="text" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Usuario API</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type= "text" name="user_api" value= <?echo($res[1]['x_Usuario_Api'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Contraseña API</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type= "text" name="pw_api" value= <?echo($res[1]['x_Passw_Api'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>URL wsdl API</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type= "url" name="url_api" value= <?echo($res[1]['x_Url_Wsdl'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Usuario Ult Modif</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type="text" readonly value= <?echo($res[1]['c_Usuario_Ult_Mod'])?> >
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Fecha Ult Modif</label>
+				</td>
+				<td>
+					<span class="control-group">
+						<input type="text" readonly value= <?echo($res[1]['f_Ult_Mod'])?> >
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</td></tr></tbody></table>
+	<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit">Modificar</button>
 </form>
 
