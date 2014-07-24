@@ -5488,7 +5488,7 @@ function &Breadcrumb() {
 // Get current user name
 function CurrentUserName() {
 	global $Security;
-	return (isset($Security)) ? $Security->CurrentUserName() : strval(@$_SESSION[EW_SESSION_USER_NAME]);
+	return (isset($Security)) ? $Security->CurrentUserName() : strval(@$_SESSION[USUARIO]);
 }
 
 // Get current user ID
