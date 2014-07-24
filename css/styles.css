@@ -51,12 +51,15 @@ body{
 
 .ewMenuColumn{
 	font-size: 16px;
-	background-color:#3380D8;
+	background-color: #ccc;
+	border-right: 1px solid #666;
 }
 
 .ewFooterText{
 	background-color: black;
 }
+
+/*modificaciones de bootstrap viejo*/
 
 .dropdown-header{
 	color:#333;
@@ -64,6 +67,9 @@ body{
 	font-weight: bold;
 }
 
-/*faltantes de bootstrap*/
-
+.dropdown-menu .divider{
+	margin: 9px auto;
+	background-color: #666;
+	width: 90%;
+}
 
