@@ -496,15 +496,75 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
 			// c_IDestino
-			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+			if (strval($this->c_IDestino->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IDestino->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IDestino, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+				}
+			} else {
+				$this->c_IDestino->ViewValue = NULL;
+			}
 			$this->c_IDestino->ViewCustomAttributes = "";
 
 			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			if (strval($this->c_IReseller->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+				}
+			} else {
+				$this->c_IReseller->ViewValue = NULL;
+			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
 			// c_ICClass
-			$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
+			if (strval($this->c_ICClass->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICClass->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_ICClass, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
+				}
+			} else {
+				$this->c_ICClass->ViewValue = NULL;
+			}
 			$this->c_ICClass->ViewCustomAttributes = "";
 
 			// q_MinAl_CClass
@@ -562,18 +622,57 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 
 			// c_IDestino
 			$this->c_IDestino->EditCustomAttributes = "";
-			$this->c_IDestino->EditValue = ew_HtmlEncode($this->c_IDestino->CurrentValue);
-			$this->c_IDestino->PlaceHolder = ew_RemoveHtml($this->c_IDestino->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IDestino, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_IDestino->EditValue = $arwrk;
 
 			// c_IReseller
 			$this->c_IReseller->EditCustomAttributes = "";
-			$this->c_IReseller->EditValue = ew_HtmlEncode($this->c_IReseller->CurrentValue);
-			$this->c_IReseller->PlaceHolder = ew_RemoveHtml($this->c_IReseller->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_IReseller->EditValue = $arwrk;
 
 			// c_ICClass
 			$this->c_ICClass->EditCustomAttributes = "";
-			$this->c_ICClass->EditValue = ew_HtmlEncode($this->c_ICClass->CurrentValue);
-			$this->c_ICClass->PlaceHolder = ew_RemoveHtml($this->c_ICClass->FldCaption());
+			$sFilterWrk = "";
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_ICClass, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
+			$this->c_ICClass->EditValue = $arwrk;
 
 			// q_MinAl_CClass
 			$this->q_MinAl_CClass->EditCustomAttributes = "";
@@ -941,8 +1040,11 @@ faf_umb_cclassadd.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-// Form object for search
+faf_umb_cclassadd.Lists["x_c_IDestino"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_umb_cclassadd.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_umb_cclassadd.Lists["x_c_ICClass"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
@@ -963,7 +1065,27 @@ $af_umb_cclass_add->ShowMessage();
 		<td><span id="elh_af_umb_cclass_c_IDestino"><?php echo $af_umb_cclass->c_IDestino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->c_IDestino->CellAttributes() ?>>
 <span id="el_af_umb_cclass_c_IDestino" class="control-group">
-<input type="text" data-field="x_c_IDestino" name="x_c_IDestino" id="x_c_IDestino" size="30" maxlength="40" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->c_IDestino->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->c_IDestino->EditValue ?>"<?php echo $af_umb_cclass->c_IDestino->EditAttributes() ?>>
+<select data-field="x_c_IDestino" id="x_c_IDestino" name="x_c_IDestino"<?php echo $af_umb_cclass->c_IDestino->EditAttributes() ?>>
+<?php
+if (is_array($af_umb_cclass->c_IDestino->EditValue)) {
+	$arwrk = $af_umb_cclass->c_IDestino->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_umb_cclass->c_IDestino->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_umb_cclassadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb_cclass->c_IDestino->EditValue)) ? ew_ArrayToJson($af_umb_cclass->c_IDestino->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_umb_cclass->c_IDestino->CustomMsg ?></td>
 	</tr>
@@ -973,7 +1095,27 @@ $af_umb_cclass_add->ShowMessage();
 		<td><span id="elh_af_umb_cclass_c_IReseller"><?php echo $af_umb_cclass->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->c_IReseller->CellAttributes() ?>>
 <span id="el_af_umb_cclass_c_IReseller" class="control-group">
-<input type="text" data-field="x_c_IReseller" name="x_c_IReseller" id="x_c_IReseller" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->c_IReseller->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->c_IReseller->EditValue ?>"<?php echo $af_umb_cclass->c_IReseller->EditAttributes() ?>>
+<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_umb_cclass->c_IReseller->EditAttributes() ?>>
+<?php
+if (is_array($af_umb_cclass->c_IReseller->EditValue)) {
+	$arwrk = $af_umb_cclass->c_IReseller->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_umb_cclass->c_IReseller->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_umb_cclassadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_umb_cclass->c_IReseller->EditValue)) ? ew_ArrayToJson($af_umb_cclass->c_IReseller->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_umb_cclass->c_IReseller->CustomMsg ?></td>
 	</tr>
@@ -983,7 +1125,27 @@ $af_umb_cclass_add->ShowMessage();
 		<td><span id="elh_af_umb_cclass_c_ICClass"><?php echo $af_umb_cclass->c_ICClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->c_ICClass->CellAttributes() ?>>
 <span id="el_af_umb_cclass_c_ICClass" class="control-group">
-<input type="text" data-field="x_c_ICClass" name="x_c_ICClass" id="x_c_ICClass" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->c_ICClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->c_ICClass->EditValue ?>"<?php echo $af_umb_cclass->c_ICClass->EditAttributes() ?>>
+<select data-field="x_c_ICClass" id="x_c_ICClass" name="x_c_ICClass"<?php echo $af_umb_cclass->c_ICClass->EditAttributes() ?>>
+<?php
+if (is_array($af_umb_cclass->c_ICClass->EditValue)) {
+	$arwrk = $af_umb_cclass->c_ICClass->EditValue;
+	$rowswrk = count($arwrk);
+	$emptywrk = TRUE;
+	for ($rowcntwrk = 0; $rowcntwrk < $rowswrk; $rowcntwrk++) {
+		$selwrk = (strval($af_umb_cclass->c_ICClass->CurrentValue) == strval($arwrk[$rowcntwrk][0])) ? " selected=\"selected\"" : "";
+		if ($selwrk <> "") $emptywrk = FALSE;
+?>
+<option value="<?php echo ew_HtmlEncode($arwrk[$rowcntwrk][0]) ?>"<?php echo $selwrk ?>>
+<?php echo $arwrk[$rowcntwrk][1] ?>
+</option>
+<?php
+	}
+}
+?>
+</select>
+<script type="text/javascript">
+faf_umb_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_umb_cclass->c_ICClass->EditValue)) ? ew_ArrayToJson($af_umb_cclass->c_ICClass->EditValue, 1) : "[]" ?>;
+</script>
 </span>
 <?php echo $af_umb_cclass->c_ICClass->CustomMsg ?></td>
 	</tr>

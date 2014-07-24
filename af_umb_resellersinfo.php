@@ -530,11 +530,51 @@ class caf_umb_resellers extends cTable {
 		// c_Usuario_Ult_Mod
 		// c_IDestino
 
-		$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+		if (strval($this->c_IDestino->CurrentValue) <> "") {
+			$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IDestino->CurrentValue, EW_DATATYPE_STRING);
+		$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+		$sWhereWrk = "";
+		if ($sFilterWrk <> "") {
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+		}
+
+		// Call Lookup selecting
+		$this->Lookup_Selecting($this->c_IDestino, $sWhereWrk);
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
+				$rswrk->Close();
+			} else {
+				$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+			}
+		} else {
+			$this->c_IDestino->ViewValue = NULL;
+		}
 		$this->c_IDestino->ViewCustomAttributes = "";
 
 		// c_IReseller
-		$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+		if (strval($this->c_IReseller->CurrentValue) <> "") {
+			$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
+		$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+		$sWhereWrk = "";
+		if ($sFilterWrk <> "") {
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+		}
+
+		// Call Lookup selecting
+		$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = $conn->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+				$rswrk->Close();
+			} else {
+				$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			}
+		} else {
+			$this->c_IReseller->ViewValue = NULL;
+		}
 		$this->c_IReseller->ViewCustomAttributes = "";
 
 		// q_MinAl_Res
