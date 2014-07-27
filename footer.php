@@ -7,10 +7,9 @@
 	<!-- content (end) -->
 <?php if (!ew_IsMobile()) { ?>
 	<!-- footer (begin) --><!-- *** Note: Only licensed users are allowed to remove or change the following copyright statement. *** -->
-	<div id="ewFooterRow" class="ewFooterRow">	
-		<div class="ewFooterText"><?php echo $Language->ProjectPhrase("FooterText") ?></div>
-		<!-- Place other links, for example, disclaimer, here -->		
-	</div>
+	<!-- <div id="ewFooterRow" class="ewFooterRow">	
+		<div class="ewFooterText"><?php echo $Language->ProjectPhrase("FooterText") ?></div>		
+	</div> -->
 	<!-- footer (end) -->	
 <?php } ?>
 </div>

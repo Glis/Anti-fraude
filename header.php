@@ -117,12 +117,21 @@ if (!isset($Language)) {
 <?php } ?>
 <?php if (@!$gbSkipHeaderFooter) { ?>
 <?php if (@$gsExport == "") { ?>
-<div class="ewLayout">
+<div id="contenedor" class="ewLayout container">
 <?php if (!ew_IsMobile()) { ?>
 	<!-- header (begin) --><!-- *** Note: Only licensed users are allowed to change the logo *** -->
-  <div id="ewHeaderRow" class="ewHeaderRow container-fluid"><img src="phpimages/logo.png" alt="" style="border: 0;"></div>
+  <div id="header" class="row">
+  	<span class="col-sm-10">
+	  	<img src="phpimages/logo.png" alt="" style="border: 0;" class="pull-left">
+	</span>
+	<div class="col-sm-2 pull-right">
+		Bienvenido <?php echo $_SESSION['USUARIO']; ?> <br>
+		<a href="/">Log out</a>
+	</div>
+  </div>
 	<!-- header (end) -->
 <?php } ?>
+	<?php include_once "ewmenu.php" ?>
 <?php if (ew_IsMobile()) { ?>
 	<div data-role="content" data-enhance="false">
 	<table id="ewContentTable" class="ewContentTable">
@@ -130,14 +139,14 @@ if (!isset($Language)) {
 <?php } else { ?>
 	<!-- content (begin) -->
 	<table id="ewContentTable" class="ewContentTable">
-		<tr><td id="ewMenuColumn" class="ewMenuColumn">
+		<tr><!-- <td id="ewMenuColumn" class="ewMenuColumn"> -->
 			<!-- left column (begin) -->
-<?php include_once "ewmenu.php" ?>
+			<!-- <?php include_once "ewmenu.php" ?> -->
 			<!-- left column (end) -->
-		</td>
+			<!-- </td> -->
 <?php } ?>
 		<td id="ewContentColumn" class="ewContentColumn">
 			<!-- right column (begin) -->
-				<h4 class="ewSiteTitle"><?php echo $Language->ProjectPhrase("BodyTitle") ?></h4>
+				<!-- <h4 class="ewSiteTitle"><?php echo $Language->ProjectPhrase("BodyTitle") ?></h4> -->
 <?php } ?>
 <?php } ?>

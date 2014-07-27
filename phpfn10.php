@@ -1111,8 +1111,8 @@ class cBreadcrumb {
 					$nav .= "<a href=\"" . $url . "\">" . $title . "</a>";
 				else
 					$nav .= $title;
-				if ($i < $cnt - 1)
-					$nav .= "<span class=\"divider\">" . $this->Divider . "</span>";
+				//if ($i < $cnt - 1)
+					// $nav .= "<span class=\"divider\">" . $this->Divider . "</span>";
 				$nav .= "</li>";
 			}
 		}
