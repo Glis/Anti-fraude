@@ -14,12 +14,12 @@ date_default_timezone_set('America/Caracas');
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>M&oacute;dulo de Reportes de PortaOne</title>
+        <title>Sistema de Prevención de Fraude NETUNO</title>
 
         <link rel="stylesheet" type="text/css" media="all" href="css/index.css"/>
 
         <!-- Bootstrap -->
-        <link href="bootstrap/css/bootstrap-NEW.css" rel="stylesheet">
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,7 +51,7 @@ date_default_timezone_set('America/Caracas');
         <div class="container">
             <div id="logo"><a href="/Anti-fraude"><img src="img/logo-login.png" alt="" class="center-block"></a></div>
             <div id="cuerpo">
-                <h1 id="titulo">Módulo de Reportes de PortaOne</h1>
+                <h1 id="login-titulo">Sistema de Prevención de Fraude NETUNO</h1>
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
                         <div id="login-box" class="jumbotron">
@@ -142,7 +142,7 @@ date_default_timezone_set('America/Caracas');
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bootstrap/js/bootstrap.min-NEW.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
 
     </body>
 </html>
