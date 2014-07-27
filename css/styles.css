@@ -18,7 +18,7 @@ body{
 
 #login-box{
 	background-color: #eee;
-	border: solid 1px #666;
+	border: solid 3px #666;
 	text-align: center;
 
 	-webkit-border-radius: 6px;
@@ -31,9 +31,14 @@ body{
 }
 
 #loginBut{
-	width: 100%
+	width: 50%;
 }
 
+
+.inputlogin{
+	width: 60%;
+	margin-left: 10px;
+}
 /*Modificados de PHPMaker*/
 
 .ewContentTable{

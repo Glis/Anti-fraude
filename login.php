@@ -57,21 +57,21 @@ date_default_timezone_set('America/Caracas');
                         <div id="login-box" class="jumbotron">
                             <form class="form-horizontal" role="form" action="" method="POST" onsubmit="return validar(this)">
                                 <div id="campo1_Fact" class="form-group">
-                                  <label for="usuario" id="label_usuario" class="col-sm-2 control-label">Login</label>
+                                  <label for="usuario" id="label_usuario" class="col-sm-2 control-label labellogin">Login</label>
                                   <div class="col-sm-10">
-                                    <input type="text" name="usuario" id="usuario" class="form-control" value="" placeholder="netunoUser"> </input>
+                                    <input type="text" name="usuario" id="usuario" class="form-control inputlogin" value="" placeholder="Usuario" autofocus> </input>
                                   </div>
                                 </div><br>
                                 <div id="campo2" class="form-group">
-                                  <label for="clave" id="label_clave" class="col-sm-2 control-label">Password</label>
+                                  <label for="clave" id="label_clave" class="col-sm-2 control-label labellogin">Password</label>
                                   <div class="col-sm-10">
-                                    <input type="password" name="clave" id="clave" class="form-control" placeholder="Password">
+                                    <input type="password" name="clave" id="clave" class="form-control inputlogin" placeholder="Password">
                                   </div>
                                 </div><br>
                                 <div id="campo3" class="form-group">
-                                  <label for="portaone" id="label_select" class="col-sm-2 control-label">PortaOne</label>
+                                  <label for="portaone" id="label_select" class="col-sm-2 control-label labellogin">PortaOne</label>
                                   <div class="col-sm-10">
-                                    <select name="portaone" id="portaone" class="form-control">
+                                    <select name="portaone" id="portaone" class="form-control inputlogin">
                                         <option value="1">Costa Rica (CR)</option>
                                         <option value="2">Panama (PA)</option>
                                     </select>
@@ -79,7 +79,7 @@ date_default_timezone_set('America/Caracas');
                                 </div><br>
                                 <div id="boton" class="form-group">
                                   <div class="col-sm-offset-2 col-sm-8">
-                                    <input type="submit" value="Login" id="loginBut" class="btn btn-default" name="login"/>
+                                    <input type="submit" value="Login" id="loginBut" class="btn btn-primary" name="login"/>
                                     <!-- <button type="submit" id="login" name="login" class="btn btn-default">Login</button> -->
                                   </div>
                                 </div>
