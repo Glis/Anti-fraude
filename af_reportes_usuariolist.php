@@ -10,6 +10,11 @@ ob_start(); // Turn on output buffering
 <?php include_once "lib/libreriaBD.php" ?>
 <?php
 
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
 //
 // Page class
 //
@@ -1189,6 +1194,17 @@ Page_Rendering();
 $af_reportes_usuario_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+<?          /**********************SI NO ES USUARIO ADMIN**********************/
+
+if($_SESSION['USUARIO_TYPE']['admin']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
+
 <?php if ($af_reportes_usuario->Export == "") { ?>
 <script type="text/javascript">
 

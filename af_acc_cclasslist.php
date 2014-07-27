@@ -10,6 +10,13 @@ ob_start(); // Turn on output buffering
 <?php include_once "lib/libreriaBD.php" ?>
 <?php
 
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
+
+
 //
 // Page class
 //
@@ -1297,6 +1304,18 @@ Page_Rendering();
 $af_acc_cclass_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+
+<?          /**********************SI NO ES USUARIO CONFIG**********************/
+
+if($_SESSION['USUARIO_TYPE']['config']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
+
 <?php if ($af_acc_cclass->Export == "") { ?>
 <script type="text/javascript">
 
@@ -1336,6 +1355,8 @@ faf_acc_cclasslist.Lists["x_c_ICClass"] = {"LinkField":"x_c_Usuario","Ajax":null
 
 // Write your client script here, no need to add script tags.
 </script>
+
+
 <?php } ?>
 <?php if ($af_acc_cclass->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
@@ -1438,7 +1459,7 @@ $(document).on('change', '#select_tipo_accion', function() {
 		echo "<option value= '".$dom_tipo_accion[$k]['rv_Low_Value']. "'>". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
 		$k++;
 	}
-
+$_SESSION['filtros']="";
 ?>
 
 </select>

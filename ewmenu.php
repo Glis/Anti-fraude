@@ -29,6 +29,7 @@
         <li><a href="">Reportes</a></li>
       </ul>
     </li>
+    <?if ($_SESSION['USUARIO_TYPE']['config'] == 1){?>
     <li class="dropdown col-sm-3">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         Configuracion <span class="caret"></span>
@@ -44,6 +45,7 @@
             <li><a href="af_acc_plataformalist.php">Plataforma</a></li>
           </ul>
         </li>
+        
         <li><a href="af_configlist.php">Configuración</a></li>
         <li><a href="af_config_reporteslist.php">Config Env Reportes</a></li>
         <li><a href="af_umb_destinoslist.php">Destinos</a></li>
@@ -58,6 +60,8 @@
         </li>
       </ul>
     </li>
+    <?} 
+    if ($_SESSION['USUARIO_TYPE']['admin'] == 1){?>
     <li class="dropdown col-sm-3">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         Seguridad <span class="caret"></span>
@@ -68,6 +72,7 @@
         <li><a href="af_usuarioslist.php">Usuarios</a></li>
       </ul>
     </li>
+    <?}?>
   </ul>
 </div>
 

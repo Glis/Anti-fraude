@@ -9,6 +9,12 @@ ob_start(); // Turn on output buffering
 <?php include_once "userfn10.php" ?>
 <?php
 
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
+
 //
 // Page class
 //
@@ -1081,6 +1087,16 @@ Page_Rendering();
 $af_acc_clientes_add->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+<?          /**********************SI NO ES USUARIO CONFIG**********************/
+
+if($_SESSION['USUARIO_TYPE']['config']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
 <script type="text/javascript">
 
 // Page object

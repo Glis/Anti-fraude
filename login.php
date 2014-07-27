@@ -118,7 +118,7 @@ date_default_timezone_set('America/Caracas');
                 
                 $registrado = select_sql("select_usuario",$_SESSION["USUARIO"]);
                 $activo = select_sql("select_usuario_activo",$_SESSION["USUARIO"]);
-                print_r($activo);
+                
                 if ((!isset($registrado[1]["c_Usuario"])) || (!isset($activo[1]["c_Usuario"]))) {
                     $_SESSION = array();
                     echo "<h5 id='error'>ERROR: Login o password inv&aacute;lido<br><br></h5>";
@@ -129,6 +129,9 @@ date_default_timezone_set('America/Caracas');
                         echo "<h5 id='error'>ERROR: Login o password inv&aacute;lido<br><br></h5>";
                     }else{
                         //Redireccionamiento a pag. "af_acc_cclasslist.php" cuando login/password es correcto y se inicio la sesion
+                        $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
+                        $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
+                        $_SESSION['USUARIO_TYPE']['config'] = $datos[1]['i_Config'];
                         echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
                     }
                 }

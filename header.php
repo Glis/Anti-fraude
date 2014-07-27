@@ -126,7 +126,7 @@ if (!isset($Language)) {
 	</span>
 	<div class="col-sm-2 pull-right">
 		Bienvenido <?php echo $_SESSION['USUARIO']; ?> <br>
-		<a href="/">Log out</a>
+		<a href="logout.php">Log out</a>
 	</div>
   </div>
 	<!-- header (end) -->

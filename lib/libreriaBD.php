@@ -66,6 +66,12 @@ function select_sql($nombre, $x = NULL){
                    " ORDER BY c_Usuario ASC ";
             break;
 
+        case 'select_usuario_all':
+            $sql = "SELECT * " .
+                   " FROM netuno.af_usuarios " .
+                   " WHERE c_Usuario = '" . $x . "'" ;
+            break;
+
         case 'select_dominio':
             $sql = "Select * from netuno.af_dominios where rv_Domain ='". $x ."'";
             break; 
