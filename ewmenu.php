@@ -39,7 +39,7 @@
           <ul class="dropdown-menu">
             <li><a tabindex="-1" href="af_acc_clienteslist.php">Clientes</a></li>
             <li><a href="af_acc_cuentaslist.php">Cuentas</a></li>
-            <li><a href="af_acc_cuentaslist.php">Customer Class</a></li>
+            <li><a href="af_acc_cclasslist.php">Customer Class</a></li>
             <li><a href="af_acc_resellerslist.php">Reseller</a></li>
             <li><a href="af_acc_plataformalist.php">Plataforma</a></li>
           </ul>
@@ -94,8 +94,8 @@
 	$RootMenu->AddMenuItem(8, $Language->MenuPhrase("8", "MenuText"), "af_usuarioslist.php", 21, "", TRUE, FALSE);
 	$RootMenu->AddMenuItem(7, $Language->MenuPhrase("7", "MenuText"), "af_reporteslist.php", 25, "", TRUE, FALSE);
 	$RootMenu->AddMenuItem(12, $Language->MenuPhrase("12", "MenuText"), "af_dominioslist.php", 25, "", TRUE, FALSE);
-?>
-<pre><h5><?php var_dump($Language->MenuPhrase("22", "MenuText")) ?></h5></pre> -->
+?>-->
+<!-- <pre><h5><?php var_dump($Language->MenuPhrase("7", "MenuText")) ?></h5></pre>  -->
 
 <!-- <div class="ewMenu">
 <?php $RootMenu = new cMenu(EW_MENUBAR_ID) ?>
