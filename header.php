@@ -125,7 +125,7 @@ if (!isset($Language)) {
 	  	<img src="phpimages/logo.png" alt="" style="border: 0;" class="pull-left">
 	</span>
 	<div class="col-sm-2 pull-right">
-		Bienvenido Perensejo! <br>
+		Bienvenido <?php echo $_SESSION['USUARIO']; ?> <br>
 		<a href="/">Log out</a>
 	</div>
   </div>
