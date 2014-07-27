@@ -197,6 +197,7 @@ class caf_config_reportes_add extends caf_config_reportes {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->c_IConfig->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -353,9 +354,6 @@ class caf_config_reportes_add extends caf_config_reportes {
 
 		// Load from form
 		global $objForm;
-		if (!$this->c_IConfig->FldIsDetailKey) {
-			$this->c_IConfig->setFormValue($objForm->GetValue("x_c_IConfig"));
-		}
 		if (!$this->c_IReporte->FldIsDetailKey) {
 			$this->c_IReporte->setFormValue($objForm->GetValue("x_c_IReporte"));
 		}
@@ -399,7 +397,6 @@ class caf_config_reportes_add extends caf_config_reportes {
 	function RestoreFormValues() {
 		global $objForm;
 		$this->LoadOldRecord();
-		$this->c_IConfig->CurrentValue = $this->c_IConfig->FormValue;
 		$this->c_IReporte->CurrentValue = $this->c_IReporte->FormValue;
 		$this->frec_Envio->CurrentValue = $this->frec_Envio->FormValue;
 		$this->i_Dia_Envio->CurrentValue = $this->i_Dia_Envio->FormValue;
@@ -779,11 +776,8 @@ class caf_config_reportes_add extends caf_config_reportes {
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
 			// c_IConfig
-			$this->c_IConfig->EditCustomAttributes = "";
-			$this->c_IConfig->EditValue = ew_HtmlEncode($this->c_IConfig->CurrentValue);
-			$this->c_IConfig->PlaceHolder = ew_RemoveHtml($this->c_IConfig->FldCaption());
-
 			// c_IReporte
+
 			$this->c_IReporte->EditCustomAttributes = "";
 			$sFilterWrk = "";
 			$sSqlWrk = "SELECT `c_IReporte`, `x_NbReporte` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `af_reportes`";
@@ -987,9 +981,6 @@ class caf_config_reportes_add extends caf_config_reportes {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->c_IConfig->FldIsDetailKey && !is_null($this->c_IConfig->FormValue) && $this->c_IConfig->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_IConfig->FldCaption());
-		}
 		if (!ew_CheckInteger($this->c_IConfig->FormValue)) {
 			ew_AddMessage($gsFormError, $this->c_IConfig->FldErrMsg());
 		}
@@ -1046,9 +1037,6 @@ class caf_config_reportes_add extends caf_config_reportes {
 		}
 		$rsnew = array();
 
-		// c_IConfig
-		$this->c_IConfig->SetDbValueDef($rsnew, $this->c_IConfig->CurrentValue, 0, FALSE);
-
 		// c_IReporte
 		$this->c_IReporte->SetDbValueDef($rsnew, $this->c_IReporte->CurrentValue, 0, FALSE);
 
@@ -1090,24 +1078,6 @@ class caf_config_reportes_add extends caf_config_reportes {
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
 		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
-
-		// Check if key value entered
-		if ($bInsertRow && $this->ValidateKey && $this->c_IConfig->CurrentValue == "" && $this->c_IConfig->getSessionValue() == "") {
-			$this->setFailureMessage($Language->Phrase("InvalidKeyValue"));
-			$bInsertRow = FALSE;
-		}
-
-		// Check for duplicate key
-		if ($bInsertRow && $this->ValidateKey) {
-			$sFilter = $this->KeyFilter();
-			$rsChk = $this->LoadRs($sFilter);
-			if ($rsChk && !$rsChk->EOF) {
-				$sKeyErrMsg = str_replace("%f", $sFilter, $Language->Phrase("DupKey"));
-				$this->setFailureMessage($sKeyErrMsg);
-				$rsChk->Close();
-				$bInsertRow = FALSE;
-			}
-		}
 		if ($bInsertRow) {
 			$conn->raiseErrorFn = 'ew_ErrorFn';
 			$AddRow = $this->Insert($rsnew);
@@ -1129,6 +1099,8 @@ class caf_config_reportes_add extends caf_config_reportes {
 
 		// Get insert id if necessary
 		if ($AddRow) {
+			$this->c_IConfig->setDbValue($conn->Insert_ID());
+			$rsnew['c_IConfig'] = $this->c_IConfig->DbValue;
 		}
 		if ($AddRow) {
 
@@ -1262,9 +1234,6 @@ faf_config_reportesadd.Validate = function() {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
 			elm = this.GetElements("x" + infix + "_c_IConfig");
-			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->c_IConfig->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_c_IConfig");
 			if (elm && !ew_CheckInteger(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($af_config_reportes->c_IConfig->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_c_IReporte");
@@ -1356,14 +1325,10 @@ $af_config_reportes_add->ShowMessage();
 <input type="hidden" name="a_add" id="a_add" value="A">
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_config_reportesadd" class="table table-bordered table-striped">
-<?php if ($af_config_reportes->c_IConfig->Visible) { // c_IConfig ?>
+<?php if (false/*$af_config_reportes->c_IConfig->Visible*/) { // c_IConfig ?>
 	<tr id="r_c_IConfig">
-		<td><span id="elh_af_config_reportes_c_IConfig"><?php echo $af_config_reportes->c_IConfig->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_config_reportes->c_IConfig->CellAttributes() ?>>
-<span id="el_af_config_reportes_c_IConfig" class="control-group">
-<input type="text" readonly data-field="x_c_IConfig" name="x_c_IConfig" id="x_c_IConfig" size="30" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->c_IConfig->PlaceHolder) ?>" value="<?php echo $af_config_reportes->c_IConfig->EditValue ?>"<?php echo $af_config_reportes->c_IConfig->EditAttributes() ?>>
-</span>
-<?php echo $af_config_reportes->c_IConfig->CustomMsg ?></td>
+		<td><span id="elh_af_config_reportes_c_IConfig"><?php echo $af_config_reportes->c_IConfig->FldCaption() ?></span></td>
+		<td<?php echo $af_config_reportes->c_IConfig->CellAttributes() ?>><?php echo $af_config_reportes->c_IConfig->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 <?php if ($af_config_reportes->c_IReporte->Visible) { // c_IReporte ?>
@@ -1561,7 +1526,7 @@ faf_config_reportesadd.Lists["x_p_CClass"].Options = <?php echo (is_array($af_co
 		<td><span id="elh_af_config_reportes_x_DirCorreo"><?php echo $af_config_reportes->x_DirCorreo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
+<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_DirCorreo->CustomMsg ?></td>
 	</tr>

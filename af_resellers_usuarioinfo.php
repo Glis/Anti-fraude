@@ -114,9 +114,29 @@ class caf_resellers_usuario extends cTable {
 	}
 
 	function SqlSelectList() { // Select for List page
-		return "SELECT * FROM (" .
+		if($_SESSION['filtros'] != ""){
+			return "SELECT * 
+				FROM 
+					(SELECT *, 
+						(SELECT `c_Usuario` 
+				         FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` 
+				         WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_Usuario` 
+				         LIMIT 1) 
+							AS `EV__c_Usuario`, 
+				         (SELECT `c_Usuario`
+				          FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` 
+				          WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_Usuario` 
+				          LIMIT 1) 
+							AS `EV__c_IReseller`
+					FROM `af_resellers_usuario`) `EW_TMP_TABLE` 
+				 WHERE `EW_TMP_TABLE`.`c_Usuario` = '".$_SESSION['filtros']."'";
+		}else{
+
+			return "SELECT * FROM (" .
 			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario`, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_resellers_usuario`.`c_IReseller` LIMIT 1) AS `EV__c_IReseller` FROM `af_resellers_usuario`" .
 			") `EW_TMP_TABLE`";
+		}
+		
 	}
 
 	function SqlWhere() { // Where

@@ -197,6 +197,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->c_IConfig->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -348,9 +349,8 @@ class caf_config_reportes_edit extends caf_config_reportes {
 
 		// Load from form
 		global $objForm;
-		if (!$this->c_IConfig->FldIsDetailKey) {
+		if (!$this->c_IConfig->FldIsDetailKey)
 			$this->c_IConfig->setFormValue($objForm->GetValue("x_c_IConfig"));
-		}
 		if (!$this->c_IReporte->FldIsDetailKey) {
 			$this->c_IReporte->setFormValue($objForm->GetValue("x_c_IReporte"));
 		}
@@ -966,9 +966,6 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->c_IConfig->FldIsDetailKey && !is_null($this->c_IConfig->FormValue) && $this->c_IConfig->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_IConfig->FldCaption());
-		}
 		if (!ew_CheckInteger($this->c_IConfig->FormValue)) {
 			ew_AddMessage($gsFormError, $this->c_IConfig->FldErrMsg());
 		}
@@ -1035,9 +1032,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// c_IConfig
 			// c_IReporte
-
 			$this->c_IReporte->SetDbValueDef($rsnew, $this->c_IReporte->CurrentValue, 0, $this->c_IReporte->ReadOnly);
 
 			// frec_Envio
@@ -1130,7 +1125,6 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		if (!$rs)
 			return "";
 		$sHash = "";
-		$sHash .= ew_GetFldHash($rs->fields('c_IConfig')); // c_IConfig
 		$sHash .= ew_GetFldHash($rs->fields('c_IReporte')); // c_IReporte
 		$sHash .= ew_GetFldHash($rs->fields('frec_Envio')); // frec_Envio
 		$sHash .= ew_GetFldHash($rs->fields('i_Dia_Envio')); // i_Dia_Envio
@@ -1267,9 +1261,6 @@ faf_config_reportesedit.Validate = function() {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
 			elm = this.GetElements("x" + infix + "_c_IConfig");
-			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->c_IConfig->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_c_IConfig");
 			if (elm && !ew_CheckInteger(elm.value))
 				return this.OnError(elm, "<?php echo ew_JsEncode2($af_config_reportes->c_IConfig->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_c_IReporte");
@@ -1364,7 +1355,7 @@ $af_config_reportes_edit->ShowMessage();
 <table id="tbl_af_config_reportesedit" class="table table-bordered table-striped">
 <?php if ($af_config_reportes->c_IConfig->Visible) { // c_IConfig ?>
 	<tr id="r_c_IConfig">
-		<td><span id="elh_af_config_reportes_c_IConfig"><?php echo $af_config_reportes->c_IConfig->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td><span id="elh_af_config_reportes_c_IConfig"><?php echo $af_config_reportes->c_IConfig->FldCaption() ?></span></td>
 		<td<?php echo $af_config_reportes->c_IConfig->CellAttributes() ?>>
 <span id="el_af_config_reportes_c_IConfig" class="control-group">
 <span<?php echo $af_config_reportes->c_IConfig->ViewAttributes() ?>>
@@ -1569,7 +1560,7 @@ faf_config_reportesedit.Lists["x_p_CClass"].Options = <?php echo (is_array($af_c
 		<td><span id="elh_af_config_reportes_x_DirCorreo"><?php echo $af_config_reportes->x_DirCorreo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
+<input type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_DirCorreo->CustomMsg ?></td>
 	</tr>

@@ -737,18 +737,20 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 		global $conn;
 
 		// Call Recordset Selecting event
+		//$this->CurrentFilter="`c_Usuario` = 'usr1'";
 		$this->Recordset_Selecting($this->CurrentFilter);
 
 		// Load List page SQL
 		$sSql = $this->SelectSQL();
+		
 		if ($offset > -1 && $rowcnt > -1)
-			$sSql .= " LIMIT $rowcnt OFFSET $offset";
-
+		 	$sSql .= " LIMIT $rowcnt OFFSET $offset";
 		// Load recordset
 		$rs = ew_LoadRecordset($sSql);
 
 		// Call Recordset Selected event
 		$this->Recordset_Selected($rs);
+
 		return $rs;
 	}
 
@@ -1253,7 +1255,6 @@ $af_reportes_usuario_list->RenderOtherOptions();
 $af_reportes_usuario_list->ShowMessage();
 ?>
 
-
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
@@ -1261,10 +1262,18 @@ $af_reportes_usuario_list->ShowMessage();
 $(document).on('change', '#select_usuarios', function() { 
 
 	if($(this).val() != 100){
-	$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
-	$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
-	}else{
-		$("#tbl_af_reportes_usuariolist tbody tr").show();
+	/*$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
+	$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();*/
+	var option = $(this).find("option:selected").text();
+	var dataString = "pag=reportes_usuario&filtro=usuarios&valor=" + option;
+	$.ajax({  
+	  type: "POST",  
+	  url: "lib/functions.php",  
+	  data: dataString,  
+	  success: function(html) {  
+		location.reload();
+	  }
+	  });
 	}
 });
 </script>
@@ -1272,6 +1281,7 @@ $(document).on('change', '#select_usuarios', function() {
 <label class= "filtro_label">Filtro Usuario</label>
 <select id= "select_usuarios" class= "filtro_select">
 	<option value = 100>Seleccione un Usuario</option>
+	<option value = 1000>All</option>
 <? $users = select_sql('select_usuarios');
 	$count = count($users);
 	$k = 1;
@@ -1338,7 +1348,7 @@ if ($af_reportes_usuario->ExportAll && $af_reportes_usuario->Export <> "") {
 
 	// Set the last record to display
 	if ($af_reportes_usuario_list->TotalRecs > $af_reportes_usuario_list->StartRec + $af_reportes_usuario_list->DisplayRecs - 1)
-		$af_reportes_usuario_list->StopRec = $af_reportes_usuario_list->StartRec + $af_reportes_usuario_list->DisplayRecs - 1;
+		/*echo "Start: " . $af_reportes_usuario_list->StartRec . " -- Display: ". $af_reportes_usuario_list->DisplayRecs;*/$af_reportes_usuario_list->StopRec = $af_reportes_usuario_list->StartRec + $af_reportes_usuario_list->DisplayRecs - 1;
 	else
 		$af_reportes_usuario_list->StopRec = $af_reportes_usuario_list->TotalRecs;
 }

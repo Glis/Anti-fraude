@@ -137,14 +137,20 @@ class caf_config_reportes extends cTable {
 	}
 
 	function SqlSelect() { // Select
-		return "SELECT * FROM " . $this->SqlFrom();
+		/**/
+			return "SELECT * FROM " . $this->SqlFrom();
+		//}
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		if($_SESSION['filtros'] != ""){
+			return "`af_config_reportes`.`c_IReporte`=".$_SESSION['filtros'];
+		}else{
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

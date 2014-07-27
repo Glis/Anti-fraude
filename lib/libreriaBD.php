@@ -71,7 +71,7 @@ function select_sql($nombre, $x = NULL){
             break; 
 
         case 'select_reportes':
-            $sql = "SELECT x_NbReporte " .
+            $sql = "SELECT c_IReporte, x_NbReporte " .
                    " FROM netuno.af_reportes " .
                    " ORDER BY x_NbReporte ASC ";
             break;

@@ -287,6 +287,7 @@ class caf_config_reportes_list extends caf_config_reportes {
 
 		// Setup export options
 		$this->SetupExportOptions();
+		$this->c_IConfig->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -1416,6 +1417,8 @@ $af_config_reportes_list->RenderOtherOptions();
 $af_config_reportes_list->ShowMessage();
 ?>
 
+
+
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
@@ -1423,25 +1426,38 @@ $af_config_reportes_list->ShowMessage();
 $(document).on('change', '#select_reportes', function() { 
 
 	if($(this).val() != 100){
-	$("#tbl_af_config_reporteslist tbody tr").hide(); 
+	/*$("#tbl_af_config_reporteslist tbody tr").hide(); 
 	$("#tbl_af_config_reporteslist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
 	}else{
-		$("#tbl_af_config_reporteslist tbody tr").show();
+		$("#tbl_af_config_reporteslist tbody tr").show();*/
+		var option = $(this).find("option:selected").val();
+		
+		var dataString = "pag=config_reportes&filtro=reporte&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+	
 	}
 });
 </script>
 
 <label class= "filtro_label">Filtro Reporte</label>
-<select id= "select_repotes" class= "filtro_select">
+<select id= "select_reportes" class= "filtro_select">
 	<option value = 100>Seleccione un Reporte</option>
-<? $reportes = select_sql('select_reportes');
+	<option value = 'All'>All</option>
+<? $reportes = select_sql('select_reportes'); print_r($reportes);
 	$count = count($reportes);
 	$k = 1;
 	while ($k <= $count){
-		echo "<option value= ".$reportes[$k]['x_NbReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
+		echo "<option value= ".$reportes[$k]['c_IReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
 		$k++;
 	}
-
+$_SESSION['filtros']= "";
 ?>
 
 </select>
@@ -1449,6 +1465,7 @@ $(document).on('change', '#select_reportes', function() {
 							<?/******************************************************
 							************************ENDFILTROS***********************
 							*********************************************************/?>
+
 
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_config_reporteslist" id="faf_config_reporteslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">

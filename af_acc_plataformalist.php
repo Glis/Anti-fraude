@@ -1288,10 +1288,20 @@ $af_acc_plataforma_list->ShowMessage();
 <script type="text/javascript">
 $(document).on('change', '#select_accion', function() { 
 	if($(this).val() != 100){
-	$("#tbl_af_acc_plataformalist tbody tr").hide();
+	/*$("#tbl_af_acc_plataformalist tbody tr").hide();
 	$("#tbl_af_acc_plataformalist" ).find( "span:contains('"+$(this).val()+ "')" ).parent().parent().show();
 	}else{
-		$("#tbl_af_acc_plataformalist tbody tr").show();
+		$("#tbl_af_acc_plataformalist tbody tr").show();*/
+		var option = $(this).find("option:selected").val();
+		var dataString = "pag=acc_plataforma&filtro=clase_accion&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
 	}
 });
 </script>
@@ -1299,11 +1309,12 @@ $(document).on('change', '#select_accion', function() {
 <label class= "filtro_label">Filtro Clase Acción</label>
 <select id= "select_accion" class= "filtro_select">
 	<option value = 100>Seleccione una Acción</option>
+	<option value = 'All'>All</option>
 <? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
 	$count = count($dom_accion);
 	$k = 1;
 	while ($k <= $count){
-		echo "<option value= ".$dom_accion[$k]['rv_Meaning']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+		echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
 		$k++;
 	}
 
@@ -1315,10 +1326,20 @@ $(document).on('change', '#select_accion', function() {
 <script type="text/javascript">
 $(document).on('change', '#select_tipo_accion', function() { 
 	if($(this).val() != 100){
-	$("#tbl_af_acc_plataformalist tbody tr").hide();
+	/*$("#tbl_af_acc_plataformalist tbody tr").hide();
 	$("#tbl_af_acc_plataformalist" ).find( "span:contains('"+$(this).val().replace(/_/g , " ")+"')" ).parent().parent().show();
 	}else{
-		$("#tbl_af_acc_plataformalist tbody tr").show();
+		$("#tbl_af_acc_plataformalist tbody tr").show();*/
+		var option = $(this).find("option:selected").val();
+		var dataString = "pag=acc_plataforma&filtro=tipo_accion&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
 	}
 });
 </script>
@@ -1326,11 +1347,12 @@ $(document).on('change', '#select_tipo_accion', function() {
 <label class= "filtro_label">Filtro Tipo Acción</label>
 <select id= "select_tipo_accion" class= "filtro_select">
 	<option value = 100>Seleccione un Tipo de Acción</option>
+	<option value = 'All'>All</option>
 <? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
 	$count = count($dom_tipo_accion);
 	$k = 1;
 	while ($k <= $count){
-		echo "<option value= ".str_replace(" ", "_", $dom_tipo_accion[$k]['rv_Meaning']). ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
+		echo "<option value= ".$dom_tipo_accion[$k]['rv_Low_Value']. ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
 		$k++;
 	}
 

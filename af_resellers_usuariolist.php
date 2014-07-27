@@ -1273,17 +1273,29 @@ $af_resellers_usuario_list->ShowMessage();
 $(document).on('change', '#select_usuarios', function() { 
 
 	if($(this).val() != 100){
-	$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
-	if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();
-	}else{
+		var option = $(this).find("option:selected").text();
+		var dataString = "pag=resellers_usuario&filtro=usuarios&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+	
+	/*$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
+	if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();*/
+	}/*else{
 		$("#tbl_af_resellers_usuariolist tbody tr").show();
-	}
+	}*/
 });
 </script>
 
 <label class= "filtro_label">Filtro Usuario</label>
 <select id= "select_usuarios" class= "filtro_select">
-	<option value = 100>Seleccione una Usuario</option>
+	<option value = 100>Seleccione un Usuario</option>
+	<option value = 100>All</option>
 <? $users = select_sql('select_usuarios');
 	$count = count($users);
 	$k = 1;

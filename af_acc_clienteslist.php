@@ -1371,11 +1371,21 @@ $af_acc_clientes_list->ShowMessage();
 <script type="text/javascript">
 $(document).on('change', '#select_accion', function() { 
 	if($(this).val() != 100){
-	$("#tbl_af_acc_clienteslist tbody tr").hide();
+	/*$("#tbl_af_acc_clienteslist tbody tr").hide();
 	$("#tbl_af_acc_clienteslist" ).find( "span:contains('"+$(this).val()+ "')" ).parent().parent().show();
 	}else{
-		$("#tbl_af_acc_clienteslist tbody tr").show();
-	}//$("#tbl_af_acc_clienteslist").find($(this).val()).val(); alert($("#tbl_af_acc_clienteslist tbody").find($(this).val()).text());
+		$("#tbl_af_acc_clienteslist tbody tr").show();*/
+		var option = $(this).find("option:selected").val();
+		var dataString = "pag=acc_cliente&filtro=clase_accion&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+	}
 });
 </script>
 
@@ -1386,7 +1396,7 @@ $(document).on('change', '#select_accion', function() {
 	$count = count($dom_accion);
 	$k = 1;
 	while ($k <= $count){
-		echo "<option value= ".$dom_accion[$k]['rv_Meaning']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+		echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
 		$k++;
 	}
 
@@ -1398,11 +1408,21 @@ $(document).on('change', '#select_accion', function() {
 <script type="text/javascript">
 $(document).on('change', '#select_tipo_accion', function() { 
 	if($(this).val() != 100){
-	$("#tbl_af_acc_clienteslist tbody tr").hide();
+	/*$("#tbl_af_acc_clienteslist tbody tr").hide();
 	$("#tbl_af_acc_clienteslist" ).find( "span:contains('"+$(this).val().replace(/_/g , " ")+"')" ).parent().parent().show();
 	}else{
-		$("#tbl_af_acc_clienteslist tbody tr").show();
-	}//$("#tbl_af_acc_clienteslist").find($(this).val()).val(); alert($("#tbl_af_acc_clienteslist tbody").find($(this).val()).text());
+		$("#tbl_af_acc_clienteslist tbody tr").show();*/
+		var option = $(this).find("option:selected").val();
+		var dataString = "pag=acc_cclass&filtro=tipo_accion&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+	}
 });
 </script>
 
@@ -1413,7 +1433,7 @@ $(document).on('change', '#select_tipo_accion', function() {
 	$count = count($dom_tipo_accion);
 	$k = 1;
 	while ($k <= $count){
-		echo "<option value= ".str_replace(" ", "_", $dom_tipo_accion[$k]['rv_Meaning']). ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
+		echo "<option value= ".$dom_tipo_accion[$k]['rv_Low_Value']. ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
 		$k++;
 	}
 

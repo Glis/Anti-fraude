@@ -194,6 +194,7 @@ class caf_config_reportes_delete extends caf_config_reportes {
 	function Page_Init() {
 		global $gsExport, $gsExportFile, $UserProfile, $Language, $Security, $objForm;
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->c_IConfig->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();

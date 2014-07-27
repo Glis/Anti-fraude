@@ -117,10 +117,18 @@ class caf_acc_cuentas extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		if($_SESSION['filtros'] != ""){
+			if($_SESSION['tipofiltro'] == 'clase_accion'){
+				return $this->SqlFrom().".`cl_Accion`=".$_SESSION['filtros'];
+			}else{
+				if($_SESSION['tipofiltro'] == 'tipo_accion')return $this->SqlFrom().".`t_Accion`=".$_SESSION['filtros'];
+			}
+		}else{
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By
