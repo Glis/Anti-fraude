@@ -57,26 +57,26 @@ date_default_timezone_set('America/Caracas');
                         <div id="login-box" class="jumbotron">
                             <form class="form-horizontal" role="form" action="" method="POST" onsubmit="return validar(this)">
                                 <div id="campo1_Fact" class="form-group">
-                                  <label for="usuario" id="label_usuario" class="col-sm-2 control-label labellogin">Login</label>
-                                  <div class="col-sm-10">
+                                  <label for="usuario" id="label_usuario" class="col-sm-2 col-sm-offset-1 control-label labellogin">Login</label>
+                                  <div class="col-sm-6">
                                     <input type="text" name="usuario" id="usuario" class="form-control inputlogin" value="" placeholder="Usuario" autofocus> </input>
                                   </div>
                                 </div><br>
                                 <div id="campo2" class="form-group">
-                                  <label for="clave" id="label_clave" class="col-sm-2 control-label labellogin">Password</label>
-                                  <div class="col-sm-10">
+                                  <label for="clave" id="label_clave" class="col-sm-2 col-sm-offset-1 control-label labellogin">Password</label>
+                                  <div class="col-sm-6">
                                     <input type="password" name="clave" id="clave" class="form-control inputlogin" placeholder="Password">
                                   </div>
                                 </div><br>
                                 <div id="campo3" class="form-group">
-                                  <label for="portaone" id="label_select" class="col-sm-2 control-label labellogin">PortaOne</label>
-                                  <div class="col-sm-10">
+                                  <label for="portaone" id="label_select" class="col-sm-2 col-sm-offset-1 control-label labellogin">PortaOne</label>
+                                  <div class="col-sm-6">
                                     <select name="portaone" id="portaone" class="form-control inputlogin">
                                         <option value="1">Costa Rica (CR)</option>
                                         <option value="2">Panama (PA)</option>
                                     </select>
                                   </div>
-                                </div><br>
+                                </div></br>
                                 <div id="boton" class="form-group">
                                   <div class="col-sm-offset-2 col-sm-8">
                                     <input type="submit" value="Login" id="loginBut" class="btn btn-primary" name="login"/>
@@ -84,6 +84,34 @@ date_default_timezone_set('America/Caracas');
                                   </div>
                                 </div>
                             </form>
+                            <?php
+                            if(isset($_POST['login'])){ 
+                                $_SESSION["USUARIO"] = trim($_POST['usuario']);
+                                $_SESSION["CLAVE"] = trim($_POST['clave']);
+                                $_SESSION["PORTAONE"] = trim($_POST['portaone']);
+                                
+                                $registrado = select_sql("select_usuario",$_SESSION["USUARIO"]);
+                                $activo = select_sql("select_usuario_activo",$_SESSION["USUARIO"]);
+                                
+                                if ((!isset($registrado[1]["c_Usuario"])) || (!isset($activo[1]["c_Usuario"]))) {
+                                    $_SESSION = array();
+                                    echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
+                                }else{
+                                     $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
+                                    if (!$salida->logged) {
+                                        $_SESSION = array();
+                                        echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
+                                    }else{
+                                        //Redireccionamiento a pag. "af_acc_cclasslist.php" cuando login/password es correcto y se inicio la sesion
+                                        $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
+                                        $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
+                                        $_SESSION['USUARIO_TYPE']['config'] = $datos[1]['i_Config'];
+                                        echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
+                                    }
+                                }
+                                //abrirConexion_PO();
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -108,37 +136,8 @@ date_default_timezone_set('America/Caracas');
                         <input type="submit" value="Login" id="login" name="login"/>
                     </div>
                 </form> -->
+                
             </div>
-
-            <?php
-            if(isset($_POST['login'])){ 
-                $_SESSION["USUARIO"] = trim($_POST['usuario']);
-                $_SESSION["CLAVE"] = trim($_POST['clave']);
-                $_SESSION["PORTAONE"] = trim($_POST['portaone']);
-                
-                $registrado = select_sql("select_usuario",$_SESSION["USUARIO"]);
-                $activo = select_sql("select_usuario_activo",$_SESSION["USUARIO"]);
-                
-                if ((!isset($registrado[1]["c_Usuario"])) || (!isset($activo[1]["c_Usuario"]))) {
-                    $_SESSION = array();
-                    echo "<h5 id='error'>ERROR: Login o password inv&aacute;lido<br><br></h5>";
-                }else{
-                     $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
-                    if (!$salida->logged) {
-                        $_SESSION = array();
-                        echo "<h5 id='error'>ERROR: Login o password inv&aacute;lido<br><br></h5>";
-                    }else{
-                        //Redireccionamiento a pag. "af_acc_cclasslist.php" cuando login/password es correcto y se inicio la sesion
-                        $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
-                        $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
-                        $_SESSION['USUARIO_TYPE']['config'] = $datos[1]['i_Config'];
-                        echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
-                    }
-                }
-                //abrirConexion_PO();
-            }
-            ?>
-
         </div>
 
         

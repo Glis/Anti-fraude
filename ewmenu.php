@@ -9,7 +9,7 @@
         <li><a href="#">Clientes Bloqueados</a></li>
         <li><a href="#">Cuentas Bloqueadas</a></li>
         <li class="divider"></li>
-        <li><a href="#">Monitor</a></li>
+        <li><a href="af_monitor.php">Monitor</a></li>
       </ul>
     </li>
     <li class="dropdown col-sm-3">

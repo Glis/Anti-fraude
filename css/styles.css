@@ -30,13 +30,16 @@ body{
 	box-shadow: 2px 2px 3px 0px #666;
 }
 
+#login-box .alert{
+	margin-bottom: 0;
+}
+
 #loginBut{
 	width: 50%;
 }
 
 
 .inputlogin{
-	width: 60%;
 	margin-left: 10px;
 }
 /*Modificados de PHPMaker*/
@@ -203,4 +206,33 @@ Dropdown Submenus
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
+}
+
+/*//////////////////////////////
+//////Monitor Stuff
+///////////////////////////////*/
+
+#treeContainer ul{
+	list-style-type: none;
+}
+
+#treeContainer table{
+	margin-bottom: 0px;
+}
+
+.tableContainer{
+	margin-bottom: 20px
+}
+
+.panel{
+	margin-bottom: 1px;
+}
+
+.iconCol{
+	width: 40px;
+}
+
+.glyphicon-plus {
+	margin-left: 18%;
+	margin-top: 6%;
 }

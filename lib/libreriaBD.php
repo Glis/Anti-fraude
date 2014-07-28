@@ -82,8 +82,46 @@ function select_sql($nombre, $x = NULL){
                    " ORDER BY x_NbReporte ASC ";
             break;
 
+        case 'select_monitor_first_level':
+            $sql = "SELECT c_IReporte, x_NbReporte " .
+                   " FROM netuno.af_reportes " .
+                   " ORDER BY x_NbReporte ASC ";
+
+            break;
         }
     
+    abrirConexion();
+    $ejecutar_sql = mysql_query($sql);
+    if (!$ejecutar_sql) {
+        $object[1]['error'] = 'error';
+        return $object;
+    } else {
+        $num_rows = @mysql_num_fields($ejecutar_sql);
+        $j=0;
+        $x=1;
+        while($row=@mysql_fetch_array($ejecutar_sql)){
+            for($j=0;$j<$num_rows;$j++){
+                $name = @mysql_field_name($ejecutar_sql,$j);
+                $object[$x][$name]=$row[$name];
+            }
+            $x++;
+        }
+            
+        if ($x>1 && $num_rows>0) {
+            return $object;
+        }
+            
+        @mysql_free_result($ejecutar_sql);
+    }
+    cerrarConexion();
+}
+
+function select_custom_sql($queryFields, $queryTable, $queryCondition, $queryOrderBy/*,  $x = NULL*/){
+    $sql = "SELECT ".$queryFields.
+           " FROM netuno.".$queryTable;
+    if($queryCondition <> "") $sql.=" WHERE ".$queryCondition;
+    if($queryOrderBy <> "") $sql.= " ORDER BY ".$queryOrderBy; 
+                
     abrirConexion();
     $ejecutar_sql = mysql_query($sql);
     if (!$ejecutar_sql) {
