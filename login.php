@@ -106,6 +106,7 @@ date_default_timezone_set('America/Caracas');
                                         $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
                                         $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
                                         $_SESSION['USUARIO_TYPE']['config'] = $datos[1]['i_Config'];
+                                        $_SESSION['filtros']="";
                                         echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
                                     }
                                 }
