@@ -1234,9 +1234,7 @@ $af_config_list->ShowMessage();
 					<label>Frecuencia Chequeo (min)</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type="number" name="freq_chq_min" value= <?echo($res[1]['q_Min_Chequeo'])?> >
-					</span>
+					<input type="number" name="freq_chq_min" class="form-control" value= <?echo($res[1]['q_Min_Chequeo'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1244,9 +1242,7 @@ $af_config_list->ShowMessage();
 					<label>Ventana Chequeo (min)</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type= "number" name="ventana_chq_min" value= <?echo($res[1]['q_Min_VentChequeo'])?> >
-					</span>
+					<input type= "number" name="ventana_chq_min" class="form-control" value= <?echo($res[1]['q_Min_VentChequeo'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1254,9 +1250,7 @@ $af_config_list->ShowMessage();
 					<label>Fecha de Ult Chequeo</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type="date" name="fecha_ult_chq" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
-					</span>
+					<input type="date" name="fecha_ult_chq" class="form-control" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1264,9 +1258,7 @@ $af_config_list->ShowMessage();
 					<label>Usuario API</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type= "text" name="user_api" value= <?echo($res[1]['x_Usuario_Api'])?> >
-					</span>
+					<input type= "text" name="user_api" class="form-control" value= <?echo($res[1]['x_Usuario_Api'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1274,9 +1266,7 @@ $af_config_list->ShowMessage();
 					<label>Contraseña API</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type= "text" name="pw_api" value= <?echo($res[1]['x_Passw_Api'])?> >
-					</span>
+					<input type= "text" name="pw_api" class="form-control" value= <?echo($res[1]['x_Passw_Api'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1284,9 +1274,7 @@ $af_config_list->ShowMessage();
 					<label>URL wsdl API</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type= "url" name="url_api" value= <?echo($res[1]['x_Url_Wsdl'])?> >
-					</span>
+					<input type= "url" name="url_api" class="form-control" value= <?echo($res[1]['x_Url_Wsdl'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1294,9 +1282,7 @@ $af_config_list->ShowMessage();
 					<label>Usuario Ult Modif</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type="text" readonly value= <?echo($res[1]['c_Usuario_Ult_Mod'])?> >
-					</span>
+					<input type="text" readonly class="form-control" value= <?echo($res[1]['c_Usuario_Ult_Mod'])?> >
 				</td>
 			</tr>
 			<tr>
@@ -1304,9 +1290,7 @@ $af_config_list->ShowMessage();
 					<label>Fecha Ult Modif</label>
 				</td>
 				<td>
-					<span class="control-group">
-						<input type="text" readonly value= <?echo($res[1]['f_Ult_Mod'])?> >
-					</span>
+					<input type="text" readonly class="form-control" value= <?echo($res[1]['f_Ult_Mod'])?> >
 				</td>
 			</tr>
 		</tbody>

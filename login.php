@@ -80,7 +80,6 @@ date_default_timezone_set('America/Caracas');
                                 <div id="boton" class="form-group">
                                   <div class="col-sm-offset-2 col-sm-8">
                                     <input type="submit" value="Login" id="loginBut" class="btn btn-primary" name="login"/>
-                                    <!-- <button type="submit" id="login" name="login" class="btn btn-default">Login</button> -->
                                   </div>
                                 </div>
                             </form>

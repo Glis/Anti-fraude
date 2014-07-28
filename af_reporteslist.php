@@ -1378,7 +1378,7 @@ if ($af_reportes_list->Recordset)
 	<?php if ($af_reportes_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<p><?php echo $Language->Phrase("NoRecord") ?></p>
+	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
 	<?php } ?>
 <?php } ?>
 </td>

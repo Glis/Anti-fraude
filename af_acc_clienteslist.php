@@ -629,13 +629,13 @@ class caf_acc_clientes_list extends caf_acc_clientes {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAddEdit ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAddEdit  ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 		$option = $options["action"];
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_acc_clienteslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_acc_clienteslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = (TRUE);
 
 		// Set up options default
@@ -1664,7 +1664,7 @@ if ($af_acc_clientes_list->Recordset)
 	<?php if ($af_acc_clientes_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<p><?php echo $Language->Phrase("NoRecord") ?></p>
+	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
 	<?php } ?>
 <?php } ?>
 </td>
