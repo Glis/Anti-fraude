@@ -8,8 +8,9 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_resellers_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
-
+ini_set('max_execution_time', 300); 
 if(!isset($_SESSION['USUARIO']))
 {
     header("Location: login.php");
@@ -912,9 +913,13 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					/*$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];*/
 					$rswrk->Close();
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					/*$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];*/
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
@@ -1163,10 +1168,11 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 	function ListOptions_Load() {
 
 		// Example:
-		//$opt = &$this->ListOptions->Add("new");
-		//$opt->Header = "xxx";
+		//$opt = &$this->ListOptions->Add("nb_Destino");
+		//$opt->Header = "Nombre Destino";
 		//$opt->OnLeft = TRUE; // Link on left
-		//$opt->MoveTo(0); // Move to first column
+		//$opt->MoveTo(2); // Move to first column
+
 
 	}
 
@@ -1174,7 +1180,7 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 	function ListOptions_Rendered() {
 
 		// Example: 
-		//$this->ListOptions->Items["new"]->Body = "xxx";
+		//$this->ListOptions->Items["nb_Destino"]->Body = $this->c_Usuario->CurrentValue;
 
 	}
 

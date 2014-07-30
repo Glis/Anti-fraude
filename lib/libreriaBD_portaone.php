@@ -29,13 +29,22 @@ function select_sql_PO($nombre, $ArrParams = NULL){
         switch($nombre) {
 
             case 'select_porta_customers' :
-                $sql = "Select * from Customers";
+                $sql = "SELECT * FROM Customers";
                 //$sql = "Select name from porta-billing.Customers where i_customer_type=2 and i_env=1";
                 break; 
 
             case 'select_porta_customers_where' :
-                $sql = "Select name from Customers where i_customer_type=2 and i_env=1 and i_Customer=".$ArrParams[0];
+                $sql = "SELECT name FROM Customers WHERE i_customer_type=2 AND i_env=1 AND i_Customer=".$ArrParams[0];
                 break;
+             
+             case 'select_destino_where' :
+                $sql = "SELECT description FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
+                break;
+
+            case 'select_i_destino_where' :
+                $sql = 'SELECT i_dest FROM Destinations WHERE i_env=1 AND description LIKE "%'.$ArrParams[0].'%"';
+                break;
+
         }
     
     abrirConexion_PO();

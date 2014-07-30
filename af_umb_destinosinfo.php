@@ -147,10 +147,25 @@ class caf_umb_destinos extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		if($_SESSION['filtros_umb'] != ""){
+				$cant = count($_SESSION['filtros_umb']);
+				$k = 1;
+				$where = $this->SqlFrom().".`c_IDestino` IN (";
+				while($k <= $cant - 1){
+					$where .= $_SESSION['filtros_umb'][$k]['i_dest']. ", ";
+					$k++;
+				}
+
+				$where .= $_SESSION['filtros_umb'][$k]['i_dest'] . ")";
+				$sWhere = $where; //var_dump($where);
+				return $sWhere;
+			
+		}else{
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

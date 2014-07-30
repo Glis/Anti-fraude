@@ -7,8 +7,9 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_destinosinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
-
+ini_set('max_execution_time', 300); 
 if(!isset($_SESSION['USUARIO']))
 {
     header("Location: login.php");
@@ -1219,6 +1220,10 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
+		$opt = &$this->ListOptions->Add("nb_Destino");
+		$opt->Header = "Nombre Destino";
+		$opt->OnLeft = TRUE; // Link on left
+		$opt->MoveTo(2); // Move to first column
 
 	}
 
@@ -1227,6 +1232,8 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
+		$res = select_sql_PO('select_destino_where', array((int)$this->c_IDestino->CurrentValue));
+		$this->ListOptions->Items["nb_Destino"]->Body = $res[1]['description'];
 
 	}
 
@@ -1332,6 +1339,41 @@ $af_umb_destinos_list->RenderOtherOptions();
 <?php
 $af_umb_destinos_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+
+<script type="text/javascript">
+$(document).on('click','#submit_dest',function(){
+		var option = $("#dest").val();
+		var dataString = "pag=umb_destinos&filtro=destinos";
+		if (option == ""){
+			dataString = dataString + "&valor=vacio";
+		}else{
+			dataString = dataString + "&valor=" + option;
+		}
+
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		});
+
+	});
+
+
+</script>
+
+<form id="submit_destinos">
+	<label class= "filtro_label">Filtro Destino</label>
+	<input type="text" name="dest" id="dest">
+	<button type="button" id="submit_dest">Buscar</button>
+</form>
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_umb_destinoslist" id="faf_umb_destinoslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_umb_destinos">
@@ -1342,7 +1384,7 @@ $af_umb_destinos_list->ShowMessage();
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
-
+$_SESSION['filtros_umb'] = "";
 // Render list options
 $af_umb_destinos_list->RenderListOptions();
 
