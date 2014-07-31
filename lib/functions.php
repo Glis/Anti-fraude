@@ -80,12 +80,54 @@ switch ($pagina) {
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 		break;
+
+	case 'customer_class_filtro':
+
+		$res = select_sql_PO('select_customer_class_filtro', array($_POST['reseller']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='vacio'>Todo</option>";
+		while ($k <= $cant) {
+			$html_res .= "<option value='".$res[$k]['i_customer_class']."''>".$res[$k]['name']."</option>";
+			$k++;
+		}
+		echo $html_res;
+		break;
 	
+	case 'umb_cclass':
+		
+		if($_POST['destino'] == 'vacio'){
+			$_SESSION['filtros_umb']['destino']="";
+		}else{		
+			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+			$_SESSION['filtros_umb']['destino'] = $res;
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['reseller'] == 'vacio'){
+			$_SESSION['filtros_umb']['reseller']="";
+		}else{		
+			//$res = select_sql_PO('select_i_porta_customers_where', array($_POST['valor']));
+			$_SESSION['filtros_umb']['reseller'] = $_POST['reseller'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['reseller'] == 'vacio'){
+			$_SESSION['filtros_umb']['cclass']="";
+		}else{		
+			//$res = select_sql_PO('select_i_porta_customers_where', array($_POST['valor']));
+			$_SESSION['filtros_umb']['cclass'] = $_POST['cclass'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		break;
+
+
 	default:
 		# code...
 		break;
 }
 //echo $_SESSION['filtros'];
-echo($_SESSION['filtros_umb'][1]['i_dest']);
+//echo($_SESSION['filtros_umb'][1]['i_dest']);
 
 ?>

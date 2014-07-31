@@ -60,6 +60,10 @@ function select_sql_PO($nombre, $ArrParams = NULL){
                 $sql = "SELECT id FROM Accounts WHERE i_env=1 AND i_account=" . $ArrParams[0] . " AND i_customer=" . $ArrParams[1];
                 break; 
 
+            case 'select_customer_class_filtro':
+                //Populate select Umb_CClass
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer=" .$ArrParams[0];
+
         }
     
     abrirConexion_PO();

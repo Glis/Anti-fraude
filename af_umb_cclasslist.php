@@ -1358,7 +1358,7 @@ $(document).on('click','#submit_filtros',function(){
 		var destino = $("#dest").val();
 		var reseller = $("#resellers_filtro").find("option:selected").val();
 		var cclass = $("#cclass_filtro").find("option:selected").val();
-		var dataString = "pag=umb_resellers&filtro1=destinos";
+		var dataString = "pag=umb_cclass&filtro1=destinos";
 		if (destino == ""){
 			dataString = dataString + "&destino=vacio";
 		}else{
@@ -1378,16 +1378,33 @@ $(document).on('click','#submit_filtros',function(){
 		}
 
 		alert(dataString);
-		/*$.ajax({  
+		$.ajax({  
 		  type: "POST",  
 		  url: "lib/functions.php",  
 		  data: dataString,  
 		  success: function(html) {  
 			location.reload();
 		  }
-		});*/
+		});
 
 	});
+
+
+$(document).on('change','#resellers_filtro',function(){
+
+	var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
+	$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(response) {  
+			$('#cclass_filtro').empty().append(response);
+			$( "#cclass_filtro" ).prop( "disabled", false );
+		  }
+		});
+	
+});
+
 
 
 </script>
@@ -1401,7 +1418,7 @@ $(document).on('click','#submit_filtros',function(){
 <select id="resellers_filtro">
 <option value="vacio">Todo</option>
 <?
-$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
+$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; $_SESSION['filtros_umb']['cclass'] = "";
 $res = select_sql_PO('select_porta_customers');
 $cant = count($res);
 $k = 1;
@@ -1415,20 +1432,8 @@ while ($k <= $cant) {
 </select>
 
 <label class= "filtro_label">Filtro Customer Class</label>
-<select id="cclass_filtro">
+<select id="cclass_filtro" disabled>
 <option value="vacio">Todo</option>
-<?
-$_SESSION['filtros_umb']['cclass'] = ""; $_SESSION['filtros_umb']['cclass'] = "";
-$res = select_sql_PO('select_porta_customers_class_where');
-$cant = count($res);
-$k = 1;
-
-while ($k <= $cant) {
-	echo ('<option value='.$res[$k]['i_customer_class'].'>'. $res[$k]['name'] . '</option>');
-	$k++;
-}
-
-?>
 </select>
 <button type="button btn-primary" id="submit_filtros">Buscar</button>
 
