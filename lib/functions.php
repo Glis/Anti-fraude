@@ -53,13 +53,32 @@ switch ($pagina) {
 
 	case 'umb_destinos':
 		if($_POST['valor'] == 'vacio'){
-			$_SESSION['filtros']="";
+			$_SESSION['filtros_umb']="";
 		}else{
 			$res = select_sql_PO('select_i_destino_where', array($_POST['valor']));
 			$_SESSION['filtros_umb'] = $res;
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 		
+		break;
+
+	case 'umb_resellers':
+		
+		if($_POST['destino'] == 'vacio'){
+			$_SESSION['filtros_umb']['destino']="";
+		}else{		
+			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+			$_SESSION['filtros_umb']['destino'] = $res;
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['reseller'] == 'vacio'){
+			$_SESSION['filtros_umb']['reseller']="";
+		}else{		
+			//$res = select_sql_PO('select_i_porta_customers_where', array($_POST['valor']));
+			$_SESSION['filtros_umb']['reseller'] = $_POST['reseller'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
 		break;
 	
 	default:

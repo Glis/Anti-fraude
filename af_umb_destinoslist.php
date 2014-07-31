@@ -912,8 +912,12 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->ViewValue = NULL;
@@ -1368,11 +1372,11 @@ $(document).on('click','#submit_dest',function(){
 
 </script>
 
-<form id="submit_destinos">
-	<label class= "filtro_label">Filtro Destino</label>
-	<input type="text" name="dest" id="dest">
-	<button type="button" id="submit_dest">Buscar</button>
-</form>
+
+<label class= "filtro_label">Filtro Destino</label>
+<input type="text" name="dest" id="dest">
+<button type="button" id="submit_dest">Buscar</button>
+
 
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_umb_destinoslist" id="faf_umb_destinoslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">

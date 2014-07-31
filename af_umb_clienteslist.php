@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -900,8 +901,12 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->ViewValue = NULL;
@@ -924,8 +929,13 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
+
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
@@ -948,8 +958,12 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICliente->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICliente->ViewValue = NULL;
@@ -1214,6 +1228,10 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
+		$opt = &$this->ListOptions->Add("nb_Destino");
+		$opt->Header = "Nombre Destino";
+		$opt->OnLeft = TRUE; // Link on left
+		$opt->MoveTo(2); // Move to first column
 
 	}
 
@@ -1222,6 +1240,8 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
+		$res = select_sql_PO('select_destino_where', array((int)$this->c_IDestino->CurrentValue));
+		$this->ListOptions->Items["nb_Destino"]->Body = $res[1]['description'];
 
 	}
 
@@ -1329,6 +1349,83 @@ $af_umb_clientes_list->RenderOtherOptions();
 <?php
 $af_umb_clientes_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+
+<script type="text/javascript">
+$(document).on('click','#submit_filtros',function(){
+
+		var destino = $("#dest").val();
+		var reseller = $("#resellers_filtro").find("option:selected").val();
+		var cclass = $("#cclass_filtro").find("option:selected").val();
+		var dataString = "pag=umb_resellers&filtro1=destinos";
+		if (destino == ""){
+			dataString = dataString + "&destino=vacio";
+		}else{
+			dataString = dataString + "&destino=" + destino;
+		}
+
+		if (reseller == "vacio"){
+			dataString = dataString + "&reseller=vacio";
+		}else{
+			dataString = dataString + "&reseller=" + reseller;
+		}
+
+		if (cclass == "vacio"){
+			dataString = dataString + "&cclass=vacio";
+		}else{
+			dataString = dataString + "&cclass=" + cclass;
+		}
+
+		alert(dataString);
+		/*$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		});*/
+
+	});
+
+
+</script>
+
+
+<label class= "filtro_label">Filtro Destino</label>
+<input type="text" name="dest" id="dest">
+
+
+<label class= "filtro_label">Filtro Reseller</label>
+<select id="resellers_filtro">
+<option value="vacio">Todo</option>
+<?
+$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
+$res = select_sql_PO('select_porta_customers');
+$cant = count($res);
+$k = 1;
+
+while ($k <= $cant) {
+	echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+	$k++;
+}
+
+?>
+</select>
+
+<label class= "filtro_label">Filtro Destino</label>
+<input type="text" name="dest" id="dest">
+
+<button type="button btn-primary" id="submit_filtros">Buscar</button>
+
+
+							<?/******************************************************
+							************************END FILTROS**************************
+							*********************************************************/?>
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_umb_clienteslist" id="faf_umb_clienteslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_umb_clientes">

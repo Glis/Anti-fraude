@@ -29,21 +29,36 @@ function select_sql_PO($nombre, $ArrParams = NULL){
         switch($nombre) {
 
             case 'select_porta_customers' :
-                $sql = "SELECT * FROM Customers";
-                //$sql = "Select name from porta-billing.Customers where i_customer_type=2 and i_env=1";
+                //$sql = "SELECT * FROM Customers";
+                $sql = "SELECT * FROM Customers WHERE i_customer_type=2 AND i_env=1";
                 break; 
 
             case 'select_porta_customers_where' :
-                $sql = "SELECT name FROM Customers WHERE i_customer_type=2 AND i_env=1 AND i_Customer=".$ArrParams[0];
+                $sql = "SELECT name FROM Customers WHERE i_customer_type=2 AND i_env=1 AND i_customer=".$ArrParams[0];
                 break;
              
              case 'select_destino_where' :
-                $sql = "SELECT description FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
+                $sql = "SELECT description, destination FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
                 break;
 
             case 'select_i_destino_where' :
                 $sql = 'SELECT i_dest FROM Destinations WHERE i_env=1 AND description LIKE "%'.$ArrParams[0].'%"';
                 break;
+
+            case 'select_porta_customers_class_where' :
+                //Customer Class
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer_class =" .$ArrParams[0];
+                break; 
+
+            case 'select_porta_customers_where_class' :
+                //Clientes
+                $sql = "SELECT name, i_customer_class FROM Customers WHERE i_customer_type=1 AND i_env=1 AND i_customer=".$ArrParams[0];
+                break;
+
+            case 'select_porta_accounts_where' :
+                //Cuentas
+                $sql = "SELECT id FROM Accounts WHERE i_env=1 AND i_account=" . $ArrParams[0] . " AND i_customer=" . $ArrParams[1];
+                break; 
 
         }
     

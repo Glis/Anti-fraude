@@ -913,13 +913,13 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
-					/*$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->ViewValue = $result[1]['name'];*/
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 					$rswrk->Close();
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-					/*$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->ViewValue = $result[1]['name'];*/
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
