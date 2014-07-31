@@ -48,6 +48,19 @@ body{
 	background-color: white;
 }
 
+.ewContentColumn{
+	padding-top: 5px;
+}
+
+.ewStdTable{
+	margin: 0 auto;
+}
+
+.breadcrumb{
+	background-color: transparent;
+}
+
+
 .ewMenuColumn{
 	font-size: 16px;
 	background-color: #ccc;
