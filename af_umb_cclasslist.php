@@ -1351,92 +1351,97 @@ $af_umb_cclass_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
+<div id="filterContainer">
 
-<script type="text/javascript">
-$(document).on('click','#submit_filtros',function(){
+	<script type="text/javascript">
+	$(document).on('click','#submit_filtros',function(){
 
-		var destino = $("#dest").val();
-		var reseller = $("#resellers_filtro").find("option:selected").val();
-		var cclass = $("#cclass_filtro").find("option:selected").val();
-		var dataString = "pag=umb_cclass&filtro1=destinos";
-		if (destino == ""){
-			dataString = dataString + "&destino=vacio";
-		}else{
-			dataString = dataString + "&destino=" + destino;
-		}
+			var destino = $("#dest").val();
+			var reseller = $("#resellers_filtro").find("option:selected").val();
+			var cclass = $("#cclass_filtro").find("option:selected").val();
+			var dataString = "pag=umb_cclass&filtro1=destinos";
+			if (destino == ""){
+				dataString = dataString + "&destino=vacio";
+			}else{
+				dataString = dataString + "&destino=" + destino;
+			}
 
-		if (reseller == "vacio"){
-			dataString = dataString + "&reseller=vacio";
-		}else{
-			dataString = dataString + "&reseller=" + reseller;
-		}
+			if (reseller == "vacio"){
+				dataString = dataString + "&reseller=vacio";
+			}else{
+				dataString = dataString + "&reseller=" + reseller;
+			}
 
-		if (cclass == "vacio"){
-			dataString = dataString + "&cclass=vacio";
-		}else{
-			dataString = dataString + "&cclass=" + cclass;
-		}
+			if (cclass == "vacio"){
+				dataString = dataString + "&cclass=vacio";
+			}else{
+				dataString = dataString + "&cclass=" + cclass;
+			}
 
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
+
 		});
 
+
+	$(document).on('change','#resellers_filtro',function(){
+
+		var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
+		$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(response) {  
+				$('#cclass_filtro').empty().append(response);
+				$( "#cclass_filtro" ).prop( "disabled", false );
+			  }
+			});
+		
 	});
 
 
-$(document).on('change','#resellers_filtro',function(){
 
-	var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
-	$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(response) {  
-			$('#cclass_filtro').empty().append(response);
-			$( "#cclass_filtro" ).prop( "disabled", false );
-		  }
-		});
-	
-});
+	</script>
 
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Destino</label>
+		<input type="text" name="dest" id="dest" class="form-control">
+	</div>
 
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Reseller</label>
+		<select id="resellers_filtro" class="form-control">
+		<option value="vacio">Todo</option>
+		<?
+		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; $_SESSION['filtros_umb']['cclass'] = "";
+		$res = select_sql_PO('select_porta_customers');
+		$cant = count($res);
+		$k = 1;
 
-</script>
+		while ($k <= $cant) {
+			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+			$k++;
+		}
 
+		?>
+		</select>
+	</div>
 
-<label class= "filtro_label">Filtro Destino</label>
-<input type="text" name="dest" id="dest">
-
-
-<label class= "filtro_label">Filtro Reseller</label>
-<select id="resellers_filtro">
-<option value="vacio">Todo</option>
-<?
-$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; $_SESSION['filtros_umb']['cclass'] = "";
-$res = select_sql_PO('select_porta_customers');
-$cant = count($res);
-$k = 1;
-
-while ($k <= $cant) {
-	echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-	$k++;
-}
-
-?>
-</select>
-
-<label class= "filtro_label">Filtro Customer Class</label>
-<select id="cclass_filtro" disabled>
-<option value="vacio">Todo</option>
-</select>
-<button type="button btn-primary" id="submit_filtros">Buscar</button>
-
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Customer Class</label>
+		<select id="cclass_filtro" disabled class="form-control">
+		<option value="vacio">Todo</option>
+		</select>
+	</div>
+	<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+</div>
 
 							<?/******************************************************
 							************************END FILTROS**************************

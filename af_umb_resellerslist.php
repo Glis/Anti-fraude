@@ -1307,62 +1307,64 @@ $af_umb_resellers_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
+<div id="filterContainer">
+	<script type="text/javascript">
+	$(document).on('click','#submit_filtros',function(){
 
-<script type="text/javascript">
-$(document).on('click','#submit_filtros',function(){
+			var destino = $("#dest").val();
+			var reseller = $("#resellers_filtro").find("option:selected").val();
+			var dataString = "pag=umb_resellers&filtro1=destinos";
+			if (destino == ""){
+				dataString = dataString + "&destino=vacio";
+			}else{
+				dataString = dataString + "&destino=" + destino;
+			}
 
-		var destino = $("#dest").val();
-		var reseller = $("#resellers_filtro").find("option:selected").val();
-		var dataString = "pag=umb_resellers&filtro1=destinos";
-		if (destino == ""){
-			dataString = dataString + "&destino=vacio";
-		}else{
-			dataString = dataString + "&destino=" + destino;
-		}
+			if (reseller == "vacio"){
+				dataString = dataString + "&reseller=vacio";
+			}else{
+				dataString = dataString + "&reseller=" + reseller;
+			}
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
 
-		if (reseller == "vacio"){
-			dataString = dataString + "&reseller=vacio";
-		}else{
-			dataString = dataString + "&reseller=" + reseller;
-		}
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
 		});
 
-	});
 
+	</script>
 
-</script>
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Destino</label>
+		<input type="text" name="dest" id="dest" class="form-control">
+	</div>
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Reseller</label>
+		<select id="resellers_filtro" class="form-control">
+		<option value="vacio">Seleccione un Reseller</option>
+		<option value="vacio">All</option>
+		<?
+		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
+		$res = select_sql_PO('select_porta_customers');
+		$cant = count($res);
+		$k = 1;
 
+		while ($k <= $cant) {
+			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+			$k++;
+		}
 
-<label class= "filtro_label">Filtro Destino</label>
-<input type="text" name="dest" id="dest">
-
-
-<label class= "filtro_label">Filtro Reseller</label>
-<select id="resellers_filtro">
-<option value="vacio">Seleccione un Reseller</option>
-<option value="vacio">All</option>
-<?
-$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
-$res = select_sql_PO('select_porta_customers');
-$cant = count($res);
-$k = 1;
-
-while ($k <= $cant) {
-	echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-	$k++;
-}
-
-?>
-</select>
-<button type="button btn-primary" id="submit_filtros">Buscar</button>
+		?>
+		</select>
+	</div>
+	<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+</div>
 
 
 							<?/******************************************************

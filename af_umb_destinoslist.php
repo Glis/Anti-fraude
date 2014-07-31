@@ -1348,36 +1348,43 @@ $af_umb_destinos_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
+<div id="filterContainer">
+	<script type="text/javascript">
+	$(document).on('click','#submit_dest',function(){
+			var option = $("#dest").val();
+			var dataString = "pag=umb_destinos&filtro=destinos";
+			if (option == ""){
+				dataString = dataString + "&valor=vacio";
+			}else{
+				dataString = dataString + "&valor=" + option;
+			}
 
-<script type="text/javascript">
-$(document).on('click','#submit_dest',function(){
-		var option = $("#dest").val();
-		var dataString = "pag=umb_destinos&filtro=destinos";
-		if (option == ""){
-			dataString = dataString + "&valor=vacio";
-		}else{
-			dataString = dataString + "&valor=" + option;
-		}
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
 
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
 		});
 
-	});
+
+	</script>
+
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Destino</label>
+		<input type="text" name="dest" id="dest" class="form-control">
+	</div>
+	<button type="button" class="btn btn-primary" id="submit_dest">Buscar</button>
+
+</div>
 
 
-</script>
-
-
-<label class= "filtro_label">Filtro Destino</label>
-<input type="text" name="dest" id="dest">
-<button type="button" id="submit_dest">Buscar</button>
 <?$_SESSION['filtros_umb_dest']=""?>
+
+
 
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_umb_destinoslist" id="faf_umb_destinoslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
