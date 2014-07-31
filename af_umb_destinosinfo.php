@@ -147,18 +147,18 @@ class caf_umb_destinos extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		if($_SESSION['filtros_umb'] != ""){
-				$cant = count($_SESSION['filtros_umb']);
+		if($_SESSION['filtros_umb_dest'] != ""){
+				$cant = count($_SESSION['filtros_umb_dest']);
 				$k = 1;
 				$where = $this->SqlFrom().".`c_IDestino` IN (";
 				while($k <= $cant - 1){
-					$where .= $_SESSION['filtros_umb'][$k]['i_dest']. ", ";
+					$where .= $_SESSION['filtros_umb_dest'][$k]['i_dest']. ", ";
 					$k++;
 				}
 
-				$where .= $_SESSION['filtros_umb'][$k]['i_dest'] . ")";
-				$sWhere = $where; //var_dump($where);
-				return $sWhere;
+				$where .= $_SESSION['filtros_umb_dest'][$k]['i_dest'] . ")";
+				$sWhere = $where; //var_dump($_SESSION['filtros_umb']);
+				return $sWhere; var_dump($sWhere);
 			
 		}else{
 			$sWhere = "";

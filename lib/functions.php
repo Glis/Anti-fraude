@@ -53,10 +53,10 @@ switch ($pagina) {
 
 	case 'umb_destinos':
 		if($_POST['valor'] == 'vacio'){
-			$_SESSION['filtros_umb']="";
+			$_SESSION['filtros_umb_dest']="";
 		}else{
 			$res = select_sql_PO('select_i_destino_where', array($_POST['valor']));
-			$_SESSION['filtros_umb'] = $res;
+			$_SESSION['filtros_umb_dest'] = $res;
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 		
