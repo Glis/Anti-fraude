@@ -1416,7 +1416,7 @@ while ($k <= $cant) {
 ?>
 </select>
 
-<label class= "filtro_label">Filtro Destino</label>
+<label class= "filtro_label">Filtro Customer Name</label>
 <input type="text" name="dest" id="dest">
 
 <button type="button btn-primary" id="submit_filtros">Buscar</button>

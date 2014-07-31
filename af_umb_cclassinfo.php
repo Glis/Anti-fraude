@@ -109,10 +109,52 @@ class caf_umb_cclass extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		if(($_SESSION['filtros_umb']['destino'] == "") && ($_SESSION['filtros_umb']['reseller'] == "") && ($_SESSION['filtros_umb']['cclass'] == "")){
+				
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+			
+		}else{
+			if($_SESSION['filtros_umb']['destino'] != ""){
+				$cant = count($_SESSION['filtros_umb']['destino']);
+				$k = 1;
+				$where = $this->SqlFrom().".`c_IDestino` IN (";
+				while($k <= $cant - 1){
+					$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest']. ", ";
+					$k++;
+				}
+
+				$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest'] . ")";
+				//$sWhere = $where; //var_dump($where);
+				//return $sWhere;
+			}
+
+			if($_SESSION['filtros_umb']['reseller'] != "" && $_SESSION['filtros_umb']['destino'] != ""){
+				
+
+				$where .= " AND " . $this->SqlFrom().".`c_IReseller`=" .$_SESSION['filtros_umb']['reseller'];
+				 //var_dump($where);
+				//return $sWhere;
+			}else{
+				if($_SESSION['filtros_umb']['reseller'] != "" && $_SESSION['filtros_umb']['destino'] == ""){
+					$where = $this->SqlFrom().".`c_IReseller`=" .$_SESSION['filtros_umb']['reseller'];
+				}
+
+			}
+
+			if(($_SESSION['filtros_umb']['reseller'] != "" || $_SESSION['filtros_umb']['destino'] != "") && $_SESSION['filtros_umb']['cclass'] != ""){
+				$where .= " AND " . $this->SqlFrom().".`c_ICClass`=" .$_SESSION['filtros_umb']['cclass'];
+			}else{
+				if($_SESSION['filtros_umb']['cclass'] != ""){
+					$where = $this->SqlFrom().".`c_ICClass`=" .$_SESSION['filtros_umb']['cclass'];
+				}
+			}
+
+			$sWhere = $where;
+			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

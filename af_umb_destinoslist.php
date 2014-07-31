@@ -10,6 +10,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 ini_set('max_execution_time', 300); 
+
 if(!isset($_SESSION['USUARIO']))
 {
     header("Location: login.php");
@@ -1376,7 +1377,7 @@ $(document).on('click','#submit_dest',function(){
 <label class= "filtro_label">Filtro Destino</label>
 <input type="text" name="dest" id="dest">
 <button type="button" id="submit_dest">Buscar</button>
-
+<?$_SESSION['filtros_umb_dest']=""?>
 
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_umb_destinoslist" id="faf_umb_destinoslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
@@ -1388,7 +1389,6 @@ $(document).on('click','#submit_dest',function(){
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
-$_SESSION['filtros_umb'] = "";
 // Render list options
 $af_umb_destinos_list->RenderListOptions();
 
