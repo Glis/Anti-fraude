@@ -1274,41 +1274,45 @@ $af_reportes_usuario_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
-<script type="text/javascript">
-$(document).on('change', '#select_usuarios', function() { 
+<div id="filterContainer">
+	<script type="text/javascript">
+	$(document).on('change', '#select_usuarios', function() { 
 
-	if($(this).val() != 100){
-	/*$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
-	$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();*/
-	var option = $(this).find("option:selected").text();
-	var dataString = "pag=reportes_usuario&filtro=usuarios&valor=" + option;
-	$.ajax({  
-	  type: "POST",  
-	  url: "lib/functions.php",  
-	  data: dataString,  
-	  success: function(html) {  
-		location.reload();
-	  }
-	  });
-	}
-});
-</script>
+		if($(this).val() != 100){
+		/*$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
+		$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();*/
+		var option = $(this).find("option:selected").text();
+		var dataString = "pag=reportes_usuario&filtro=usuarios&valor=" + option;
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+		}
+	});
+	</script>
 
-<label class= "filtro_label">Filtro Usuario</label>
-<select id= "select_usuarios" class= "filtro_select">
-	<option value = 100>Seleccione un Usuario</option>
-	<option value = 1000>All</option>
-<? $users = select_sql('select_usuarios');
-	$count = count($users);
-	$k = 1;
-	while ($k <= $count){
-		echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
-		$k++;
-	}
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Usuario</label>
+		<select id= "select_usuarios" class= "form-control">
+			<option value = 100>Seleccione un Usuario</option>
+			<option value = 1000>All</option>
+		<? $users = select_sql('select_usuarios');
+			$count = count($users);
+			$k = 1;
+			while ($k <= $count){
+				echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
+				$k++;
+			}
 
-?>
+		?>
 
-</select>
+		</select>
+	</div>
+</div>
 
 							<?/******************************************************
 							************************ENDFILTROS***********************
@@ -1487,7 +1491,7 @@ if ($af_reportes_usuario_list->Recordset)
 	<?php if ($af_reportes_usuario_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
+	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
 	<?php } ?>
 <?php } ?>
 </td>

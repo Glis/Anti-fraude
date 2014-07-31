@@ -1291,44 +1291,48 @@ $af_resellers_usuario_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
-<script type="text/javascript">
-$(document).on('change', '#select_usuarios', function() { 
+<div id="filterContainer">
+	<script type="text/javascript">
+	$(document).on('change', '#select_usuarios', function() { 
 
-	if($(this).val() != 100){
-		var option = $(this).find("option:selected").text();
-		var dataString = "pag=resellers_usuario&filtro=usuarios&valor=" + option;
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
-		  });
-	
-	/*$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
-	if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();*/
-	}/*else{
-		$("#tbl_af_resellers_usuariolist tbody tr").show();
-	}*/
-});
-</script>
+		if($(this).val() != 100){
+			var option = $(this).find("option:selected").text();
+			var dataString = "pag=resellers_usuario&filtro=usuarios&valor=" + option;
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			  });
+		
+		/*$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
+		if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();*/
+		}/*else{
+			$("#tbl_af_resellers_usuariolist tbody tr").show();
+		}*/
+	});
+	</script>
 
-<label class= "filtro_label">Filtro Usuario</label>
-<select id= "select_usuarios" class= "filtro_select">
-	<option value = 100>Seleccione un Usuario</option>
-	<option value = 100>All</option>
-<? $users = select_sql('select_usuarios');
-	$count = count($users);
-	$k = 1;
-	while ($k <= $count){
-		echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
-		$k++;
-	}
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Usuario</label>
+		<select id= "select_usuarios" class= "form-control">
+			<option value = 100>Seleccione un Usuario</option>
+			<option value = 100>All</option>
+		<? $users = select_sql('select_usuarios');
+			$count = count($users);
+			$k = 1;
+			while ($k <= $count){
+				echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
+				$k++;
+			}
 
-?>
+		?>
 
-</select>
+		</select>
+	</div>
+</div>
 
 							<?/******************************************************
 							************************ENDFILTROS***********************
@@ -1537,7 +1541,7 @@ if ($af_resellers_usuario_list->Recordset)
 	<?php if ($af_resellers_usuario_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
+	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
 	<?php } ?>
 <?php } ?>
 </td>

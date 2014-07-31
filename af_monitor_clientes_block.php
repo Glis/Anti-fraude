@@ -40,7 +40,7 @@ if(!isset($_SESSION['USUARIO']))
 <div id="treeContainer" class="col-sm-12">
   <!-- Tabla de chequeo  -->
   
-  <div class="tableContainer row">
+  <div class="row">
   	<div class="col-sm-8">
   		<h3>Clientes Bloqueados</h3>
       <table class="table table-striped table-condensed table-bordered">

@@ -40,43 +40,43 @@ if(!isset($_SESSION['USUARIO']))
 <div id="treeContainer" class="col-sm-12">
   <!-- Tabla de chequeo  -->
   
-  <div class="tableContainer row">
+  <div class="row">
   	<div class="col-sm-8">
-  		<h3>Tabla de Chequeos</h3>
-		<table class="table table-striped table-condensed table-bordered">
-		  <tbody id="tableBodyChequeo">
-		    <tr>
-	     	  <th class="col-sm-2">Código</th>
-		      <th >Fecha Inicio Ventana</th>
-		      <th >Fecha Fin Ventana</th>
-		    </tr>
-		    <tr>
-		      <td><a href="">Cuenta 1</a></td>
-		      <td>26/07/2014</td>
-		      <td>27/07/2014</td>
-		    </tr>
-		    <tr>
-		      <td><a href="">Cuenta 1</a></td>
-		      <td>26/07/2014</td>
-		      <td>27/07/2014</td>
-		    </tr>
-		    <tr>
-		      <td><a href="">Cuenta 1</a></td>
-		      <td>26/07/2014</td>
-		      <td>27/07/2014</td>
-		    </tr>
-		    <tr>
-		      <td><a href="">Cuenta 1</a></td>
-		      <td>26/07/2014</td>
-		      <td>27/07/2014</td>
-		    </tr>
-		    <tr>
-		      <td><a href="">Cuenta 1</a></td>
-		      <td>26/07/2014</td>
-		      <td>27/07/2014</td>
-		    </tr>
-		  </tbody>
-		</table>
+    	<h3>Tabla de Chequeos</h3>
+  		<table class="table table-striped table-condensed table-bordered">
+  		  <tbody id="tableBodyChequeo">
+  		    <tr>
+  	     	  <th class="col-sm-2">Código</th>
+  		      <th class="col-sm-1">Fecha Inicio Ventana</th>
+  		      <th class="col-sm-1">Fecha Fin Ventana</th>
+  		    </tr>
+  		    <tr>
+  		      <td><a href="">Cuenta 1</a></td>
+  		      <td>26/07/2014</td>
+  		      <td>27/07/2014</td>
+  		    </tr>
+  		    <tr>
+  		      <td><a href="">Cuenta 1</a></td>
+  		      <td>26/07/2014</td>
+  		      <td>27/07/2014</td>
+  		    </tr>
+  		    <tr>
+  		      <td><a href="">Cuenta 1</a></td>
+  		      <td>26/07/2014</td>
+  		      <td>27/07/2014</td>
+  		    </tr>
+  		    <tr>
+  		      <td><a href="">Cuenta 1</a></td>
+  		      <td>26/07/2014</td>
+  		      <td>27/07/2014</td>
+  		    </tr>
+  		    <tr>
+  		      <td><a href="">Cuenta 1</a></td>
+  		      <td>26/07/2014</td>
+  		      <td>27/07/2014</td>
+  		    </tr>
+  		  </tbody>
+  		</table>
   	</div>  	
   	<div class="col-sm-4">
   		<h3>Filtros</h3>
@@ -110,117 +110,123 @@ if(!isset($_SESSION['USUARIO']))
   <!-- </h3></pre> -->
 
   <!-- Tabla de 5 niveles -->
-  <h3>Detalles</h3>
-  <div class="tableContainer row">
-    <table class="table table-striped table-condensed table-bordered">
-      <tbody id="tablacuerpo">
-        <tr>
-          <th class="iconCol"></th>
-          <th >ID Destino</th>
-          <th class="col-sm-6">Nombre Destino</th>
-          <th >Minutos</th>
-          <th class="col-sm-1">Opc</th>
-        </tr>
-        <tr>
-          <td><a href="#son1" data-toggle="collapse" data-parent="#tablacuerpo"><span class="glyphicon glyphicon-plus"></span></a></td>
-          <td>1</td>
-          <td>Destino 1</td>
-          <td>300</td>
-          <td>CDR</td>
-        </tr>
-        <tr id="son1" class="collapse">
-          <td></td>
-          <td colspan="4">
-            <table class="table table-striped table-condensed table-bordered">
-              <tbody id="tablacuerpo1">
-                <tr>
-                  <th class="iconCol"></th>
-                  <th class="col-sm-8">Nombre Reseller</th>
-                  <th >Minutos</th>
-                  <th class="col-sm-1">Opc</th>
-                </tr>
-                <tr>
-                  <td><a href="#son2" data-toggle="collapse" data-parent="#tablacuerpo1"><span class="glyphicon glyphicon-plus"></span></a></td>
-                  <td>Reseller 1</td>
-                  <td>300</td>
-                  <td>CDR</td>
-                </tr>
-                <tr id="son2" class="collapse">
-                  <td></td>
-                  <td colspan="4">
-                    <table class="table table-striped table-condensed table-bordered">
-                      <tbody id="tablacuerpo2">
-                        <tr>
-                          <th class="iconCol"></th>
-                          <th class="col-sm-8">Nombre Customer Class</th>
-                          <th >Minutos</th>
-                          <th class="col-sm-1">Opc</th>
-                        </tr>
-                        <tr>
-                          <td><a href="#son3" data-toggle="collapse" data-parent="#tablacuerpo2"><span class="glyphicon glyphicon-plus"></span></a></td>
-                          <td>Customer Class 1</td>
-                          <td>300</td>
-                          <td>CDR</td>
-                        </tr>
-                        <tr id="son3" class="collapse">
-                          <td></td>
-                          <td colspan="4">
-                            <table class="table table-striped table-condensed table-bordered">
-                              <tbody id="tablacuerpo3">
-                                <tr>
-                                  <th class="iconCol"></th>
-                                  <th class="col-sm-6">Nombre Cliente</th>
-                                  <th >Minutos</th>
-                                  <th >Bloqueado?</th>
-                                  <th >Fecha Ult Desbloqueo</th>
-                                  <th class="col-sm-1">Opc</th>
-                                </tr>
-                                <tr>
-                                  <td><a href="#son4" data-toggle="collapse" data-parent="#tablacuerpo3"><span class="glyphicon glyphicon-plus"></span></a></td>
-                                  <td>Cliente 1</td>
-                                  <td>300</td>
-                                  <td>Si</td>
-                                  <td>07/10/2011</td>
-                                  <td>Opciones</td>
-                                </tr>
-                                <tr id="son4" class="collapse">
-                                  <td></td>
-                                  <td colspan="5">
-                                    <table class="table table-striped table-condensed table-bordered">
-                                      <tbody id="tablacuerpo4">
-                                        <tr>
-                                          <th class="col-sm-6">Nombre Cuenta</th>
-                                          <th >Minutos</th>
-                                          <th >Bloqueado?</th>
-                                          <th >Fecha Ult Desbloqueo</th>
-                                          <th class="col-sm-1">Opc</th>
-                                        </tr>
-                                        <tr>
-                                          <td>Cuenta 1</td>
-                                          <td>300</td>
-                                          <td>Si</td>
-                                          <td>07/10/2011</td>
-                                          <td>Opciones</td>
-                                        </tr> <!-- quinto nivel -->
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr><!-- cuarto nivel -->
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr> <!-- tercer nivel -->
-                      </tbody>
-                    </table>
-                  </td>
-                </tr> <!-- segundo nivel -->
-              </tbody>
-            </table>
-          </td>
-        </tr> <!-- primer nivel -->
-      </tbody>
-    </table>
-  </div><!-- tableContainer -->
-</div>
+  
+ 
+    
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Detalles</h3>
+      <table class="table table-striped table-condensed table-bordered">
+        <tbody id="tablacuerpo">
+          <tr>
+            <th class="iconCol"></th>
+            <th >ID Destino</th>
+            <th class="col-sm-6">Nombre Destino</th>
+            <th >Minutos</th>
+            <th class="col-sm-1">Opc</th>
+          </tr>
+          <tr>
+            <td><a href="#son1" data-toggle="collapse" data-parent="#tablacuerpo"><span class="glyphicon glyphicon-plus"></span></a></td>
+            <td>1</td>
+            <td>Destino 1</td>
+            <td>300</td>
+            <td>CDR</td>
+          </tr>
+          <tr id="son1" class="collapse">
+            <td></td>
+            <td colspan="4">
+              <table class="table table-striped table-condensed table-bordered">
+                <tbody id="tablacuerpo1">
+                  <tr>
+                    <th class="iconCol"></th>
+                    <th class="col-sm-8">Nombre Reseller</th>
+                    <th >Minutos</th>
+                    <th class="col-sm-1">Opc</th>
+                  </tr>
+                  <tr>
+                    <td><a href="#son2" data-toggle="collapse" data-parent="#tablacuerpo1"><span class="glyphicon glyphicon-plus"></span></a></td>
+                    <td>Reseller 1</td>
+                    <td>300</td>
+                    <td>CDR</td>
+                  </tr>
+                  <tr id="son2" class="collapse">
+                    <td></td>
+                    <td colspan="4">
+                      <table class="table table-striped table-condensed table-bordered">
+                        <tbody id="tablacuerpo2">
+                          <tr>
+                            <th class="iconCol"></th>
+                            <th class="col-sm-8">Nombre Customer Class</th>
+                            <th >Minutos</th>
+                            <th class="col-sm-1">Opc</th>
+                          </tr>
+                          <tr>
+                            <td><a href="#son3" data-toggle="collapse" data-parent="#tablacuerpo2"><span class="glyphicon glyphicon-plus"></span></a></td>
+                            <td>Customer Class 1</td>
+                            <td>300</td>
+                            <td>CDR</td>
+                          </tr>
+                          <tr id="son3" class="collapse">
+                            <td></td>
+                            <td colspan="4">
+                              <table class="table table-striped table-condensed table-bordered">
+                                <tbody id="tablacuerpo3">
+                                  <tr>
+                                    <th class="iconCol"></th>
+                                    <th class="col-sm-6">Nombre Cliente</th>
+                                    <th >Minutos</th>
+                                    <th >Bloqueado?</th>
+                                    <th >Fecha Ult Desbloqueo</th>
+                                    <th class="col-sm-1">Opc</th>
+                                  </tr>
+                                  <tr>
+                                    <td><a href="#son4" data-toggle="collapse" data-parent="#tablacuerpo3"><span class="glyphicon glyphicon-plus"></span></a></td>
+                                    <td>Cliente 1</td>
+                                    <td>300</td>
+                                    <td>Si</td>
+                                    <td>07/10/2011</td>
+                                    <td>Opciones</td>
+                                  </tr>
+                                  <tr id="son4" class="collapse">
+                                    <td></td>
+                                    <td colspan="5">
+                                      <table class="table table-striped table-condensed table-bordered">
+                                        <tbody id="tablacuerpo4">
+                                          <tr>
+                                            <th class="col-sm-6">Nombre Cuenta</th>
+                                            <th >Minutos</th>
+                                            <th >Bloqueado?</th>
+                                            <th >Fecha Ult Desbloqueo</th>
+                                            <th class="col-sm-1">Opc</th>
+                                          </tr>
+                                          <tr>
+                                            <td>Cuenta 1</td>
+                                            <td>300</td>
+                                            <td>Si</td>
+                                            <td>07/10/2011</td>
+                                            <td>Opciones</td>
+                                          </tr> <!-- quinto nivel -->
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr><!-- cuarto nivel -->
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr> <!-- tercer nivel -->
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr> <!-- segundo nivel -->
+                </tbody>
+              </table>
+            </td>
+          </tr> <!-- primer nivel -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- treeContainer -->
 
 <?php include_once "footer.php" ?>

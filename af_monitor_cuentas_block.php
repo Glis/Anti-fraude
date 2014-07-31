@@ -38,9 +38,9 @@ if(!isset($_SESSION['USUARIO']))
 
 <h1 style="text-align:center; ">Monitor (Cuentas Bloqueadas)</h1>
 <div id="treeContainer" class="col-sm-12">
-  <!-- Tabla de chequeo  -->
+  <!-- Tabla de cuentas  -->
   
-  <div class="tableContainer row">
+  <div class="row">
   	<div class="col-sm-8">
   		<h3>Cuentas Bloqueadas</h3>
       <table class="table table-striped table-condensed table-bordered">
@@ -69,7 +69,12 @@ if(!isset($_SESSION['USUARIO']))
             <td>Cuenta 4</td>
             <td>07/10/2011</td>
             <td>Opciones</td>
-          </tr> <!-- quinto nivel -->
+          </tr> 
+          <tr>
+            <td>Cuenta 4</td>
+            <td>07/10/2011</td>
+            <td>Opciones</td>
+          </tr> 
         </tbody>
       </table>
   	</div>  	

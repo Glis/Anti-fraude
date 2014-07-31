@@ -1224,7 +1224,7 @@ faf_configlist.ValidateRequired = false;
 <?php
 $af_config_list->ShowMessage();
 ?>
-<form action='' method='POST'>
+<form action='' method='POST' style="text-align: center;">
 	<?php $res = select_sql('select_config_data'); ?>
 	<table class="ewGrid"><tbody><tr><td>
 	<table class="table table-bordered table-striped">
@@ -1296,7 +1296,9 @@ $af_config_list->ShowMessage();
 		</tbody>
 	</table>
 	</td></tr></tbody></table>
-	<button class="btn btn-primary ewButton" name="submit" id="btnAction" type="submit">Modificar</button>
+	<div class="btn-group ewButtonGroup">
+		<button class="btn btn-primary ewButton" name="submit" id="btnAction" type="submit">Modificar</button>
+	</div>
 </form>
 
 <?

@@ -1437,45 +1437,50 @@ $af_config_reportes_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
-<script type="text/javascript">
-$(document).on('change', '#select_reportes', function() { 
+<div id="filterContainer">
+	<script type="text/javascript">
+	$(document).on('change', '#select_reportes', function() { 
 
-	if($(this).val() != 100){
-	/*$("#tbl_af_config_reporteslist tbody tr").hide(); 
-	$("#tbl_af_config_reporteslist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
-	}else{
-		$("#tbl_af_config_reporteslist tbody tr").show();*/
-		var option = $(this).find("option:selected").val();
+		if($(this).val() != 100){
+		/*$("#tbl_af_config_reporteslist tbody tr").hide(); 
+		$("#tbl_af_config_reporteslist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
+		}else{
+			$("#tbl_af_config_reporteslist tbody tr").show();*/
+			var option = $(this).find("option:selected").val();
+			
+			var dataString = "pag=config_reportes&filtro=reporte&valor=" + option;
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			  });
 		
-		var dataString = "pag=config_reportes&filtro=reporte&valor=" + option;
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
-		  });
+		}
+	});
+	</script>
 	
-	}
-});
-</script>
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Reporte</label>
+		<select id= "select_reportes" class= "form-control">
+			<option value = 100>Seleccione un Reporte</option>
+			<option value = 'All'>All</option>
+		<? $reportes = select_sql('select_reportes'); print_r($reportes);
+			$count = count($reportes);
+			$k = 1;
+			while ($k <= $count){
+				echo "<option value= ".$reportes[$k]['c_IReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
+				$k++;
+			}
+		$_SESSION['filtros']= "";
+		?>
 
-<label class= "filtro_label">Filtro Reporte</label>
-<select id= "select_reportes" class= "filtro_select">
-	<option value = 100>Seleccione un Reporte</option>
-	<option value = 'All'>All</option>
-<? $reportes = select_sql('select_reportes'); print_r($reportes);
-	$count = count($reportes);
-	$k = 1;
-	while ($k <= $count){
-		echo "<option value= ".$reportes[$k]['c_IReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
-		$k++;
-	}
-$_SESSION['filtros']= "";
-?>
+		</select>
+	</div>
+</div>
 
-</select>
 
 							<?/******************************************************
 							************************ENDFILTROS***********************
@@ -1700,7 +1705,7 @@ if ($af_config_reportes_list->Recordset)
 	<?php if ($af_config_reportes_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
+	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
 	<?php } ?>
 <?php } ?>
 </td>

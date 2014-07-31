@@ -32,7 +32,7 @@
     <?if ($_SESSION['USUARIO_TYPE']['config'] == 1){?>
     <li class="dropdown col-sm-3">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        Configuracion <span class="caret"></span>
+        Configuración <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
         <li class="dropdown-submenu">

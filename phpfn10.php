@@ -2354,7 +2354,7 @@ class cListOptions {
 					$links .= '<li>' . $submenulink . '</li>';
 				}
 			}
-			$buttonclass = "dropdown-toggle btn";
+			$buttonclass = "dropdown-toggle btn btn-primary";
 			if ($this->ButtonClass <> "")
 				ew_AppendClass($buttonclass, $this->ButtonClass);
 			$button = '<button class="' . $buttonclass .'" data-toggle="dropdown">' . $this->DropDownButtonPhrase . ' <b class="caret"></b></button><ul class="dropdown-menu ewMenu">' . $links . '</ul>';

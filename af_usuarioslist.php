@@ -1521,7 +1521,7 @@ if ($af_usuarios_list->Recordset)
 	<?php if ($af_usuarios_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<div class="panel alert-info"><div class="panel-body"><?php echo $Language->Phrase("NoRecord") ?></div></div>
+	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
 	<?php } ?>
 <?php } ?>
 </td>
