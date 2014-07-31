@@ -19,6 +19,23 @@ if(!isset($_SESSION['USUARIO']))
 
 <?php include_once "header.php" ?>
 
+<table class="ewStdTable">
+  <tbody>
+    <tr>
+      <td>
+        <ul class="breadcrumb">
+          <li>
+            <a href="login.php">Home</a>
+          </li>
+          <li class="active">
+            <span id="ewPageCaption">Monitor general</span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <h1 style="text-align:center; ">Monitor General</h1>
 <div id="treeContainer" class="col-sm-12">
   <!-- Tabla de chequeo  -->

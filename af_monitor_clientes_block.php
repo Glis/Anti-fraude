@@ -19,37 +19,54 @@ if(!isset($_SESSION['USUARIO']))
 
 <?php include_once "header.php" ?>
 
-<h1 style="text-align:center; ">Monitor (Cuentas Bloqueadas)</h1>
+<table class="ewStdTable">
+  <tbody>
+    <tr>
+      <td>
+        <ul class="breadcrumb">
+          <li>
+            <a href="login.php">Home</a>
+          </li>
+          <li class="active">
+            <span id="ewPageCaption">Monitor (Clientes Bloqueados)</span>
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 style="text-align:center; ">Monitor (Clientes Bloqueados)</h1>
 <div id="treeContainer" class="col-sm-12">
   <!-- Tabla de chequeo  -->
   
   <div class="tableContainer row">
   	<div class="col-sm-8">
-  		<h3>Cuentas Bloqueadas</h3>
+  		<h3>Clientes Bloqueados</h3>
       <table class="table table-striped table-condensed table-bordered">
         <tbody id="tableBody">
           <tr>
-            <th class="col-sm-6">Codigo Cuenta</th>
-            <th >Fecha Ult Desbloqueo</th>
+            <th class="col-sm-6">Nombre Cliente</th>
+            <th >Fecha Bloqueo</th>
             <th class="col-sm-1">Opc</th>
           </tr>
           <tr>
-            <td>Cuenta 1</td>
+            <td>Cliente 1</td>
             <td>07/10/2011</td>
             <td>Opciones</td>
           </tr>
           <tr>
-            <td>Cuenta 2</td>
+            <td>Cliente 2</td>
             <td>07/10/2011</td>
             <td>Opciones</td>
           </tr>
           <tr>
-            <td>Cuenta 3</td>
+            <td>Cliente 3</td>
             <td>07/10/2011</td>
             <td>Opciones</td>
           </tr>
           <tr>
-            <td>Cuenta 4</td>
+            <td>Cliente 4</td>
             <td>07/10/2011</td>
             <td>Opciones</td>
           </tr> <!-- quinto nivel -->
@@ -62,7 +79,7 @@ if(!isset($_SESSION['USUARIO']))
   			<form role="form">
   			  <div class="form-group">
   			    <label for="resellerName">Resellers</label>
-  			    <select id= "resellerName" class= "form-control">
+            <select id= "resellerName" class= "form-control">
               <option value = 100>Seleccione un Reseller</option>
               <option value = 'All'>Todos</option>
             <!-- 
@@ -73,7 +90,8 @@ if(!isset($_SESSION['USUARIO']))
                 echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
                 $k++;
               }
-            ?> -->
+            ?>
+             -->
             </select>
   			  </div>
   			  <div class="form-group">
