@@ -109,39 +109,29 @@ class caf_umb_cclass extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		if(($_SESSION['filtros_umb']['destino'] == "") && ($_SESSION['filtros_umb']['reseller'] == "") && ($_SESSION['filtros_umb']['cclass'] == "")){
-				
-			$sWhere = "";
-			$this->TableFilter = "";
-			ew_AddFilter($sWhere, $this->TableFilter);
-			return $sWhere;
-			
-		}else{
-			if($_SESSION['filtros_umb']['destino'] != ""){
-				$cant = count($_SESSION['filtros_umb']['destino']);
-				$k = 1;
-				$where = $this->SqlFrom().".`c_IDestino` IN (";
-				while($k <= $cant - 1){
-					$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest']. ", ";
-					$k++;
-				}
-
-				$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest'] . ")";
-				//$sWhere = $where; //var_dump($where);
-				//return $sWhere;
+		if($_SESSION['filtros_acc']['clase_accion'] != ""){
+				$where = $this->SqlFrom().".`cl_Accion`=" .$_SESSION['filtros_acc']['clase_accion'];
 			}
 
-			if($_SESSION['filtros_umb']['reseller'] != "" && $_SESSION['filtros_umb']['destino'] != ""){
+			if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['cl_Accion'] != ""){
 				
-
-				$where .= " AND " . $this->SqlFrom().".`c_IReseller`=" .$_SESSION['filtros_umb']['reseller'];
-				 //var_dump($where);
-				//return $sWhere;
+				$where .= " AND " . $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
+	
 			}else{
-				if($_SESSION['filtros_umb']['reseller'] != "" && $_SESSION['filtros_umb']['destino'] == ""){
-					$where = $this->SqlFrom().".`c_IReseller`=" .$_SESSION['filtros_umb']['reseller'];
+				if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['clase_accion'] == ""){
+					$where = $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
 				}
 
+			}
+
+			if(($_SESSION['filtros_acc']['tipo_accion'] != "" || $_SESSION['filtros_acc']['clase_accion'] != "") && $_SESSION['filtros_acc']['reseller'] != ""){
+
+					$where .= " AND". $this->SqlFrom().".`c_IReseller` =" .$_SESSION['filtros_acc']['reseller'];
+				
+			}else{
+				if($_SESSION['filtros_acc']['reseller'] != ""){
+					$where = $this->SqlFrom().".`c_IReseller` =" .$_SESSION['filtros_acc']['reseller'];
+				}
 			}
 
 			if(($_SESSION['filtros_umb']['reseller'] != "" || $_SESSION['filtros_umb']['destino'] != "") && $_SESSION['filtros_umb']['cclass'] != ""){

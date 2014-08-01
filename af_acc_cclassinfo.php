@@ -146,16 +146,48 @@ class caf_acc_cclass extends cTable {
 
 	function SqlWhere() { // Where
 		
-		if($_SESSION['filtros'] != ""){
-			if($_SESSION['tipofiltro'] == 'clase_accion'){
-				return $this->SqlFrom().".`cl_Accion`=".$_SESSION['filtros'];
-			}else{
-				if($_SESSION['tipofiltro'] == 'tipo_accion')return $this->SqlFrom().".`t_Accion`=".$_SESSION['filtros'];
-			}
-		}else{
+		if(($_SESSION['filtros_acc']['tipo_accion'] == "") && ($_SESSION['filtros_acc']['clase_accion'] == "") && ($_SESSION['filtros_acc']['reseller'] == "") && ($_SESSION['filtros_acc']['cclass'] == "")){
+				
 			$sWhere = "";
 			$this->TableFilter = "";
 			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+			
+		}else{
+			if($_SESSION['filtros_acc']['clase_accion'] != ""){
+				$where = $this->SqlFrom().".`cl_Accion`=" .$_SESSION['filtros_acc']['clase_accion'];
+			}
+
+			if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['clase_accion'] != ""){
+				
+				$where .= " AND " . $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
+	
+			}else{
+				if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['clase_accion'] == ""){
+					$where = $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
+				}
+
+			}
+
+			if(($_SESSION['filtros_acc']['tipo_accion'] != "" || $_SESSION['filtros_acc']['clase_accion'] != "") && $_SESSION['filtros_acc']['reseller'] != ""){
+
+					$where .= " AND". $this->SqlFrom().".`c_IReseller` =" .$_SESSION['filtros_acc']['reseller'];
+				
+			}else{
+				if($_SESSION['filtros_acc']['reseller'] != ""){
+					$where = $this->SqlFrom().".`c_IReseller` =" .$_SESSION['filtros_acc']['reseller'];
+				}
+			}
+
+			if(($_SESSION['filtros_acc']['reseller'] != "" || $_SESSION['filtros_acc']['tipo_accion'] != "" || $_SESSION['filtros_acc']['clase_accion'] != "") && $_SESSION['filtros_acc']['cclass'] != ""){
+				$where .= " AND " . $this->SqlFrom().".`c_ICClass`=" .$_SESSION['filtros_acc']['cclass'];
+			}else{
+				if($_SESSION['filtros_acc']['cclass'] != ""){
+					$where = $this->SqlFrom().".`c_ICClass`=" .$_SESSION['filtros_acc']['cclass'];
+				}
+			}
+
+			$sWhere = $where;
 			return $sWhere;
 		}
 	}

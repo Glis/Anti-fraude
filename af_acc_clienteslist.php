@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_acc_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -980,8 +981,12 @@ class caf_acc_clientes_list extends caf_acc_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
@@ -1004,8 +1009,12 @@ class caf_acc_clientes_list extends caf_acc_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICClass->ViewValue = NULL;
@@ -1385,14 +1394,38 @@ $af_acc_clientes_list->ShowMessage();
 							************************FILTROS**************************
 							*********************************************************/?>
 <script type="text/javascript">
-$(document).on('change', '#select_accion', function() { 
-	if($(this).val() != 100){
-	/*$("#tbl_af_acc_clienteslist tbody tr").hide();
-	$("#tbl_af_acc_clienteslist" ).find( "span:contains('"+$(this).val()+ "')" ).parent().parent().show();
-	}else{
-		$("#tbl_af_acc_clienteslist tbody tr").show();*/
-		var option = $(this).find("option:selected").val();
-		var dataString = "pag=acc_cliente&filtro=clase_accion&valor=" + option;
+	$(document).on('click','#submit_filtros',function(){
+
+		var clase_accion = $('#select_accion').find("option:selected").val();
+		var tipo_accion = $('#select_tipo_accion').find("option:selected").val();
+		var reseller = $('#resellers_filtro').find("option:selected").val();
+		var cclass = $('#cclass_filtro').find("option:selected").val();
+		var dataString = "pag=acc_clientes&filtro=clase_accion";
+		if (clase_accion == ""){
+			dataString = dataString + "&clase_accion=vacio";
+		}else{
+			dataString = dataString + "&clase_accion=" + clase_accion;
+		}
+
+		if (tipo_accion == "vacio"){
+			dataString = dataString + "&tipo_accion=vacio";
+		}else{
+			dataString = dataString + "&tipo_accion=" + tipo_accion;
+		}
+
+		if (reseller == ""){
+			dataString = dataString + "&reseller=vacio";
+		}else{
+			dataString = dataString + "&reseller=" + reseller;
+		}
+
+		if (cclass == "vacio"){
+			dataString = dataString + "&cclass=vacio";
+		}else{
+			dataString = dataString + "&cclass=" + cclass;
+		}
+
+		alert(dataString);
 		$.ajax({  
 		  type: "POST",  
 		  url: "lib/functions.php",  
@@ -1400,14 +1433,33 @@ $(document).on('change', '#select_accion', function() {
 		  success: function(html) {  
 			location.reload();
 		  }
-		  });
-	}
-});
+		});
+
+	});
+
+
+	$(document).on('change','#resellers_filtro',function(){
+
+		var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
+		$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(response) {  
+				$('#cclass_filtro').empty().append(response);
+				$( "#cclass_filtro" ).prop( "disabled", false );
+			  }
+			});
+		
+	});
+
+
+
 </script>
 <div class="form-group">
 	<label class= "filtro_label">Filtro Clase Acción</label>
 	<select id= "select_accion" class= "form-control">
-		<option value = 100>Seleccione una Acción</option>
+		<option value = "vacio">Todo</option>
 	<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
 		$count = count($dom_accion);
 		$k = 1;
@@ -1419,30 +1471,11 @@ $(document).on('change', '#select_accion', function() {
 	?>
 	</select>
 </div>
-<script type="text/javascript">
-$(document).on('change', '#select_tipo_accion', function() { 
-	if($(this).val() != 100){
-	/*$("#tbl_af_acc_clienteslist tbody tr").hide();
-	$("#tbl_af_acc_clienteslist" ).find( "span:contains('"+$(this).val().replace(/_/g , " ")+"')" ).parent().parent().show();
-	}else{
-		$("#tbl_af_acc_clienteslist tbody tr").show();*/
-		var option = $(this).find("option:selected").val();
-		var dataString = "pag=acc_cclass&filtro=tipo_accion&valor=" + option;
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
-		  });
-	}
-});
-</script>
+
 <div class="form-group">
 	<label class= "filtro_label">Filtro Tipo Acción</label>
 	<select id= "select_tipo_accion" class= "form-control">
-		<option value = 100>Seleccione un Tipo de Acción</option>
+		<option value = "vacio">Todo</option>
 	<? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
 		$count = count($dom_tipo_accion);
 		$k = 1;
@@ -1453,6 +1486,34 @@ $(document).on('change', '#select_tipo_accion', function() {
 
 	?>
 	</select>
+
+		<div class="form-group">
+		<label class= "filtro_label">Filtro Reseller</label>
+		<select id="resellers_filtro" class="form-control">
+		<option value="vacio">Todo</option>
+		<?
+		$_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+		$_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
+		$res = select_sql_PO('select_porta_customers');
+		$cant = count($res);
+		$k = 1;
+
+		while ($k <= $cant) {
+			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+			$k++;
+		}
+
+		?>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label class= "filtro_label">Filtro Customer Class</label>
+		<select id="cclass_filtro" disabled class="form-control">
+		<option value="vacio">Todo</option>
+		</select>
+	</div>
+	<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 </div>
 
 
