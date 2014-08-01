@@ -788,6 +788,7 @@ class caf_acc_cclass_add extends caf_acc_cclass {
 			if ($rswrk) $rswrk->Close();
 			array_unshift($arwrk, array("", $Language->Phrase("PleaseSelect"), "", "", "", "", "", "", ""));
 			$this->c_ICClass->EditValue = $arwrk;
+			print_r($arwrk);
 
 			// x_DirCorreo
 			$this->x_DirCorreo->EditCustomAttributes = "";

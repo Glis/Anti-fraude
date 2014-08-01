@@ -660,7 +660,7 @@
 <field id="x_pagina"><phrase id="fldcaption" value="Página"/>
 </field>
 </table>
-<table id="af_reportes_usuario"><phrase id="tblcaption" value="Resellers por Usuario"/>
+<table id="af_reportes_usuario"><phrase id="tblcaption" value="Reportes por Usuario"/>
 <field id="c_usuario"><phrase id="fldcaption" value="Usuario"/>
 </field>
 <field id="c_ireporte"><phrase id="fldcaption" value="Reporte"/>
@@ -670,7 +670,7 @@
 <field id="c_usuario_ult_mod"><phrase id="fldcaption" value="Usuario Ult Modificación"/>
 </field>
 </table>
-<table id="af_resellers_usuario"><phrase id="tblcaption" value="Reportes por Usuario"/>
+<table id="af_resellers_usuario"><phrase id="tblcaption" value="Resellers por Usuario"/>
 <field id="c_usuario"><phrase id="fldcaption" value="Usuario"/>
 </field>
 <field id="c_ireseller"><phrase id="fldcaption" value="Reseller"/>
