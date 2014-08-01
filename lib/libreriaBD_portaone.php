@@ -62,8 +62,12 @@ function select_sql_PO($nombre, $ArrParams = NULL){
 
             case 'select_customer_class_filtro':
                 //Populate select Umb_CClass
-                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer=" .$ArrParams[0];
-
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer=9"/* .$ArrParams[0]*/;
+                break;
+            case 'select_i_client_where' :
+                //Filtro Cliente
+                $sql = 'SELECT name, i_customer FROM Customers WHERE i_env=1 AND i_customer_type=1 AND name LIKE "%'.$ArrParams[0].'%"';
+                break;
         }
     
     abrirConexion_PO();

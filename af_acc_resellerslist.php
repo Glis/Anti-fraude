@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_acc_resellersinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -903,8 +904,12 @@ class caf_acc_resellers_list extends caf_acc_resellers {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
@@ -1335,26 +1340,43 @@ $af_acc_resellers_list->ShowMessage();
 							*********************************************************/?>
 <div id="filterContainer">
 
-	<script type="text/javascript">
-	$(document).on('change', '#select_accion', function() { 
-		if($(this).val() != 100){
-		/*$("#tbl_af_acc_resellerslist tbody tr").hide();
-		$("#tbl_af_acc_resellerslist" ).find( "span:contains('"+$(this).val()+ "')" ).parent().parent().show();
+<script type="text/javascript">
+$(document).on('click', '#submit_filtros', function() { 
+	if($(this).val() != 100){
+
+		var clase_accion = $('#select_accion').find("option:selected").val();
+		var tipo_accion = $('#select_tipo_accion').find("option:selected").val();
+		var reseller = $('#resellers_filtro').find("option:selected").val();
+		var dataString = "pag=acc_resellers&filtro=clase_accion";
+		if (clase_accion == ""){
+			dataString = dataString + "&clase_accion=vacio";
 		}else{
-			$("#tbl_af_acc_resellerslist tbody tr").show();*/
-			var option = $(this).find("option:selected").val();
-			var dataString = "pag=acc_resellers&filtro=clase_accion&valor=" + option;
-			$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(html) {  
-				location.reload();
-			  }
-			  });
+			dataString = dataString + "&clase_accion=" + clase_accion;
 		}
-	});
-	</script>
+
+		if (tipo_accion == "vacio"){
+			dataString = dataString + "&tipo_accion=vacio";
+		}else{
+			dataString = dataString + "&tipo_accion=" + tipo_accion;
+		}
+
+		if (reseller == ""){
+			dataString = dataString + "&reseller=vacio";
+		}else{
+			dataString = dataString + "&reseller=" + reseller;
+		}
+		alert(dataString);
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+	}
+});
+</script>
 
 	<div class="form-group">
 		<label class= "filtro_label">Filtro Clase Acción</label>
@@ -1373,27 +1395,6 @@ $af_acc_resellers_list->ShowMessage();
 		</select>
 	</div>
 
-	<script type="text/javascript">
-	$(document).on('change', '#select_tipo_accion', function() { 
-		if($(this).val() != 100){
-		/*$("#tbl_af_acc_resellerslist tbody tr").hide();
-		$("#tbl_af_acc_resellerslist" ).find( "span:contains('"+$(this).val().replace(/_/g , " ")+"')" ).parent().parent().show();
-		}else{
-			$("#tbl_af_acc_resellerslist tbody tr").show();*/
-			var option = $(this).find("option:selected").val();
-			var dataString = "pag=acc_resellers&filtro=tipo_accion&valor=" + option;
-			$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(html) {  
-				location.reload();
-			  }
-			  });
-		}
-	});
-	</script>
-
 	<div class="form-group">
 		<label class= "filtro_label">Filtro Tipo Acción</label>
 		<select id= "select_tipo_accion" class= "form-control">
@@ -1410,6 +1411,25 @@ $af_acc_resellers_list->ShowMessage();
 		?>
 		</select>
 	</div>
+		<div class="form-group">
+			<label class= "filtro_label" >Filtro Reseller</label>
+		<select id="resellers_filtro" class= "form-control">
+		<option value="vacio">Todo</option>
+		<?
+		$res = select_sql_PO('select_porta_customers');
+		$cant = count($res);
+		$k = 1;
+
+		while ($k <= $cant) {
+			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+			$k++;
+		}
+
+		?>
+		</select>
+</div>
+
+<button type="button btn-primary" id="submit_filtros">Buscar</button>
 
 </div>
 

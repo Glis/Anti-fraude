@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_acc_cclassinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -1005,8 +1006,11 @@ class caf_acc_cclass_list extends caf_acc_cclass {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->ViewValue = $result[1]['name'];
 				} else {
-					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICClass->ViewValue = NULL;
