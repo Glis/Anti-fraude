@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_resellers_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -14,6 +15,18 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+$options = select_sql_PO('select_porta_customers');
+$cant = count($options);
+$k = 1;
+$html_res = "";
+
+while ($k <= $cant) {
+	$html_res .= "<option value='". $options[$k]['i_customer']."'>". $options[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select">'); echo $html_res; echo'</div>';
 //
 // Page class
 //
@@ -837,7 +850,13 @@ if($_SESSION['USUARIO_TYPE']['admin']==0){
 	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
 	</div>"); exit;
 }?>
+<script type="text/javascript">
+$( document ).ready(function() {
+    $('#x_c_IReseller').empty();
+    $('#x_c_IReseller').append($('.new_select').html());
+});
 
+</script>
 
 <script type="text/javascript">
 
@@ -931,7 +950,7 @@ $af_resellers_usuario_add->ShowMessage();
 		<td><span id="elh_af_resellers_usuario_c_Usuario"><?php echo $af_resellers_usuario->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_resellers_usuario->c_Usuario->CellAttributes() ?>>
 <span id="el_af_resellers_usuario_c_Usuario" class="control-group">
-<select data-field="x_c_Usuario" id="x_c_Usuario" name="x_c_Usuario"<?php echo $af_resellers_usuario->c_Usuario->EditAttributes() ?>>
+<select class = "form-control" data-field="x_c_Usuario" id="x_c_Usuario" name="x_c_Usuario"<?php echo $af_resellers_usuario->c_Usuario->EditAttributes() ?>>
 <?php
 if (is_array($af_resellers_usuario->c_Usuario->EditValue)) {
 	$arwrk = $af_resellers_usuario->c_Usuario->EditValue;
@@ -961,7 +980,7 @@ faf_resellers_usuarioadd.Lists["x_c_Usuario"].Options = <?php echo (is_array($af
 		<td><span id="elh_af_resellers_usuario_c_IReseller"><?php echo $af_resellers_usuario->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_resellers_usuario->c_IReseller->CellAttributes() ?>>
 <span id="el_af_resellers_usuario_c_IReseller" class="control-group">
-<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_resellers_usuario->c_IReseller->EditAttributes() ?>>
+<select class = "form-control" data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_resellers_usuario->c_IReseller->EditAttributes() ?>>
 <?php
 if (is_array($af_resellers_usuario->c_IReseller->EditValue)) {
 	$arwrk = $af_resellers_usuario->c_IReseller->EditValue;

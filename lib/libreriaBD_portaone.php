@@ -31,13 +31,17 @@ function select_sql_PO($nombre, $ArrParams = NULL){
             case 'select_porta_customers' :
                 //$sql = "SELECT * FROM Customers";
                 $sql = "SELECT * FROM Customers WHERE i_customer_type=2 AND i_env=1";
-                break; 
+                break;
 
             case 'select_porta_customers_where' :
                 $sql = "SELECT name FROM Customers WHERE i_customer_type=2 AND i_env=1 AND i_customer=".$ArrParams[0];
                 break;
              
-             case 'select_destino_where' :
+            case 'select_destinos_all':
+                $sql = "SELECT * FROM Destinations WHERE i_env=1 ORDER BY destination";
+                break;            
+
+            case 'select_destino_where' :
                 $sql = "SELECT description, destination FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
                 break;
 
