@@ -116,11 +116,12 @@ function select_sql($nombre, $x = NULL){
     cerrarConexion();
 }
 
-function select_custom_sql($queryFields, $queryTable, $queryCondition, $queryOrderBy/*,  $x = NULL*/){
+function select_custom_sql($queryFields, $queryTable, $queryCondition, $queryOrderBy, $queryExtras){
     $sql = "SELECT ".$queryFields.
            " FROM netuno.".$queryTable;
     if($queryCondition <> "") $sql.=" WHERE ".$queryCondition;
-    if($queryOrderBy <> "") $sql.= " ORDER BY ".$queryOrderBy; 
+    if($queryOrderBy <> "") $sql.= " ORDER BY ".$queryOrderBy;
+    if($queryExtras <> "") $sql.= " ".$queryExtras; 
                 
     abrirConexion();
     $ejecutar_sql = mysql_query($sql);

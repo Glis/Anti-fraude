@@ -15,6 +15,9 @@ if(!isset($_SESSION['USUARIO']))
     exit;
 } 
 
+$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","", "LIMIT 10");
+$customerCount = count($customers);
+
 ?>
 
 <?php include_once "header.php" ?>
@@ -48,28 +51,27 @@ if(!isset($_SESSION['USUARIO']))
           <tr>
             <th class="col-sm-6">Nombre Cliente</th>
             <th >Fecha Bloqueo</th>
-            <th class="col-sm-1">Opc</th>
+            <th class="col-sm-1">Opciones</th>
           </tr>
+          <?php 
+            if ($customerCount > 0) {
+              foreach ($customers as $cus) {
+          ?>
           <tr>
-            <td>Cliente 1</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
+            <td>Cliente <?php echo $cus['c_ICliente'];?></td>
+            <td><?php echo $cus['f_Bloqueo'];?></td>
+            <td><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
           </tr>
-          <tr>
-            <td>Cliente 2</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr>
-          <tr>
-            <td>Cliente 3</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr>
-          <tr>
-            <td>Cliente 4</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr> <!-- quinto nivel -->
+          <?php  
+              }
+            } else {
+          ?>
+              <tr>
+                <td colspan=3>No se encontraron clientes.</td>
+              </tr>
+          <?php
+            }
+          ?> 
         </tbody>
       </table>
   	</div>  	
@@ -95,7 +97,7 @@ if(!isset($_SESSION['USUARIO']))
             </select>
   			  </div>
   			  <div class="form-group">
-  			    <label for="cusName">Customer Name</label>
+  			    <label for="cusName">Nombre del cliente</label>
   			    <input type="text" class="form-control" id="cusName" placeholder="Nombre de Cliente">
   			  </div>
   			  <button type="submit" class="btn btn-primary">Filtrar</button>

@@ -15,6 +15,9 @@ if(!isset($_SESSION['USUARIO']))
     exit;
 } 
 
+$accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","", "LIMIT 10");
+$accountCount = count($accounts);
+
 ?>
 
 <?php include_once "header.php" ?>
@@ -46,35 +49,29 @@ if(!isset($_SESSION['USUARIO']))
       <table class="table table-striped table-condensed table-bordered">
         <tbody id="tableBody">
           <tr>
-            <th class="col-sm-6">Codigo Cuenta</th>
-            <th >Fecha Ult Desbloqueo</th>
-            <th class="col-sm-1">Opc</th>
+            <th class="col-sm-6">ID Cuenta</th>
+            <th >Fecha Bloqueo</th>
+            <th class="col-sm-1">Opciones</th>
           </tr>
+          <?php 
+            if ($accountCount > 0) {
+              foreach ($accounts as $acc) {
+          ?>
           <tr>
-            <td>Cuenta 1</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
+            <td>Cuenta <?php echo $acc['c_ICuenta'];?></td>
+            <td><?php echo $acc['f_Bloqueo'];?></td>
+            <td><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
           </tr>
-          <tr>
-            <td>Cuenta 2</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr>
-          <tr>
-            <td>Cuenta 3</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr>
-          <tr>
-            <td>Cuenta 4</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr> 
-          <tr>
-            <td>Cuenta 4</td>
-            <td>07/10/2011</td>
-            <td>Opciones</td>
-          </tr> 
+          <?php  
+              }
+            } else {
+          ?>
+              <tr>
+                <td colspan=3>No se encontraron cuentas.</td>
+              </tr>
+          <?php
+            }
+          ?> 
         </tbody>
       </table>
   	</div>  	
@@ -99,7 +96,7 @@ if(!isset($_SESSION['USUARIO']))
             </select>
   			  </div>
   			  <div class="form-group">
-  			    <label for="cusName">Customer Name</label>
+  			    <label for="cusName">Nombre del cliente</label>
   			    <input type="text" class="form-control" id="cusName" placeholder="Nombre de Cliente">
   			  </div>
   			  <button type="submit" class="btn btn-primary">Filtrar</button>
@@ -108,18 +105,6 @@ if(!isset($_SESSION['USUARIO']))
   	</div>
   </div>
 
-<!--   <pre><h4> -->  
-  <?php 
-  	/*$users = select_sql('select_usuarios');
-  	$count = count($users);
-  	$k = 1;
-  	while ($k <= $count){
-  		echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
-  		$k++;
-  	}
-  	var_dump(select_custom_sql("*","af_chequeo_det","",""))*/
-  ?>
-  <!-- </h3></pre> -->
 </div>
 
 <?php include_once "footer.php" ?>
