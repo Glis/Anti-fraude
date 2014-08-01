@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_resellersinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -14,6 +15,31 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+$options_res = select_sql_PO('select_porta_customers');
+$cant = count($options_res);
+$k = 1;
+$html_res_resellers = "";
+
+while ($k <= $cant) {
+	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+
+$options_dest = select_sql_PO('select_destinos_all');
+$cant = count($options_dest);
+$k = 1;
+$html_res_dest = "";
+
+while ($k <= $cant) {
+	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_destino">'); echo $html_res_dest; echo'</div>';
+
 //
 // Page class
 //
@@ -890,6 +916,16 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 	</div>"); exit;
 }?>
 
+<script type="text/javascript">
+$( document ).ready(function() {
+    $('#x_c_IDestino').empty();
+    $('#x_c_IDestino').append($('.new_select_destino').html());
+
+    $('#x_c_IReseller').empty();
+    $('#x_c_IReseller').append($('.new_select_reseller').html());
+});
+
+</script>
 
 <script type="text/javascript">
 
@@ -995,7 +1031,7 @@ $af_umb_resellers_add->ShowMessage();
 		<td><span id="elh_af_umb_resellers_c_IDestino"><?php echo $af_umb_resellers->c_IDestino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_resellers->c_IDestino->CellAttributes() ?>>
 <span id="el_af_umb_resellers_c_IDestino" class="control-group">
-<select data-field="x_c_IDestino" id="x_c_IDestino" name="x_c_IDestino"<?php echo $af_umb_resellers->c_IDestino->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IDestino" id="x_c_IDestino" name="x_c_IDestino"<?php echo $af_umb_resellers->c_IDestino->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_resellers->c_IDestino->EditValue)) {
 	$arwrk = $af_umb_resellers->c_IDestino->EditValue;
@@ -1025,7 +1061,7 @@ faf_umb_resellersadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_um
 		<td><span id="elh_af_umb_resellers_c_IReseller"><?php echo $af_umb_resellers->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_resellers->c_IReseller->CellAttributes() ?>>
 <span id="el_af_umb_resellers_c_IReseller" class="control-group">
-<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_umb_resellers->c_IReseller->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_umb_resellers->c_IReseller->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_resellers->c_IReseller->EditValue)) {
 	$arwrk = $af_umb_resellers->c_IReseller->EditValue;
@@ -1055,7 +1091,7 @@ faf_umb_resellersadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_u
 		<td><span id="elh_af_umb_resellers_q_MinAl_Res"><?php echo $af_umb_resellers->q_MinAl_Res->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_resellers->q_MinAl_Res->CellAttributes() ?>>
 <span id="el_af_umb_resellers_q_MinAl_Res" class="control-group">
-<input type="text" data-field="x_q_MinAl_Res" name="x_q_MinAl_Res" id="x_q_MinAl_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_resellers->q_MinAl_Res->PlaceHolder) ?>" value="<?php echo $af_umb_resellers->q_MinAl_Res->EditValue ?>"<?php echo $af_umb_resellers->q_MinAl_Res->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_q_MinAl_Res" name="x_q_MinAl_Res" id="x_q_MinAl_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_resellers->q_MinAl_Res->PlaceHolder) ?>" value="<?php echo $af_umb_resellers->q_MinAl_Res->EditValue ?>"<?php echo $af_umb_resellers->q_MinAl_Res->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_resellers->q_MinAl_Res->CustomMsg ?></td>
 	</tr>
@@ -1065,7 +1101,7 @@ faf_umb_resellersadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_u
 		<td><span id="elh_af_umb_resellers_q_MinCu_Res"><?php echo $af_umb_resellers->q_MinCu_Res->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_resellers->q_MinCu_Res->CellAttributes() ?>>
 <span id="el_af_umb_resellers_q_MinCu_Res" class="control-group">
-<input type="text" data-field="x_q_MinCu_Res" name="x_q_MinCu_Res" id="x_q_MinCu_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_resellers->q_MinCu_Res->PlaceHolder) ?>" value="<?php echo $af_umb_resellers->q_MinCu_Res->EditValue ?>"<?php echo $af_umb_resellers->q_MinCu_Res->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_q_MinCu_Res" name="x_q_MinCu_Res" id="x_q_MinCu_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_resellers->q_MinCu_Res->PlaceHolder) ?>" value="<?php echo $af_umb_resellers->q_MinCu_Res->EditValue ?>"<?php echo $af_umb_resellers->q_MinCu_Res->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_resellers->q_MinCu_Res->CustomMsg ?></td>
 	</tr>

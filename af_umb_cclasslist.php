@@ -1420,7 +1420,8 @@ $af_umb_cclass_list->ShowMessage();
 		<select id="resellers_filtro" class="form-control">
 		<option value="vacio">Todo</option>
 		<?
-		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; $_SESSION['filtros_umb']['cclass'] = "";
+		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; 
+		$_SESSION['filtros_umb']['cclass'] = "";
 		$res = select_sql_PO('select_porta_customers');
 		$cant = count($res);
 		$k = 1;
