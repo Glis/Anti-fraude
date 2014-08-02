@@ -40,17 +40,6 @@ while ($k <= $cant) {
 
 echo('<div class="new_select_destino">'); echo $html_res_dest; echo'</div>';
 
-$options_dest = select_sql_PO('select_destinos_all');
-$cant = count($options_dest);
-$k = 1;
-$html_res_dest = "<option value='' selected='selected'>Por favor Seleccione</option>";
-
-while ($k <= $cant) {
-	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. "</option>"; 
-	$k++;
-}
-
-echo('<div class="new_select_cclass">'); echo $html_res_dest; echo'</div>';
 
 //
 // Page class
@@ -1024,7 +1013,7 @@ $( document ).ready(function() {
 
 $(document).on('change','#x_c_IReseller',function(){
 
-		var dataString = "pag=customer_class_filtro&reseller="+$("#x_c_IReseller").find("option:selected").val();
+		var dataString = "pag=customer_class_add&reseller="+$("#x_c_IReseller").find("option:selected").val();
 		$.ajax({  
 			  type: "POST",  
 			  url: "lib/functions.php",  
@@ -1035,7 +1024,7 @@ $(document).on('change','#x_c_IReseller',function(){
 			  }
 			});
 		
-	});
+});
 
 </script>
 
@@ -1238,7 +1227,7 @@ faf_umb_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_umb_cc
 		<td><span id="elh_af_umb_cclass_q_MinAl_CClass"><?php echo $af_umb_cclass->q_MinAl_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->q_MinAl_CClass->CellAttributes() ?>>
 <span id="el_af_umb_cclass_q_MinAl_CClass" class="control-group">
-<input class="form-control" type="text" data-field="x_q_MinAl_CClass" name="x_q_MinAl_CClass" id="x_q_MinAl_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinAl_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinAl_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinAl_CClass->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_CClass" name="x_q_MinAl_CClass" id="x_q_MinAl_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinAl_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinAl_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinAl_CClass->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cclass->q_MinAl_CClass->CustomMsg ?></td>
 	</tr>
@@ -1248,7 +1237,7 @@ faf_umb_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_umb_cc
 		<td><span id="elh_af_umb_cclass_q_MinCu_CClass"><?php echo $af_umb_cclass->q_MinCu_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->q_MinCu_CClass->CellAttributes() ?>>
 <span id="el_af_umb_cclass_q_MinCu_CClass" class="control-group">
-<input class="form-control" type="text" data-field="x_q_MinCu_CClass" name="x_q_MinCu_CClass" id="x_q_MinCu_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinCu_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinCu_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinCu_CClass->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_CClass" name="x_q_MinCu_CClass" id="x_q_MinCu_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinCu_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinCu_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinCu_CClass->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cclass->q_MinCu_CClass->CustomMsg ?></td>
 	</tr>

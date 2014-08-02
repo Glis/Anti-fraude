@@ -1009,11 +1009,11 @@ class caf_acc_clientes_list extends caf_acc_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
 					$this->c_ICClass->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
-					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
 					$this->c_ICClass->ViewValue = $result[1]['name'];
 				}
 			} else {

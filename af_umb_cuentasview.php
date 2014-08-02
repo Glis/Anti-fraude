@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_cuentasinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -533,8 +534,12 @@ class caf_umb_cuentas_view extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->ViewValue = NULL;
@@ -557,8 +562,12 @@ class caf_umb_cuentas_view extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
@@ -581,8 +590,12 @@ class caf_umb_cuentas_view extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICliente->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICliente->ViewValue = NULL;
@@ -605,8 +618,12 @@ class caf_umb_cuentas_view extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICuenta->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));
+					$this->c_ICuenta->ViewValue = $result[1]['id'];
 				} else {
 					$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
+					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));
+					$this->c_ICuenta->ViewValue = $result[1]['id'];
 				}
 			} else {
 				$this->c_ICuenta->ViewValue = NULL;

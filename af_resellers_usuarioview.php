@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_resellers_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -509,8 +510,12 @@ class caf_resellers_usuario_view extends caf_resellers_usuario {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_Usuario->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_Usuario->ViewValue = NULL;
@@ -537,8 +542,13 @@ class caf_resellers_usuario_view extends caf_resellers_usuario {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
+
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;

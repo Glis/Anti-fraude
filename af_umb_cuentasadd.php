@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_cuentasinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -14,6 +15,43 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+$options_res = select_sql_PO('select_porta_customers');
+$cant = count($options_res);
+$k = 1;
+$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
+
+while ($k <= $cant) {
+	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+
+$options_dest = select_sql_PO('select_destinos_all');
+$cant = count($options_dest);
+$k = 1;
+$html_res_dest = "<option value='' selected='selected'>Por favor Seleccione</option>";
+
+while ($k <= $cant) {
+	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_destino">'); echo $html_res_dest; echo'</div>';
+
+$options_clientes = select_sql_PO('select_clientes_all');
+$cant = count($options_clientes);
+$k = 1;
+$html_res_cname = "<option value='' selected='selected'>Por favor Seleccione</option>";
+
+while ($k <= $cant) {
+	$html_res_cname .= "<option value='". $options_clientes[$k]['i_customer']."'>". $options_clientes[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_cname">'); echo $html_res_cname; echo'</div>';
+
 //
 // Page class
 //
@@ -1054,6 +1092,38 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 	</div>"); exit;
 }?>
 
+<script type="text/javascript">
+$( document ).ready(function() {
+    $('#x_c_IDestino').empty();
+    $('#x_c_IDestino').append($('.new_select_destino').html());
+
+    $('#x_c_IReseller').empty();
+    $('#x_c_IReseller').append($('.new_select_reseller').html());
+
+    $('#x_c_ICliente').empty();
+    $('#x_c_ICliente').append($('.new_select_cname').html());
+
+    $( "#x_c_ICuenta" ).prop( "disabled", true );
+    
+});
+$(document).on('change','#x_c_ICliente',function(){
+
+		var dataString = "pag=accounts_filtro&cliente="+$("#x_c_ICliente").find("option:selected").val();
+		alert(dataString);
+		$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(response) {  
+				$('#x_c_ICuenta').empty().append(response);
+				$( "#x_c_ICuenta" ).prop( "disabled", false );
+			  }
+			});
+		
+});
+
+</script>
+
 
 <script type="text/javascript">
 
@@ -1167,7 +1237,7 @@ $af_umb_cuentas_add->ShowMessage();
 		<td><span id="elh_af_umb_cuentas_c_IDestino"><?php echo $af_umb_cuentas->c_IDestino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->c_IDestino->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_c_IDestino" class="control-group">
-<select data-field="x_c_IDestino" id="x_c_IDestino" name="x_c_IDestino"<?php echo $af_umb_cuentas->c_IDestino->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IDestino" id="x_c_IDestino" name="x_c_IDestino"<?php echo $af_umb_cuentas->c_IDestino->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_cuentas->c_IDestino->EditValue)) {
 	$arwrk = $af_umb_cuentas->c_IDestino->EditValue;
@@ -1197,7 +1267,7 @@ faf_umb_cuentasadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb_
 		<td><span id="elh_af_umb_cuentas_c_IReseller"><?php echo $af_umb_cuentas->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->c_IReseller->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_c_IReseller" class="control-group">
-<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_umb_cuentas->c_IReseller->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_umb_cuentas->c_IReseller->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_cuentas->c_IReseller->EditValue)) {
 	$arwrk = $af_umb_cuentas->c_IReseller->EditValue;
@@ -1227,7 +1297,7 @@ faf_umb_cuentasadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_cuentas_c_ICliente"><?php echo $af_umb_cuentas->c_ICliente->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->c_ICliente->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_c_ICliente" class="control-group">
-<select data-field="x_c_ICliente" id="x_c_ICliente" name="x_c_ICliente"<?php echo $af_umb_cuentas->c_ICliente->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_ICliente" id="x_c_ICliente" name="x_c_ICliente"<?php echo $af_umb_cuentas->c_ICliente->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_cuentas->c_ICliente->EditValue)) {
 	$arwrk = $af_umb_cuentas->c_ICliente->EditValue;
@@ -1257,7 +1327,7 @@ faf_umb_cuentasadd.Lists["x_c_ICliente"].Options = <?php echo (is_array($af_umb_
 		<td><span id="elh_af_umb_cuentas_c_ICuenta"><?php echo $af_umb_cuentas->c_ICuenta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->c_ICuenta->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_c_ICuenta" class="control-group">
-<select data-field="x_c_ICuenta" id="x_c_ICuenta" name="x_c_ICuenta"<?php echo $af_umb_cuentas->c_ICuenta->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_ICuenta" id="x_c_ICuenta" name="x_c_ICuenta"<?php echo $af_umb_cuentas->c_ICuenta->EditAttributes() ?>>
 <?php
 if (is_array($af_umb_cuentas->c_ICuenta->EditValue)) {
 	$arwrk = $af_umb_cuentas->c_ICuenta->EditValue;
@@ -1287,7 +1357,7 @@ faf_umb_cuentasadd.Lists["x_c_ICuenta"].Options = <?php echo (is_array($af_umb_c
 		<td><span id="elh_af_umb_cuentas_q_MinAl_Cta"><?php echo $af_umb_cuentas->q_MinAl_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->q_MinAl_Cta->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_q_MinAl_Cta" class="control-group">
-<input type="text" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinAl_Cta->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinAl_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cuentas->q_MinAl_Cta->CustomMsg ?></td>
 	</tr>
@@ -1297,7 +1367,7 @@ faf_umb_cuentasadd.Lists["x_c_ICuenta"].Options = <?php echo (is_array($af_umb_c
 		<td><span id="elh_af_umb_cuentas_q_MinCu_Cta"><?php echo $af_umb_cuentas->q_MinCu_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->q_MinCu_Cta->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_q_MinCu_Cta" class="control-group">
-<input type="text" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinCu_Cta->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinCu_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cuentas->q_MinCu_Cta->CustomMsg ?></td>
 	</tr>

@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_cuentasinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -661,9 +662,13 @@ class caf_umb_cuentas_edit extends caf_umb_cuentas {
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->EditValue = $rswrk->fields('DispFld');
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 					$rswrk->Close();
 				} else {
 					$this->c_IDestino->EditValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->EditValue = NULL;
@@ -687,8 +692,12 @@ class caf_umb_cuentas_edit extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->EditValue = NULL;
@@ -712,8 +721,12 @@ class caf_umb_cuentas_edit extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICliente->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->EditValue = $result[1]['name'];
 				} else {
 					$this->c_ICliente->EditValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICliente->EditValue = NULL;
@@ -737,8 +750,12 @@ class caf_umb_cuentas_edit extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICuenta->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));
+					$this->c_ICuenta->EditValue = $result[1]['id'];
 				} else {
 					$this->c_ICuenta->EditValue = $this->c_ICuenta->CurrentValue;
+					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));
+					$this->c_ICuenta->EditValue = $result[1]['id'];
 				}
 			} else {
 				$this->c_ICuenta->EditValue = NULL;
@@ -1212,7 +1229,7 @@ $af_umb_cuentas_edit->ShowMessage();
 		<td><span id="elh_af_umb_cuentas_q_MinAl_Cta"><?php echo $af_umb_cuentas->q_MinAl_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->q_MinAl_Cta->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_q_MinAl_Cta" class="control-group">
-<input type="text" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinAl_Cta->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinAl_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cuentas->q_MinAl_Cta->CustomMsg ?></td>
 	</tr>
@@ -1222,7 +1239,7 @@ $af_umb_cuentas_edit->ShowMessage();
 		<td><span id="elh_af_umb_cuentas_q_MinCu_Cta"><?php echo $af_umb_cuentas->q_MinCu_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cuentas->q_MinCu_Cta->CellAttributes() ?>>
 <span id="el_af_umb_cuentas_q_MinCu_Cta" class="control-group">
-<input type="text" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinCu_Cta->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cuentas->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_cuentas->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_cuentas->q_MinCu_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cuentas->q_MinCu_Cta->CustomMsg ?></td>
 	</tr>

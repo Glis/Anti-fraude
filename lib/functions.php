@@ -201,6 +201,36 @@ switch ($pagina) {
 		}
 		echo($html_res);
 		break;
+
+	case 'customer_class_add':
+
+		$res = select_sql_PO('select_customer_class_filtro', array($_POST['reseller']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
+		if($_POST['reseller'] != "vacio"){
+			while ($k <= $cant) {
+				$html_res .= "<option value='".$res[$k]['i_customer_class']."''>".$res[$k]['name']."</option>";
+				$k++;
+			}
+		}
+		echo($html_res);
+		break;
+
+	case 'accounts_filtro':
+
+		$res = select_sql_PO('select_accounts_all', array($_POST['cliente']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='vacio'>Todo</option>";
+		if($_POST['cliente'] != "vacio"){
+			while ($k <= $cant) {
+				$html_res .= "<option value='".$res[$k]['i_account']."''>".$res[$k]['id']."</option>";
+				$k++;
+			}
+		}
+		echo($html_res);
+		break;
 	
 	case 'umb_cclass':
 		

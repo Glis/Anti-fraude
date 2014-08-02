@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_config_reportesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -14,6 +15,19 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+$options_res = select_sql_PO('select_porta_customers');
+$cant = count($options_res);
+$k = 1;
+$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
+
+while ($k <= $cant) {
+	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+
 //
 // Page class
 //
@@ -1224,6 +1238,32 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 }?>
 
 <script type="text/javascript">
+$( document ).ready(function() {
+
+    $('#x_p_Reseller').empty();
+    $('#x_p_Reseller').append($('.new_select_reseller').html());
+
+    $('#x_p_CClass').prop('disabled', true); alert("algo");
+});
+
+$(document).on('change','#x_p_Reseller',function(){
+
+		var dataString = "pag=customer_class_add&reseller="+$("#x_p_Reseller").find("option:selected").val();
+		$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(response) {  
+				$('#x_p_CClass').empty().append(response);
+				$( "#x_p_CClass" ).prop( "disabled", false );
+			  }
+			});
+		
+});
+
+</script>
+
+<script type="text/javascript">
 
 // Page object
 var af_config_reportes_add = new ew_Page("af_config_reportes_add");
@@ -1352,7 +1392,7 @@ $af_config_reportes_add->ShowMessage();
 		<td><span id="elh_af_config_reportes_c_IReporte"><?php echo $af_config_reportes->c_IReporte->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->c_IReporte->CellAttributes() ?>>
 <span id="el_af_config_reportes_c_IReporte" class="control-group">
-<select data-field="x_c_IReporte" id="x_c_IReporte" name="x_c_IReporte"<?php echo $af_config_reportes->c_IReporte->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IReporte" id="x_c_IReporte" name="x_c_IReporte"<?php echo $af_config_reportes->c_IReporte->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->c_IReporte->EditValue)) {
 	$arwrk = $af_config_reportes->c_IReporte->EditValue;
@@ -1382,7 +1422,7 @@ faf_config_reportesadd.Lists["x_c_IReporte"].Options = <?php echo (is_array($af_
 		<td><span id="elh_af_config_reportes_frec_Envio"><?php echo $af_config_reportes->frec_Envio->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->frec_Envio->CellAttributes() ?>>
 <span id="el_af_config_reportes_frec_Envio" class="control-group">
-<select data-field="x_frec_Envio" id="x_frec_Envio" name="x_frec_Envio"<?php echo $af_config_reportes->frec_Envio->EditAttributes() ?>>
+<select class="form-control" data-field="x_frec_Envio" id="x_frec_Envio" name="x_frec_Envio"<?php echo $af_config_reportes->frec_Envio->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->frec_Envio->EditValue)) {
 	$arwrk = $af_config_reportes->frec_Envio->EditValue;
@@ -1412,7 +1452,7 @@ faf_config_reportesadd.Lists["x_frec_Envio"].Options = <?php echo (is_array($af_
 		<td><span id="elh_af_config_reportes_i_Dia_Envio"><?php echo $af_config_reportes->i_Dia_Envio->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->i_Dia_Envio->CellAttributes() ?>>
 <span id="el_af_config_reportes_i_Dia_Envio" class="control-group">
-<select data-field="x_i_Dia_Envio" id="x_i_Dia_Envio" name="x_i_Dia_Envio"<?php echo $af_config_reportes->i_Dia_Envio->EditAttributes() ?>>
+<select class="form-control" data-field="x_i_Dia_Envio" id="x_i_Dia_Envio" name="x_i_Dia_Envio"<?php echo $af_config_reportes->i_Dia_Envio->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->i_Dia_Envio->EditValue)) {
 	$arwrk = $af_config_reportes->i_Dia_Envio->EditValue;
@@ -1442,7 +1482,7 @@ faf_config_reportesadd.Lists["x_i_Dia_Envio"].Options = <?php echo (is_array($af
 		<td><span id="elh_af_config_reportes_x_Hora_Envio"><?php echo $af_config_reportes->x_Hora_Envio->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_Hora_Envio->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_Hora_Envio" class="control-group">
-<input type="text" data-field="x_x_Hora_Envio" name="x_x_Hora_Envio" id="x_x_Hora_Envio" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_Hora_Envio->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_Hora_Envio->EditValue ?>"<?php echo $af_config_reportes->x_Hora_Envio->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_Hora_Envio" name="x_x_Hora_Envio" id="x_x_Hora_Envio" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_Hora_Envio->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_Hora_Envio->EditValue ?>"<?php echo $af_config_reportes->x_Hora_Envio->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_Hora_Envio->CustomMsg ?></td>
 	</tr>
@@ -1452,7 +1492,7 @@ faf_config_reportesadd.Lists["x_i_Dia_Envio"].Options = <?php echo (is_array($af
 		<td><span id="elh_af_config_reportes_p_Destino"><?php echo $af_config_reportes->p_Destino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_Destino->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_Destino" class="control-group">
-<select data-field="x_p_Destino" id="x_p_Destino" name="x_p_Destino"<?php echo $af_config_reportes->p_Destino->EditAttributes() ?>>
+<select class="form-control" data-field="x_p_Destino" id="x_p_Destino" name="x_p_Destino"<?php echo $af_config_reportes->p_Destino->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->p_Destino->EditValue)) {
 	$arwrk = $af_config_reportes->p_Destino->EditValue;
@@ -1482,7 +1522,7 @@ faf_config_reportesadd.Lists["x_p_Destino"].Options = <?php echo (is_array($af_c
 		<td><span id="elh_af_config_reportes_p_Reseller"><?php echo $af_config_reportes->p_Reseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_Reseller->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_Reseller" class="control-group">
-<select data-field="x_p_Reseller" id="x_p_Reseller" name="x_p_Reseller"<?php echo $af_config_reportes->p_Reseller->EditAttributes() ?>>
+<select class="form-control" data-field="x_p_Reseller" id="x_p_Reseller" name="x_p_Reseller"<?php echo $af_config_reportes->p_Reseller->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->p_Reseller->EditValue)) {
 	$arwrk = $af_config_reportes->p_Reseller->EditValue;
@@ -1512,7 +1552,7 @@ faf_config_reportesadd.Lists["x_p_Reseller"].Options = <?php echo (is_array($af_
 		<td><span id="elh_af_config_reportes_p_CClass"><?php echo $af_config_reportes->p_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->p_CClass->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_CClass" class="control-group">
-<select data-field="x_p_CClass" id="x_p_CClass" name="x_p_CClass"<?php echo $af_config_reportes->p_CClass->EditAttributes() ?>>
+<select class="form-control" data-field="x_p_CClass" id="x_p_CClass" name="x_p_CClass"<?php echo $af_config_reportes->p_CClass->EditAttributes() ?>>
 <?php
 if (is_array($af_config_reportes->p_CClass->EditValue)) {
 	$arwrk = $af_config_reportes->p_CClass->EditValue;
@@ -1542,7 +1582,7 @@ faf_config_reportesadd.Lists["x_p_CClass"].Options = <?php echo (is_array($af_co
 		<td><span id="elh_af_config_reportes_x_DirCorreo"><?php echo $af_config_reportes->x_DirCorreo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
+<input class="form-control" type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_config_reportes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_DirCorreo->EditValue ?>"<?php echo $af_config_reportes->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_DirCorreo->CustomMsg ?></td>
 	</tr>
@@ -1552,7 +1592,7 @@ faf_config_reportesadd.Lists["x_p_CClass"].Options = <?php echo (is_array($af_co
 		<td><span id="elh_af_config_reportes_x_Titulo"><?php echo $af_config_reportes->x_Titulo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_config_reportes->x_Titulo->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_Titulo" class="control-group">
-<input type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_Titulo->EditValue ?>"<?php echo $af_config_reportes->x_Titulo->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_config_reportes->x_Titulo->EditValue ?>"<?php echo $af_config_reportes->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_config_reportes->x_Titulo->CustomMsg ?></td>
 	</tr>

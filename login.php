@@ -106,6 +106,16 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
                                         $_SESSION['USUARIO_TYPE']['config'] = $datos[1]['i_Config'];
                                         $_SESSION['filtros']="";
+                                        $_SESSION['filtros_umb_dest']="";
+                                        $_SESSION['filtros_umb']['reseller']="";
+                                        $_SESSION['filtros_umb']['destino']="";
+                                        $_SESSION['filtros_umb']['cname']="";
+                                        $_SESSION['filtros_umb']['cclass']="";
+                                        $_SESSION['filtros_acc']['tipo_accion']="";
+                                        $_SESSION['filtros_acc']['clase_accion']="";
+                                        $_SESSION['filtros_acc']['reseller']="";
+                                        $_SESSION['filtros_acc']['cclass']="";
+                                        
                                         echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
                                     }
                                 }

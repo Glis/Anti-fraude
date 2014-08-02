@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_cclassinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -621,8 +622,12 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->EditValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->EditValue = NULL;
@@ -646,8 +651,12 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->EditValue = NULL;
@@ -671,8 +680,12 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICClass->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				} else {
 					$this->c_ICClass->EditValue = $this->c_ICClass->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICClass->EditValue = NULL;
@@ -1122,7 +1135,7 @@ $af_umb_cclass_edit->ShowMessage();
 		<td><span id="elh_af_umb_cclass_q_MinAl_CClass"><?php echo $af_umb_cclass->q_MinAl_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->q_MinAl_CClass->CellAttributes() ?>>
 <span id="el_af_umb_cclass_q_MinAl_CClass" class="control-group">
-<input type="text" data-field="x_q_MinAl_CClass" name="x_q_MinAl_CClass" id="x_q_MinAl_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinAl_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinAl_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinAl_CClass->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_CClass" name="x_q_MinAl_CClass" id="x_q_MinAl_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinAl_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinAl_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinAl_CClass->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cclass->q_MinAl_CClass->CustomMsg ?></td>
 	</tr>
@@ -1132,7 +1145,7 @@ $af_umb_cclass_edit->ShowMessage();
 		<td><span id="elh_af_umb_cclass_q_MinCu_CClass"><?php echo $af_umb_cclass->q_MinCu_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_cclass->q_MinCu_CClass->CellAttributes() ?>>
 <span id="el_af_umb_cclass_q_MinCu_CClass" class="control-group">
-<input type="text" data-field="x_q_MinCu_CClass" name="x_q_MinCu_CClass" id="x_q_MinCu_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinCu_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinCu_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinCu_CClass->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_CClass" name="x_q_MinCu_CClass" id="x_q_MinCu_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinCu_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinCu_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinCu_CClass->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_cclass->q_MinCu_CClass->CustomMsg ?></td>
 	</tr>

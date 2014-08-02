@@ -29,8 +29,8 @@ function select_sql_PO($nombre, $ArrParams = NULL){
         switch($nombre) {
 
             case 'select_porta_customers' :
-                //$sql = "SELECT * FROM Customers";
-                $sql = "SELECT * FROM Customers WHERE i_customer_type=2 AND i_env=1";
+                //Select Resellers
+                $sql = "SELECT * FROM Customers WHERE i_customer_type=2 AND i_env=1 ORDER BY name";
                 break;
 
             case 'select_porta_customers_where' :
@@ -40,6 +40,16 @@ function select_sql_PO($nombre, $ArrParams = NULL){
             case 'select_destinos_all':
                 $sql = "SELECT * FROM Destinations WHERE i_env=1 ORDER BY destination";
                 break;            
+
+            case 'select_clientes_all':
+                //Select Clientes
+                $sql = "SELECT * FROM Customers WHERE i_customer_type=1 AND i_env=1 ORDER BY name";
+                break;
+
+            case 'select_accounts_all':
+                //Select Clientes
+                $sql = "SELECT * FROM Accounts WHERE i_env=1 AND i_customer=".$ArrParams[0]." ORDER BY id";
+                break;
 
             case 'select_destino_where' :
                 $sql = "SELECT description, destination FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];

@@ -994,6 +994,8 @@ class caf_umb_cuentas_list extends caf_umb_cuentas {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICuenta->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));
+					$this->c_ICuenta->ViewValue = $result[1]['id'];
 				} else {
 					$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 					$result = select_sql_PO("select_porta_accounts_where", array($this->c_ICuenta->CurrentValue, $this->c_ICliente->CurrentValue));

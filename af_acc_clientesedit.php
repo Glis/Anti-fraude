@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_acc_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -758,8 +759,12 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->EditValue = NULL;
@@ -783,8 +788,12 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICClass->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				} else {
 					$this->c_ICClass->EditValue = $this->c_ICClass->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICClass->EditValue = NULL;
@@ -1245,7 +1254,7 @@ $af_acc_clientes_edit->ShowMessage();
 		<td><span id="elh_af_acc_clientes_x_DirCorreo"><?php echo $af_acc_clientes->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_clientes->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_clientes_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_clientes->x_DirCorreo->EditValue ?>"<?php echo $af_acc_clientes->x_DirCorreo->EditAttributes() ?>>
+<input class="form-control" type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_clientes->x_DirCorreo->EditValue ?>"<?php echo $af_acc_clientes->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_clientes->x_DirCorreo->CustomMsg ?></td>
 	</tr>
@@ -1255,7 +1264,7 @@ $af_acc_clientes_edit->ShowMessage();
 		<td><span id="elh_af_acc_clientes_x_Titulo"><?php echo $af_acc_clientes->x_Titulo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_clientes->x_Titulo->CellAttributes() ?>>
 <span id="el_af_acc_clientes_x_Titulo" class="control-group">
-<input type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_clientes->x_Titulo->EditValue ?>"<?php echo $af_acc_clientes->x_Titulo->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_clientes->x_Titulo->EditValue ?>"<?php echo $af_acc_clientes->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_clientes->x_Titulo->CustomMsg ?></td>
 	</tr>
@@ -1265,7 +1274,7 @@ $af_acc_clientes_edit->ShowMessage();
 		<td><span id="elh_af_acc_clientes_x_Mensaje"><?php echo $af_acc_clientes->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_clientes->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_acc_clientes_x_Mensaje" class="control-group">
-<textarea data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_clientes->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_clientes->x_Mensaje->EditValue ?></textarea>
+<textarea class="form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_clientes->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_clientes->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_clientes->x_Mensaje->EditValue ?></textarea>
 </span>
 <?php echo $af_acc_clientes->x_Mensaje->CustomMsg ?></td>
 	</tr>

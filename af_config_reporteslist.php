@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_config_reportesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -1027,8 +1028,12 @@ class caf_config_reportes_list extends caf_config_reportes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->p_Reseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->p_Reseller->CurrentValue));
+					$this->p_Reseller->ViewValue = $result[1]['name'];
 				} else {
 					$this->p_Reseller->ViewValue = $this->p_Reseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->p_Reseller->CurrentValue));
+					$this->p_Reseller->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->p_Reseller->ViewValue = NULL;
@@ -1051,8 +1056,12 @@ class caf_config_reportes_list extends caf_config_reportes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->p_CClass->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->p_CClass->CurrentValue));
+					$this->p_CClass->ViewValue = $result[1]['name'];
 				} else {
 					$this->p_CClass->ViewValue = $this->p_CClass->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->p_CClass->CurrentValue));
+					$this->p_CClass->ViewValue = $result[1]['name'];
 				}
 			} else {
 				$this->p_CClass->ViewValue = NULL;

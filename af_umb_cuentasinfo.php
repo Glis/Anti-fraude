@@ -181,6 +181,7 @@ class caf_umb_cuentas extends cTable {
 
 			$sWhere = $where;
 			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_acc_resellersinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -14,6 +15,18 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+$options_res = select_sql_PO('select_porta_customers');
+$cant = count($options_res);
+$k = 1;
+$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
+
+while ($k <= $cant) {
+	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
+	$k++;
+}
+
+echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
 //
 // Page class
 //
@@ -1006,6 +1019,16 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 }?>
 
 <script type="text/javascript">
+$( document ).ready(function() {
+
+    $('#x_c_IReseller').empty();
+    $('#x_c_IReseller').append($('.new_select_reseller').html());
+});
+
+</script>
+
+
+<script type="text/javascript">
 
 // Page object
 var af_acc_resellers_add = new ew_Page("af_acc_resellers_add");
@@ -1101,7 +1124,7 @@ $af_acc_resellers_add->ShowMessage();
 		<td><span id="elh_af_acc_resellers_c_IReseller"><?php echo $af_acc_resellers->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_acc_resellers->c_IReseller->CellAttributes() ?>>
 <span id="el_af_acc_resellers_c_IReseller" class="control-group">
-<select data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_acc_resellers->c_IReseller->EditAttributes() ?>>
+<select class="form-control" data-field="x_c_IReseller" id="x_c_IReseller" name="x_c_IReseller"<?php echo $af_acc_resellers->c_IReseller->EditAttributes() ?>>
 <?php
 if (is_array($af_acc_resellers->c_IReseller->EditValue)) {
 	$arwrk = $af_acc_resellers->c_IReseller->EditValue;
@@ -1131,7 +1154,7 @@ faf_acc_resellersadd.Lists["x_c_IReseller"].Options = <?php echo (is_array($af_a
 		<td><span id="elh_af_acc_resellers_cl_Accion"><?php echo $af_acc_resellers->cl_Accion->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_acc_resellers->cl_Accion->CellAttributes() ?>>
 <span id="el_af_acc_resellers_cl_Accion" class="control-group">
-<select data-field="x_cl_Accion" id="x_cl_Accion" name="x_cl_Accion"<?php echo $af_acc_resellers->cl_Accion->EditAttributes() ?>>
+<select class="form-control" data-field="x_cl_Accion" id="x_cl_Accion" name="x_cl_Accion"<?php echo $af_acc_resellers->cl_Accion->EditAttributes() ?>>
 <?php
 if (is_array($af_acc_resellers->cl_Accion->EditValue)) {
 	$arwrk = $af_acc_resellers->cl_Accion->EditValue;
@@ -1161,7 +1184,7 @@ faf_acc_resellersadd.Lists["x_cl_Accion"].Options = <?php echo (is_array($af_acc
 		<td><span id="elh_af_acc_resellers_t_Accion"><?php echo $af_acc_resellers->t_Accion->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_acc_resellers->t_Accion->CellAttributes() ?>>
 <span id="el_af_acc_resellers_t_Accion" class="control-group">
-<select data-field="x_t_Accion" id="x_t_Accion" name="x_t_Accion"<?php echo $af_acc_resellers->t_Accion->EditAttributes() ?>>
+<select class="form-control" data-field="x_t_Accion" id="x_t_Accion" name="x_t_Accion"<?php echo $af_acc_resellers->t_Accion->EditAttributes() ?>>
 <?php
 if (is_array($af_acc_resellers->t_Accion->EditValue)) {
 	$arwrk = $af_acc_resellers->t_Accion->EditValue;
@@ -1191,7 +1214,7 @@ faf_acc_resellersadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc_
 		<td><span id="elh_af_acc_resellers_x_DirCorreo"><?php echo $af_acc_resellers->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_resellers->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_resellers_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_resellers->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_resellers->x_DirCorreo->EditValue ?>"<?php echo $af_acc_resellers->x_DirCorreo->EditAttributes() ?>>
+<input class="form-control" type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_resellers->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_resellers->x_DirCorreo->EditValue ?>"<?php echo $af_acc_resellers->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_resellers->x_DirCorreo->CustomMsg ?></td>
 	</tr>
@@ -1201,7 +1224,7 @@ faf_acc_resellersadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc_
 		<td><span id="elh_af_acc_resellers_x_Titulo"><?php echo $af_acc_resellers->x_Titulo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_resellers->x_Titulo->CellAttributes() ?>>
 <span id="el_af_acc_resellers_x_Titulo" class="control-group">
-<input type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_resellers->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_resellers->x_Titulo->EditValue ?>"<?php echo $af_acc_resellers->x_Titulo->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_resellers->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_resellers->x_Titulo->EditValue ?>"<?php echo $af_acc_resellers->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_resellers->x_Titulo->CustomMsg ?></td>
 	</tr>
@@ -1211,7 +1234,7 @@ faf_acc_resellersadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc_
 		<td><span id="elh_af_acc_resellers_x_Mensaje"><?php echo $af_acc_resellers->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_resellers->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_acc_resellers_x_Mensaje" class="control-group">
-<textarea data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_resellers->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_resellers->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_resellers->x_Mensaje->EditValue ?></textarea>
+<textarea class="form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_resellers->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_resellers->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_resellers->x_Mensaje->EditValue ?></textarea>
 </span>
 <?php echo $af_acc_resellers->x_Mensaje->CustomMsg ?></td>
 	</tr>

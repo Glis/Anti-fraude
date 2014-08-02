@@ -1013,7 +1013,8 @@ class caf_acc_cclass_list extends caf_acc_cclass {
 					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
 					$this->c_ICClass->ViewValue = $result[1]['name'];
 				} else {
-					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
 					$this->c_ICClass->ViewValue = $result[1]['name'];
 				}
 			} else {

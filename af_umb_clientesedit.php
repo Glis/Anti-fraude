@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_umb_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -622,8 +623,12 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->EditValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->EditValue = NULL;
@@ -647,8 +652,12 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->EditValue = NULL;
@@ -672,8 +681,12 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_ICliente->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->EditValue = $result[1]['name'];
 				} else {
 					$this->c_ICliente->EditValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_ICliente->EditValue = NULL;
@@ -1124,7 +1137,7 @@ $af_umb_clientes_edit->ShowMessage();
 		<td><span id="elh_af_umb_clientes_q_MinAl_Cli"><?php echo $af_umb_clientes->q_MinAl_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_clientes->q_MinAl_Cli->CellAttributes() ?>>
 <span id="el_af_umb_clientes_q_MinAl_Cli" class="control-group">
-<input type="text" data-field="x_q_MinAl_Cli" name="x_q_MinAl_Cli" id="x_q_MinAl_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinAl_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinAl_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinAl_Cli->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_Cli" name="x_q_MinAl_Cli" id="x_q_MinAl_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinAl_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinAl_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinAl_Cli->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_clientes->q_MinAl_Cli->CustomMsg ?></td>
 	</tr>
@@ -1134,7 +1147,7 @@ $af_umb_clientes_edit->ShowMessage();
 		<td><span id="elh_af_umb_clientes_q_MinCu_Cli"><?php echo $af_umb_clientes->q_MinCu_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_clientes->q_MinCu_Cli->CellAttributes() ?>>
 <span id="el_af_umb_clientes_q_MinCu_Cli" class="control-group">
-<input type="text" data-field="x_q_MinCu_Cli" name="x_q_MinCu_Cli" id="x_q_MinCu_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinCu_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinCu_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinCu_Cli->EditAttributes() ?>>
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_Cli" name="x_q_MinCu_Cli" id="x_q_MinCu_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinCu_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinCu_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinCu_Cli->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_clientes->q_MinCu_Cli->CustomMsg ?></td>
 	</tr>

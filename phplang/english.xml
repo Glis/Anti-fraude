@@ -95,7 +95,7 @@
 		<phrase id="masterdetaileditlink" value="Master/Detail Edit"/>
 		<phrase id="masterdetailviewlink" value="Master/Detail View"/>
 		<phrase id="dupindex" value="Duplicate value '%v' for unique index '%f'"/>
-		<phrase id="dupkey" value="Duplicate primary key: '%f'"/>
+		<phrase id="dupkey" value="Clave primaria duplicada: '%f'"/>
 		<phrase id="edit" value="Editar"/>
 		<phrase id="editbtn" value="Editar"/>
 		<phrase id="editlink" value="Editar" imageurl="phpimages/edit.gif" imagewidth="16" imageheight="16"/>
@@ -103,7 +103,7 @@
 		<phrase id="enteroldpassword" value="Please enter old password" client="1"/>
 		<phrase id="enterpassword" value="Please enter password" client="1"/>
 		<phrase id="enterpwd" value="Please enter password" client="1"/>
-		<phrase id="enterrequiredfield" value="Please enter required field" client="1"/>
+		<phrase id="enterrequiredfield" value="Por favor introduzca los campos obligatorios" client="1"/>
 		<phrase id="entersearchcriteria" value="Please enter search criteria"/>
 		<phrase id="enterusername" value="Please enter username" client="1"/>
 		<phrase id="entervalidatecode" value="Please enter the validation code shown" client="1"/>
@@ -701,7 +701,7 @@
 </field>
 <field id="c_ireseller"><phrase id="fldcaption" value="Reseller"/>
 </field>
-<field id="c_icliente"><phrase id="fldcaption" value="Cliente"/>
+<field id="c_icliente"><phrase id="fldcaption" value="Customer Name"/>
 </field>
 <field id="q_minal_cli"><phrase id="fldcaption" value="Min Alerta"/>
 </field>

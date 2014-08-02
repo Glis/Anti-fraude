@@ -19,7 +19,7 @@ if(!isset($_SESSION['USUARIO']))
 $options = select_sql_PO('select_destinos_all');
 $cant = count($options);
 $k = 1;
-$html_res = "";
+$html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
 	$html_res .= "<option value='". $options[$k]['i_dest']."'>". $options[$k]['destination']. "</option>"; 
@@ -1288,7 +1288,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinAl_Plataf"><?php echo $af_umb_destinos->q_MinAl_Plataf->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinAl_Plataf->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinAl_Plataf" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinAl_Plataf" name="x_q_MinAl_Plataf" id="x_q_MinAl_Plataf" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Plataf->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Plataf->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Plataf->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinAl_Plataf" name="x_q_MinAl_Plataf" id="x_q_MinAl_Plataf" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Plataf->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Plataf->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Plataf->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinAl_Plataf->CustomMsg ?></td>
 	</tr>
@@ -1298,7 +1298,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinCu_Plataf"><?php echo $af_umb_destinos->q_MinCu_Plataf->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinCu_Plataf->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinCu_Plataf" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinCu_Plataf" name="x_q_MinCu_Plataf" id="x_q_MinCu_Plataf" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Plataf->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Plataf->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Plataf->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinCu_Plataf" name="x_q_MinCu_Plataf" id="x_q_MinCu_Plataf" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Plataf->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Plataf->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Plataf->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinCu_Plataf->CustomMsg ?></td>
 	</tr>
@@ -1308,7 +1308,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinAl_Res"><?php echo $af_umb_destinos->q_MinAl_Res->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinAl_Res->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinAl_Res" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinAl_Res" name="x_q_MinAl_Res" id="x_q_MinAl_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Res->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Res->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Res->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinAl_Res" name="x_q_MinAl_Res" id="x_q_MinAl_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Res->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Res->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Res->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinAl_Res->CustomMsg ?></td>
 	</tr>
@@ -1318,7 +1318,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinCu_Res"><?php echo $af_umb_destinos->q_MinCu_Res->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinCu_Res->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinCu_Res" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinCu_Res" name="x_q_MinCu_Res" id="x_q_MinCu_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Res->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Res->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Res->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinCu_Res" name="x_q_MinCu_Res" id="x_q_MinCu_Res" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Res->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Res->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Res->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinCu_Res->CustomMsg ?></td>
 	</tr>
@@ -1328,7 +1328,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinAl_CClas"><?php echo $af_umb_destinos->q_MinAl_CClas->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinAl_CClas->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinAl_CClas" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinAl_CClas" name="x_q_MinAl_CClas" id="x_q_MinAl_CClas" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_CClas->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_CClas->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_CClas->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinAl_CClas" name="x_q_MinAl_CClas" id="x_q_MinAl_CClas" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_CClas->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_CClas->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_CClas->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinAl_CClas->CustomMsg ?></td>
 	</tr>
@@ -1338,7 +1338,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinCu_CClas"><?php echo $af_umb_destinos->q_MinCu_CClas->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinCu_CClas->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinCu_CClas" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinCu_CClas" name="x_q_MinCu_CClas" id="x_q_MinCu_CClas" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_CClas->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_CClas->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_CClas->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinCu_CClas" name="x_q_MinCu_CClas" id="x_q_MinCu_CClas" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_CClas->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_CClas->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_CClas->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinCu_CClas->CustomMsg ?></td>
 	</tr>
@@ -1348,7 +1348,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinAl_Cli"><?php echo $af_umb_destinos->q_MinAl_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinAl_Cli->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinAl_Cli" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinAl_Cli" name="x_q_MinAl_Cli" id="x_q_MinAl_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Cli->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Cli->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinAl_Cli" name="x_q_MinAl_Cli" id="x_q_MinAl_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Cli->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Cli->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinAl_Cli->CustomMsg ?></td>
 	</tr>
@@ -1358,7 +1358,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinCu_Cli"><?php echo $af_umb_destinos->q_MinCu_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinCu_Cli->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinCu_Cli" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinCu_Cli" name="x_q_MinCu_Cli" id="x_q_MinCu_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Cli->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Cli->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinCu_Cli" name="x_q_MinCu_Cli" id="x_q_MinCu_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Cli->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Cli->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinCu_Cli->CustomMsg ?></td>
 	</tr>
@@ -1368,7 +1368,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinAl_Cta"><?php echo $af_umb_destinos->q_MinAl_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinAl_Cta->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinAl_Cta" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Cta->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinAl_Cta" name="x_q_MinAl_Cta" id="x_q_MinAl_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinAl_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinAl_Cta->EditValue ?>"<?php echo $af_umb_destinos->q_MinAl_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinAl_Cta->CustomMsg ?></td>
 	</tr>
@@ -1378,7 +1378,7 @@ faf_umb_destinosadd.Lists["x_c_IDestino"].Options = <?php echo (is_array($af_umb
 		<td><span id="elh_af_umb_destinos_q_MinCu_Cta"><?php echo $af_umb_destinos->q_MinCu_Cta->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_umb_destinos->q_MinCu_Cta->CellAttributes() ?>>
 <span id="el_af_umb_destinos_q_MinCu_Cta" class="control-group">
-<input class= "form-control" type="text" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Cta->EditAttributes() ?>>
+<input class= "form-control" type="number" min="0" data-field="x_q_MinCu_Cta" name="x_q_MinCu_Cta" id="x_q_MinCu_Cta" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_destinos->q_MinCu_Cta->PlaceHolder) ?>" value="<?php echo $af_umb_destinos->q_MinCu_Cta->EditValue ?>"<?php echo $af_umb_destinos->q_MinCu_Cta->EditAttributes() ?>>
 </span>
 <?php echo $af_umb_destinos->q_MinCu_Cta->CustomMsg ?></td>
 	</tr>
