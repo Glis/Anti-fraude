@@ -1054,6 +1054,7 @@ $af_usuarios_add->ShowMessage();
 <form name="faf_usuariosadd" id="faf_usuariosadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_usuarios">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_usuariosadd" class="table table-bordered table-striped">
 <?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>

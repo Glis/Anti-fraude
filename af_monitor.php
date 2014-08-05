@@ -54,7 +54,7 @@ $chequeosCount = count($chequeos);
   </tbody>
 </table>
 
-<h1 style="text-align:center; ">Monitor General</h1>
+<div id="page_title" style="text-align:center; width:100%"></div>
 <!-- Tabla de chequeo  -->
 <div id="tableContainer" class="col-sm-12">
   <div class="row">

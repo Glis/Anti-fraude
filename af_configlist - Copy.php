@@ -243,7 +243,7 @@ class caf_config_list extends caf_config {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1202,7 +1202,7 @@ faf_configlist.ValidateRequired = false;
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_config_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_config_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_config_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

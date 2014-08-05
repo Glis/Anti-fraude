@@ -39,7 +39,7 @@ $accountCount = count($accounts);
   </tbody>
 </table>
 
-<h1 style="text-align:center; ">Monitor (Cuentas Bloqueadas)</h1>
+<div id="page_title" style="text-align:center; width:100%"></div>
 <div id="treeContainer" class="col-sm-12">
   <!-- Tabla de cuentas  -->
   

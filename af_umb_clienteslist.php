@@ -250,7 +250,7 @@ class caf_umb_clientes_list extends caf_umb_clientes {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1326,7 +1326,7 @@ faf_umb_clienteslist.Lists["x_c_ICliente"] = {"LinkField":"x_c_Usuario","Ajax":n
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_umb_clientes_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_umb_clientes_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_umb_clientes_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

@@ -27,6 +27,7 @@
 </div>
 <script type="text/javascript">
 $("#ewPageTitle").html($("#ewPageCaption").text());
+
 </script>
 <?php } ?>
 <?php if (@$_GET["_row"] <> "") { ?>
@@ -44,7 +45,8 @@ jQuery.later(1000, null, function() {
 <?php } ?>
 <?php if (@$gsExport == "") { ?>
 <script type="text/javascript">
-
+/*alert($("#ewPageCaption").text()+$("#page_title").html());*/
+$("#page_title").html($("#ewPageCaption").text()+$("#page_title").html());
 // Write your global startup script here
 // document.write("page loaded");
 

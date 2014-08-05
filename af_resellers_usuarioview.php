@@ -356,12 +356,12 @@ class caf_resellers_usuario_view extends caf_resellers_usuario {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 
 		// Delete
 		$item = &$option->Add("delete");
-		$item->Body = "<a class=\"ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl <> "");
 
 		// Set up options default
@@ -727,7 +727,7 @@ faf_resellers_usuarioview.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","A
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<div class="ewViewExportOptions">
+<div id="page_title" style="text-align:center; width:100%" class="ewViewExportOptions"> - Ver
 <?php $af_resellers_usuario_view->ExportOptions->Render("body") ?>
 <?php if (!$af_resellers_usuario_view->ExportOptions->UseDropDownButton) { ?>
 </div>

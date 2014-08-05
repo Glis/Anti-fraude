@@ -1251,6 +1251,7 @@ $af_umb_destinos_add->ShowMessage();
 <form name="faf_umb_destinosadd" id="faf_umb_destinosadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_umb_destinos">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_umb_destinosadd" class="table table-bordered table-striped">
 <?php if ($af_umb_destinos->c_IDestino->Visible) { // c_IDestino ?>

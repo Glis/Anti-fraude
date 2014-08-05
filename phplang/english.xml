@@ -22,10 +22,10 @@
 	<global>
 		<phrase id="actiondeleted" value="Eliminado"/>
 		<phrase id="actioninserted" value="Insertado"/>
-		<phrase id="actioninsertedgridadd" value="Inserted (Grid-Add)"/>
+		<phrase id="actioninsertedgridadd" value="Insertado (Grid-Add)"/>
 		<phrase id="actionupdated" value="Actualizado"/>
-		<phrase id="actionupdatedgridedit" value="Updated (Grid-Edit)"/>
-		<phrase id="actionupdatedmultiupdate" value="Updated (Multi-Update)"/>
+		<phrase id="actionupdatedgridedit" value="Actualizado (Grid-Edit)"/>
+		<phrase id="actionupdatedmultiupdate" value="Actualizado (Multi-Update)"/>
 		<phrase id="activateaccount" value="Your account is activated"/>
 		<phrase id="activatefailed" value="Activation failed"/>
 		<phrase id="add" value="Añadir"/>
@@ -88,7 +88,7 @@
 		<phrase id="deletelink" value="Delete" imageurl="phpimages/delete.gif" imagewidth="16" imageheight="16"/>
 		<phrase id="deletemulticonfirmmsg" value="¿Desea eliminar los registros seleccionados?" client="1"/>
 		<phrase id="deleteselectedlink" value="Eliminar Registros Seleccionados"/>
-		<phrase id="deletesuccess" value="Delete succeeded"/>
+		<phrase id="deletesuccess" value="Eliminación exitosa"/>
 		<phrase id="detaillink" value=""/>
 		<phrase id="detailcount" value="(%c)"/>
 		<phrase id="masterdetailcopylink" value="Master/Detail Copy"/>
@@ -526,7 +526,7 @@
 <table id="af_chequeo_det_clientes"/>
 <table id="af_chequeo_det_cuentas"/>
 <table id="af_chequeo_det_resellers"/>
-<table id="af_config"><phrase id="tblcaption" value="Configuraciónes"/>
+<table id="af_config"><phrase id="tblcaption" value="Configuraciones"/>
 <field id="q_min_chequeo"><phrase id="fldcaption" value="q Min Chequeo"/>
 </field>
 <field id="q_min_ventchequeo"><phrase id="fldcaption" value="q Min Vent Chequeo"/>
@@ -772,7 +772,7 @@
 <field id="c_usuario_ult_mod"><phrase id="fldcaption" value="Usuario Ult Modificación"/>
 </field>
 </table>
-<table id="af_usuarios"><phrase id="tblcaption" value="af usuarios"/>
+<table id="af_usuarios"><phrase id="tblcaption" value="Usuarios"/>
 <field id="c_usuario"><phrase id="fldcaption" value="Usuario"/>
 </field>
 <field id="i_activo"><phrase id="fldcaption" value="Activo?"/>

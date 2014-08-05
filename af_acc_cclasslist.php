@@ -252,7 +252,7 @@ class caf_acc_cclass_list extends caf_acc_cclass {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1371,7 +1371,7 @@ faf_acc_cclasslist.Lists["x_c_ICClass"] = {"LinkField":"x_c_Usuario","Ajax":null
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_acc_cclass_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_acc_cclass_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_acc_cclass_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

@@ -250,7 +250,7 @@ class caf_config_reportes_list extends caf_config_reportes {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -261,7 +261,7 @@ class caf_config_reportes_list extends caf_config_reportes {
 		$this->OtherOptions['detail']->TagClassName = "ewDetailOption";
 		$this->OtherOptions['action'] = new cListOptions();
 		$this->OtherOptions['action']->Tag = "div";
-		$this->OtherOptions['action']->TagClassName = "ewActionOption";
+		$this->OtherOptions['action']->TagClassName = "ewExportOption pull-right";
 	}
 
 	// 
@@ -1417,7 +1417,7 @@ faf_config_reporteslist.Lists["x_i_Dia_Envio"] = {"LinkField":"x_rv_Low_Value","
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_config_reportes_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_config_reportes_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_config_reportes_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

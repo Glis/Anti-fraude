@@ -1021,6 +1021,7 @@ $af_acc_plataforma_edit->ShowMessage();
 <input type="hidden" name="t" value="af_acc_plataforma">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_acc_plataforma_edit->HashValue ?>">
+<div id="page_title"> - Editar</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_acc_plataformaedit" class="table table-bordered table-striped">
 <?php if ($af_acc_plataforma->cl_Accion->Visible) { // cl_Accion ?>

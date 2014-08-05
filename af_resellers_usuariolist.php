@@ -250,7 +250,7 @@ class caf_resellers_usuario_list extends caf_resellers_usuario {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1264,7 +1264,7 @@ faf_resellers_usuariolist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","A
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_resellers_usuario_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_resellers_usuario_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_resellers_usuario_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

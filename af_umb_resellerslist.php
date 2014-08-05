@@ -249,7 +249,7 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1280,7 +1280,7 @@ faf_umb_resellerslist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax"
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_umb_resellers_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_umb_resellers_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_umb_resellers_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

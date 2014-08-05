@@ -1229,6 +1229,7 @@ $af_acc_cclass_add->ShowMessage();
 <form name="faf_acc_cclassadd" id="faf_acc_cclassadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_acc_cclass">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_acc_cclassadd" class="table table-bordered table-striped">
 <?php if ($af_acc_cclass->cl_Accion->Visible) { // cl_Accion ?>

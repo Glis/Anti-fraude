@@ -1379,6 +1379,7 @@ $af_config_reportes_add->ShowMessage();
 <form name="faf_config_reportesadd" id="faf_config_reportesadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_config_reportes">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_config_reportesadd" class="table table-bordered table-striped">
 <?php if (false/*$af_config_reportes->c_IConfig->Visible*/) { // c_IConfig ?>

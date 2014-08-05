@@ -376,17 +376,17 @@ class caf_umb_cuentas_view extends caf_umb_cuentas {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 
 		// Edit
 		$item = &$option->Add("edit");
-		$item->Body = "<a class=\"ewAction ewEdit\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("ViewPageEditLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewEdit\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("ViewPageEditLink") . "</a>";
 		$item->Visible = ($this->EditUrl <> "");
 
 		// Delete
 		$item = &$option->Add("delete");
-		$item->Body = "<a class=\"ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl <> "");
 
 		// Set up options default
@@ -831,7 +831,7 @@ faf_umb_cuentasview.Lists["x_c_ICuenta"] = {"LinkField":"x_c_Usuario","Ajax":nul
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<div class="ewViewExportOptions">
+<div id="page_title" style="text-align:center; width:100%" class="ewViewExportOptions"> - Ver
 <?php $af_umb_cuentas_view->ExportOptions->Render("body") ?>
 <?php if (!$af_umb_cuentas_view->ExportOptions->UseDropDownButton) { ?>
 </div>

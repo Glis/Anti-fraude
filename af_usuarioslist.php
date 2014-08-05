@@ -248,7 +248,7 @@ class caf_usuarios_list extends caf_usuarios {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1295,7 +1295,7 @@ faf_usuarioslist.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_usuarios_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

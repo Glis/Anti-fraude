@@ -46,7 +46,7 @@ body{
 
 .ewContentTable{
 	background-color: white;
-	width: auto;
+	/*width: auto;*/
 	margin: 0 auto;
 }
 
@@ -114,9 +114,19 @@ body{
 	margin-top: 10px;
 }
 
+.ewViewOtherOptions{
+	text-align: center;
+}
+
+#page_title{
+	font-size: 36px;
+	margin: 10px 0;
+}
+
+
 /*modificaciones de bootstrap viejo*/
 
-pagination{margin:20px 0;}
+.pagination{margin:20px 0;}
 .pagination ul{padding-left:0px;display:inline-block;*display:inline;*zoom:1;margin-left:0;margin-bottom:0;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);box-shadow:0 1px 2px rgba(0, 0, 0, 0.05);}
 .pagination ul>li{display:inline;}
 .pagination ul>li>a,.pagination ul>li>span{float:left;padding:4px 12px;line-height:20px;text-decoration:none;background-color:#ffffff;border:1px solid #dddddd;border-left-width:0;}

@@ -345,12 +345,12 @@ class caf_usuarios_view extends caf_usuarios {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 
 		// Delete
 		$item = &$option->Add("delete");
-		$item->Body = "<a class=\"ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl <> "");
 
 		// Set up options default
@@ -767,7 +767,7 @@ faf_usuariosview.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<div class="ewViewExportOptions">
+<div id="page_title" style="text-align:center; width:100%" class="ewViewExportOptions"> - Ver
 <?php $af_usuarios_view->ExportOptions->Render("body") ?>
 <?php if (!$af_usuarios_view->ExportOptions->UseDropDownButton) { ?>
 </div>

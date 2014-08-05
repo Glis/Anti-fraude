@@ -250,7 +250,7 @@ class caf_config_list extends caf_config {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1224,6 +1224,7 @@ faf_configlist.ValidateRequired = false;
 <?php
 $af_config_list->ShowMessage();
 ?>
+<div id="page_title" style="text-align:center; width:100%"></div>
 <form action='' method='POST' style="text-align: center;">
 	<?php $res = select_sql('select_config_data'); ?>
 	<table class="ewGrid"><tbody><tr><td>
@@ -1308,3 +1309,5 @@ if(isset($_POST['submit'])){
 	echo "<script>parent.window.location.reload();</script>";
 }	
 ?>
+
+<?php include_once "footer.php" ?>

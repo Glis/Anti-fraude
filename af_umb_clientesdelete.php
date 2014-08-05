@@ -742,6 +742,7 @@ $af_umb_clientes_delete->ShowMessage();
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
+<div id="page_title" style="text-align:center; width:100%"> - Eliminar</div>
 <table class="ewGrid"><tr><td class="ewGridContent">
 <div class="ewGridMiddlePanel">
 <table id="tbl_af_umb_clientesdelete" class="ewTable ewTableSeparate">

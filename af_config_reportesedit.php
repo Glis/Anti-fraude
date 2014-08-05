@@ -1415,6 +1415,7 @@ $af_config_reportes_edit->ShowMessage();
 <input type="hidden" name="t" value="af_config_reportes">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_config_reportes_edit->HashValue ?>">
+<div id="page_title"> - Editar</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_config_reportesedit" class="table table-bordered table-striped">
 <?php if ($af_config_reportes->c_IConfig->Visible) { // c_IConfig ?>

@@ -1174,6 +1174,7 @@ $af_umb_cuentas_edit->ShowMessage();
 <input type="hidden" name="t" value="af_umb_cuentas">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_umb_cuentas_edit->HashValue ?>">
+<div id="page_title"> - Editar</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_umb_cuentasedit" class="table table-bordered table-striped">
 <?php if ($af_umb_cuentas->c_IDestino->Visible) { // c_IDestino ?>

@@ -1130,6 +1130,7 @@ $af_umb_cclass_add->ShowMessage();
 <form name="faf_umb_cclassadd" id="faf_umb_cclassadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_umb_cclass">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_umb_cclassadd" class="table table-bordered table-striped">
 <?php if ($af_umb_cclass->c_IDestino->Visible) { // c_IDestino ?>

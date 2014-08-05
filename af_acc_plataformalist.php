@@ -249,7 +249,7 @@ class caf_acc_plataforma_list extends caf_acc_plataforma {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption";
+		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1273,7 +1273,7 @@ faf_acc_plataformalist.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_acc_plataforma_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_acc_plataforma_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_acc_plataforma_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

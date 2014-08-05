@@ -943,6 +943,7 @@ $af_resellers_usuario_add->ShowMessage();
 <form name="faf_resellers_usuarioadd" id="faf_resellers_usuarioadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_resellers_usuario">
 <input type="hidden" name="a_add" id="a_add" value="A">
+<div id="page_title"> - Añadir</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_resellers_usuarioadd" class="table table-bordered table-striped">
 <?php if ($af_resellers_usuario->c_Usuario->Visible) { // c_Usuario ?>
