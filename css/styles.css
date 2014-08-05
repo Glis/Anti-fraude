@@ -46,7 +46,7 @@ body{
 
 .ewContentTable{
 	background-color: white;
-	/*width: auto;*/
+	width: auto;
 	margin: 0 auto;
 }
 
@@ -104,10 +104,24 @@ body{
 
 .ewForm{
 	margin:5px;
+	text-align: center;
 }
 
 .ewTable{
 	border: 1px solid #ccc !important;
+	
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.ewTable .ewTableHeader, .ewTable .ewTableHeader td, #treeContainer th, #tableContainer th{
+	background-image: none;
+	background-color: #428bca;
+	font-weight: bold;
+	text-align: center;
+	border-color: #357ebd;
+	color: white;
 }
 
 .ewButtonGroup{

@@ -1062,7 +1062,7 @@ $af_usuarios_add->ShowMessage();
 		<td><span id="elh_af_usuarios_c_Usuario"><?php echo $af_usuarios->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->c_Usuario->CellAttributes() ?>>
 <span id="el_af_usuarios_c_Usuario" class="control-group">
-<input type="text" data-field="x_c_Usuario" name="x_c_Usuario" id="x_c_Usuario" size="30" maxlength="20" placeholder="<?php echo ew_HtmlEncode($af_usuarios->c_Usuario->PlaceHolder) ?>" value="<?php echo $af_usuarios->c_Usuario->EditValue ?>"<?php echo $af_usuarios->c_Usuario->EditAttributes() ?>>
+<input class = "form-control" type="text" data-field="x_c_Usuario" name="x_c_Usuario" id="x_c_Usuario" size="30" maxlength="20" placeholder="<?php echo ew_HtmlEncode($af_usuarios->c_Usuario->PlaceHolder) ?>" value="<?php echo $af_usuarios->c_Usuario->EditValue ?>"<?php echo $af_usuarios->c_Usuario->EditAttributes() ?>>
 </span>
 <?php echo $af_usuarios->c_Usuario->CustomMsg ?></td>
 	</tr>
@@ -1072,7 +1072,7 @@ $af_usuarios_add->ShowMessage();
 		<td><span id="elh_af_usuarios_i_Activo"><?php echo $af_usuarios->i_Activo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Activo->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Activo" class="control-group">
-<select data-field="x_i_Activo" id="x_i_Activo" name="x_i_Activo"<?php echo $af_usuarios->i_Activo->EditAttributes() ?>>
+<select class = "form-control" data-field="x_i_Activo" id="x_i_Activo" name="x_i_Activo"<?php echo $af_usuarios->i_Activo->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Activo->EditValue)) {
 	$arwrk = $af_usuarios->i_Activo->EditValue;
@@ -1102,7 +1102,7 @@ faf_usuariosadd.Lists["x_i_Activo"].Options = <?php echo (is_array($af_usuarios-
 		<td><span id="elh_af_usuarios_i_Admin"><?php echo $af_usuarios->i_Admin->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Admin->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Admin" class="control-group">
-<select data-field="x_i_Admin" id="x_i_Admin" name="x_i_Admin"<?php echo $af_usuarios->i_Admin->EditAttributes() ?>>
+<select class = "form-control" data-field="x_i_Admin" id="x_i_Admin" name="x_i_Admin"<?php echo $af_usuarios->i_Admin->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Admin->EditValue)) {
 	$arwrk = $af_usuarios->i_Admin->EditValue;
@@ -1132,7 +1132,7 @@ faf_usuariosadd.Lists["x_i_Admin"].Options = <?php echo (is_array($af_usuarios->
 		<td><span id="elh_af_usuarios_i_Config"><?php echo $af_usuarios->i_Config->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Config->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Config" class="control-group">
-<select data-field="x_i_Config" id="x_i_Config" name="x_i_Config"<?php echo $af_usuarios->i_Config->EditAttributes() ?>>
+<select class = "form-control" data-field="x_i_Config" id="x_i_Config" name="x_i_Config"<?php echo $af_usuarios->i_Config->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Config->EditValue)) {
 	$arwrk = $af_usuarios->i_Config->EditValue;
@@ -1162,7 +1162,7 @@ faf_usuariosadd.Lists["x_i_Config"].Options = <?php echo (is_array($af_usuarios-
 		<td><span id="elh_af_usuarios_x_Obs"><?php echo $af_usuarios->x_Obs->FldCaption() ?></span></td>
 		<td<?php echo $af_usuarios->x_Obs->CellAttributes() ?>>
 <span id="el_af_usuarios_x_Obs" class="control-group">
-<input type="text" data-field="x_x_Obs" name="x_x_Obs" id="x_x_Obs" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_usuarios->x_Obs->PlaceHolder) ?>" value="<?php echo $af_usuarios->x_Obs->EditValue ?>"<?php echo $af_usuarios->x_Obs->EditAttributes() ?>>
+<input class = "form-control" type="text" data-field="x_x_Obs" name="x_x_Obs" id="x_x_Obs" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_usuarios->x_Obs->PlaceHolder) ?>" value="<?php echo $af_usuarios->x_Obs->EditValue ?>"<?php echo $af_usuarios->x_Obs->EditAttributes() ?>>
 </span>
 <?php echo $af_usuarios->x_Obs->CustomMsg ?></td>
 	</tr>

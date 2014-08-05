@@ -60,8 +60,8 @@ a.ewButton{min-width:49px;}
 .ewTable td.ewTableLastCol{border-right:0px;}
 .ewTable td.ewTableLastRow{border-bottom:0px;}
 .ewTableEditRow>td{background-color:#afeeee;color:inherit;}
-.ewTableHighlightRow>td{background-color:#e0ffff;color:inherit;}
-.ewTableSelectRow>td{background-color:#008080;color:#ffffff;}
+.ewTableHighlightRow>td{background-color:#B9DDF1;color:inherit;}
+.ewTableSelectRow>td{background-color:#5189E6;color:#ffffff;}
 .ewTableFooter{background-color:#add8e6;color:inherit;}
 .ewAggregate:after{content:": ";}
 .ewCheckbox{text-align:center;}

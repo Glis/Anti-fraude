@@ -932,7 +932,7 @@ $af_reportes_usuario_add->ShowMessage();
 		<td><span id="elh_af_reportes_usuario_c_Usuario"><?php echo $af_reportes_usuario->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_reportes_usuario->c_Usuario->CellAttributes() ?>>
 <span id="el_af_reportes_usuario_c_Usuario" class="control-group">
-<select data-field="x_c_Usuario" id="x_c_Usuario" name="x_c_Usuario"<?php echo $af_reportes_usuario->c_Usuario->EditAttributes() ?>>
+<select class = "form-control" data-field="x_c_Usuario" id="x_c_Usuario" name="x_c_Usuario"<?php echo $af_reportes_usuario->c_Usuario->EditAttributes() ?>>
 <?php
 if (is_array($af_reportes_usuario->c_Usuario->EditValue)) {
 	$arwrk = $af_reportes_usuario->c_Usuario->EditValue;
@@ -962,7 +962,7 @@ faf_reportes_usuarioadd.Lists["x_c_Usuario"].Options = <?php echo (is_array($af_
 		<td><span id="elh_af_reportes_usuario_c_IReporte"><?php echo $af_reportes_usuario->c_IReporte->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_reportes_usuario->c_IReporte->CellAttributes() ?>>
 <span id="el_af_reportes_usuario_c_IReporte" class="control-group">
-<select data-field="x_c_IReporte" id="x_c_IReporte" name="x_c_IReporte"<?php echo $af_reportes_usuario->c_IReporte->EditAttributes() ?>>
+<select class = "form-control" data-field="x_c_IReporte" id="x_c_IReporte" name="x_c_IReporte"<?php echo $af_reportes_usuario->c_IReporte->EditAttributes() ?>>
 <?php
 if (is_array($af_reportes_usuario->c_IReporte->EditValue)) {
 	$arwrk = $af_reportes_usuario->c_IReporte->EditValue;
