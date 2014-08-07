@@ -21,9 +21,9 @@
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Logs</a>
           <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="#">Acciones</a></li>
-            <li><a href="#">Envío Reportes</a></li>
-            <li><a href="#">Usuarios</a></li>
+            <li><a tabindex="-1" href="af_log_accioneslist.php">Acciones</a></li>
+            <li><a href="af_log_envio_replist.php">Envío Reportes</a></li>
+            <li><a href="af_log_usuariolist.php">Usuarios</a></li>
           </ul>
         </li>
         <li><a href="">Reportes</a></li>

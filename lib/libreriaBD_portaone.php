@@ -52,7 +52,7 @@ function select_sql_PO($nombre, $ArrParams = NULL){
                 break;
 
             case 'select_destino_where' :
-                $sql = "SELECT description, destination FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
+                $sql = "SELECT description, destination, i_dest FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
                 break;
 
             case 'select_i_destino_where' :

@@ -788,5 +788,67 @@
 <field id="c_usuario_ult_mod"><phrase id="fldcaption" value="Usuario Ult Modificación"/>
 </field>
 </table>
+<table id="af_log_acciones"><phrase id="tblcaption" value="Log Acciones"/>
+<field id="c_itransaccion"><phrase id="fldcaption" value="ID Transacción"/>
+</field>
+<field id="f_transaccion"><phrase id="fldcaption" value="Fecha Transacción"/>
+</field>
+<field id="c_ichequeo"><phrase id="fldcaption" value="Código Chequeo"/>
+</field>
+<field id="c_idestino"><phrase id="fldcaption" value="Destino"/>
+</field>
+<field id="cl_accion"><phrase id="fldcaption" value="Clase Acción"/>
+</field>
+<field id="t_accion"><phrase id="fldcaption" value="Tipo Acción"/>
+</field>
+<field id="nv_accion"><phrase id="fldcaption" value="Nivel Acción"/>
+</field>
+<field id="q_min_destino"><phrase id="fldcaption" value="Min Nivel"/>
+</field>
+<field id="c_ireseller"><phrase id="fldcaption" value="c IReseller"/>
+</field>
+<field id="c_icclass"><phrase id="fldcaption" value="c ICClass"/>
+</field>
+<field id="c_icliente"><phrase id="fldcaption" value="c ICliente"/>
+</field>
+<field id="c_icuenta"><phrase id="fldcaption" value="c ICuenta"/>
+</field>
+</table>
+<table id="af_log_envio_rep"><phrase id="tblcaption" value="Log Envío de Reportes"/>
+<field id="c_itransaccion"><phrase id="fldcaption" value="ID Transacción"/>
+</field>
+<field id="f_transaccion"><phrase id="fldcaption" value="Fecha Transacción"/>
+</field>
+<field id="c_iconfig"><phrase id="fldcaption" value="Cod Config Env Reportes"/>
+</field>
+<field id="c_ireporte"><phrase id="fldcaption" value="Tipo de Reporte"/>
+</field>
+<field id="x_dircorreo"><phrase id="fldcaption" value="Dir Correo de Envío"/>
+</field>
+<field id="st_envio"><phrase id="fldcaption" value="Estatus Envío"/>
+</field>
+<field id="x_obs"><phrase id="fldcaption" value="Observaciones"/>
+</field>
+</table>
+<table id="af_log_usuario"><phrase id="tblcaption" value="Log Usuario"/>
+<field id="c_itransaccion"><phrase id="fldcaption" value="ID Transacción"/>
+</field>
+<field id="f_transaccion"><phrase id="fldcaption" value="Fecha Transacción"/>
+</field>
+<field id="c_usuario"><phrase id="fldcaption" value="Usuario"/>
+</field>
+<field id="t_tabla"><phrase id="fldcaption" value="Tabla Afectada"/>
+</field>
+<field id="t_campo"><phrase id="fldcaption" value="Campo Afectado"/>
+</field>
+<field id="t_cambio"><phrase id="fldcaption" value="Tipo de Cambio"/>
+</field>
+<field id="x_idregistro"><phrase id="fldcaption" value="ID Registro Afectado"/>
+</field>
+<field id="x_valor_ant"><phrase id="fldcaption" value="Valor Anterior"/>
+</field>
+<field id="x_valor_actual"><phrase id="fldcaption" value="Valor Asignado"/>
+</field>
+</table>
 </project>
 </ew-language>

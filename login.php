@@ -115,6 +115,17 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['filtros_acc']['clase_accion']="";
                                         $_SESSION['filtros_acc']['reseller']="";
                                         $_SESSION['filtros_acc']['cclass']="";
+                                        $_SESSION['filtros_log']['desde']="";
+                                        $_SESSION['filtros_log']['hasta']="";
+                                        $_SESSION['filtros_log']['tabla']="";
+                                        $_SESSION['filtros_log']['campo']="";
+                                        $_SESSION['filtros_log']['cambio']="";
+                                        $_SESSION['filtros_log']['usuario']="";
+                                        $_SESSION['filtros_log']['reportes']="";
+                                        $_SESSION['filtros_log']['estatus']="";
+                                        $_SESSION['filtros_log']['clase']="";
+                                        $_SESSION['filtros_log']['nivel']="";
+                                        $_SESSION['filtros_log']['destino']="";
                                         
                                         echo "<script language='javascript'>window.location='af_acc_cclasslist.php'</script>"; 
                                     }

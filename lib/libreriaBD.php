@@ -73,7 +73,11 @@ function select_sql($nombre, $x = NULL){
             break;
 
         case 'select_dominio':
-            $sql = "Select * from netuno.af_dominios where rv_Domain ='". $x ."'";
+            $sql = "SELECT * FROM netuno.af_dominios WHERE rv_Domain ='". $x ."'";
+            break;
+
+        case 'select_dominio_high':
+            $sql = "SELECT * FROM netuno.af_dominios WHERE rv_Domain ='". $x[0] ."' AND rv_High_Value=" . $x[1];
             break; 
 
         case 'select_reportes':
@@ -86,6 +90,11 @@ function select_sql($nombre, $x = NULL){
             $sql = "SELECT c_IReporte, x_NbReporte " .
                    " FROM netuno.af_reportes " .
                    " ORDER BY x_NbReporte ASC ";
+            break;
+
+        case 'select_log_usuarios_filtro':
+            $sql = "SELECT * FROM netuno.af_log_usuario WHERE c_Usuario LIKE '%". $x ."%'";
+            break;
 
             break;
         }
