@@ -250,7 +250,7 @@ class caf_config_reportes_list extends caf_config_reportes {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -261,7 +261,7 @@ class caf_config_reportes_list extends caf_config_reportes {
 		$this->OtherOptions['detail']->TagClassName = "ewDetailOption";
 		$this->OtherOptions['action'] = new cListOptions();
 		$this->OtherOptions['action']->Tag = "div";
-		$this->OtherOptions['action']->TagClassName = "ewExportOption pull-right";
+		$this->OtherOptions['action']->TagClassName = "ewExportOption";
 	}
 
 	// 
@@ -1471,23 +1471,28 @@ $af_config_reportes_list->ShowMessage();
 	});
 	</script>
 	
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Reporte</label>
-		<select id= "select_reportes" class= "form-control">
-			<option value = 100>Seleccione un Reporte</option>
-			<option value = 'All'>All</option>
-		<? $reportes = select_sql('select_reportes'); print_r($reportes);
-			$count = count($reportes);
-			$k = 1;
-			while ($k <= $count){
-				echo "<option value= ".$reportes[$k]['c_IReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
-				$k++;
-			}
-		$_SESSION['filtros']= "";
-		?>
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Reporte</label>
+				<select id= "select_reportes" class= "form-control">
+					<option value = 100>Seleccione un Reporte</option>
+					<option value = 'All'>All</option>
+				<? $reportes = select_sql('select_reportes'); print_r($reportes);
+					$count = count($reportes);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$reportes[$k]['c_IReporte']. ">". $reportes[$k]['x_NbReporte'] ."</option>";
+						$k++;
+					}
+				$_SESSION['filtros']= "";
+				?>
 
-		</select>
+				</select>
+			</div>
+		</div>
 	</div>
+	
 </div>
 
 

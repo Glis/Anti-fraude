@@ -46,7 +46,7 @@ $chequeosCount = count($chequeos);
             <a href="login.php">Home</a>
           </li>
           <li class="active">
-            <span id="ewPageCaption">Monitor general</span>
+            <span id="ewPageCaption">Monitor general: Chequeos</span>
           </li>
         </ul>
       </td>
@@ -57,13 +57,32 @@ $chequeosCount = count($chequeos);
 <div id="page_title" style="text-align:center; width:100%"></div>
 <!-- Tabla de chequeo  -->
 <div id="tableContainer" class="col-sm-12">
+  <form role="form">
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label for="initialDateFil">Desde</label>
+          <input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014">
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label for="endDateFil">Hasta</label>
+          <input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014">
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary" id="submit_filtros">Filtrar</button>
+      </div>
+    </div>
+  </form>
+  
   <div class="row">
-  	<div class="col-sm-8">
-    	<h3>Tabla de Chequeos</h3>
+  	<div class="col-sm-12">
   		<table class="table table-striped table-condensed table-bordered">
   		  <tbody id="tableBodyChequeo">
   		    <tr>
-  	     	  <th class="col-sm-2">Código</th>
+  	     	  <th class="col-sm-2">Código Chequeo</th>
   		      <th class="col-sm-1">Fecha Inicio Ventana</th>
   		      <th class="col-sm-1">Fecha Fin Ventana</th>
   		    </tr>
@@ -89,22 +108,7 @@ $chequeosCount = count($chequeos);
   		  </tbody>
   		</table>
   	</div>  	
-  	<div class="col-sm-4">
-  		<h3>Filtros</h3>
-  		<div class="filtros form">
-  			<form role="form">
-  			  <div class="form-group">
-  			    <label for="initialDateFil">Desde</label>
-  			    <input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014">
-  			  </div>
-  			  <div class="form-group">
-  			    <label for="endDateFil">Hasta</label>
-  			    <input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014">
-  			  </div>
-  			  <button type="submit" class="btn btn-primary">Filtrar</button>
-  			</form>
-  		</div>
-  	</div>
+  	
   </div>
 </div>
 

@@ -1362,7 +1362,7 @@ faf_log_accioneslist.Lists["x_nv_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax"
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_acciones_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1390,118 +1390,132 @@ $af_log_acciones_list->ShowMessage();
 					************************FILTROS**************************
 					*********************************************************/?>
 
-<script type="text/javascript">
-	$(document).on('click','#submit_filtros',function(){
+<div class="filterContainer">
+	
+	<script type="text/javascript">
+		$(document).on('click','#submit_filtros',function(){
 
-		var desde = $('#initialDateFil').val();
-		var hasta = $('#endDateFil').val();
-		var destino = $('#dest').val();
-		var clase = $('#select_clase').find("option:selected").val();
-		var nivel = $('#select_nivel').find("option:selected").val();
+			var desde = $('#initialDateFil').val();
+			var hasta = $('#endDateFil').val();
+			var destino = $('#dest').val();
+			var clase = $('#select_clase').find("option:selected").val();
+			var nivel = $('#select_nivel').find("option:selected").val();
 
-		var dataString = "pag=log_acciones&filtro=x";
-		if (desde == ""){
-			dataString = dataString + "&desde=vacio";
-		}else{
-			dataString = dataString + "&desde=" + desde;
-		}
+			var dataString = "pag=log_acciones&filtro=x";
+			if (desde == ""){
+				dataString = dataString + "&desde=vacio";
+			}else{
+				dataString = dataString + "&desde=" + desde;
+			}
 
-		if (hasta == ""){
-			dataString = dataString + "&hasta=vacio";
-		}else{
-			dataString = dataString + "&hasta=" + hasta;
-		}
+			if (hasta == ""){
+				dataString = dataString + "&hasta=vacio";
+			}else{
+				dataString = dataString + "&hasta=" + hasta;
+			}
 
-		if (destino == ""){
-			dataString = dataString + "&destino=vacio";
-		}else{
-			dataString = dataString + "&destino=" + destino;
-		}
+			if (destino == ""){
+				dataString = dataString + "&destino=vacio";
+			}else{
+				dataString = dataString + "&destino=" + destino;
+			}
 
-		if (clase == "vacio"){
-			dataString = dataString + "&clase=vacio";
-		}else{
-			dataString = dataString + "&clase=" + clase;
-		}
+			if (clase == "vacio"){
+				dataString = dataString + "&clase=vacio";
+			}else{
+				dataString = dataString + "&clase=" + clase;
+			}
 
-		if (nivel == "vacio"){
-			dataString = dataString + "&nivel=vacio";
-		}else{
-			dataString = dataString + "&nivel=" + nivel;
-		}
+			if (nivel == "vacio"){
+				dataString = dataString + "&nivel=vacio";
+			}else{
+				dataString = dataString + "&nivel=" + nivel;
+			}
 
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			alert("html");location.reload();
-		  }
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				alert("html");location.reload();
+			  }
+			});
+
 		});
 
-	});
+	</script>
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="initialDateFil">Desde</label>
+				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="endDateFil">Hasta</label>
+				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Destino</label>
+				<input type="text" name="dest" id="dest" class="form-control">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Clase Acción</label>
+				<select id= "select_clase" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
 
-</script>
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Nivel Acción</label>
+				<select id= "select_nivel" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_NIVEL_ACCION');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
 
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+  			<button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
+		</div>
+	</div>
 
-<div class="col-sm-4">
-  		<h3>Filtros</h3>
-  		<div class="filtros form">
-				<div class="form-group">
-					<label for="initialDateFil">Desde</label>
-					<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
-				</div>
-				<div class="form-group">
-					<label for="endDateFil">Hasta</label>
-					<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Filtro Destino</label>
-					<input type="text" name="dest" id="dest" class="form-control">
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Filtro Clase Acción</label>
-					<select id= "select_clase" class= "form-control">
-					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-							$k++;
-						}
-
-					?>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Filtro Nivel Acción</label>
-					<select id= "select_nivel" class= "form-control">
-					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_dominio', 'DNIO_NIVEL_ACCION');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-							$k++;
-						}
-
-					?>
-					</select>
-				</div>
-
-
-  			  <button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
-  			
-  		</div>
-  	</div>
 <?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; 
   $_SESSION['filtros_log']['clase']=""; $_SESSION['filtros_log']['destino']=""; $_SESSION['filtros_log']['nivel']="";
 ?>
+
+</div>
+
+					<?/******************************************************
+					************************ENDFILTROS**************************
+					*********************************************************/?>
+
 
 
 <table class="ewGrid"><tr><td class="ewGridContent">

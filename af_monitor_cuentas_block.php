@@ -41,11 +41,43 @@ $accountCount = count($accounts);
 
 <div id="page_title" style="text-align:center; width:100%"></div>
 <div id="treeContainer" class="col-sm-12">
+  <!-- Filtros -->
+  <form role="form">
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label for="resellerName">Resellers</label>
+          <select id= "resellerName" class= "form-control">
+            <option value = 100>Seleccione un Reseller</option>
+            <option value = 'All'>Todos</option>
+          <!-- 
+          <? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
+            $count = count($dom_accion);
+            $k = 1;
+            while ($k <= $count){
+              echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+              $k++;
+            }
+          ?> -->
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label for="cusName">Nombre del cliente</label>
+          <input type="text" class="form-control" id="cusName" placeholder="Nombre de Cliente">
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary" id="submit_filtros">Filtrar</button>
+      </div>
+    </div>
+  </form>
+  
   <!-- Tabla de cuentas  -->
   
   <div class="row">
-  	<div class="col-sm-8">
-  		<h3>Cuentas Bloqueadas</h3>
+  	<div class="col-sm-12">
       <table class="table table-striped table-condensed table-bordered">
         <tbody id="tableBody">
           <tr>
@@ -75,34 +107,7 @@ $accountCount = count($accounts);
         </tbody>
       </table>
   	</div>  	
-  	<div class="col-sm-4">
-  		<h3>Filtros</h3>
-  		<div class="filtros form">
-  			<form role="form">
-  			  <div class="form-group">
-  			    <label for="resellerName">Resellers</label>
-  			    <select id= "resellerName" class= "form-control">
-              <option value = 100>Seleccione un Reseller</option>
-              <option value = 'All'>Todos</option>
-            <!-- 
-            <? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-              $count = count($dom_accion);
-              $k = 1;
-              while ($k <= $count){
-                echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-                $k++;
-              }
-            ?> -->
-            </select>
-  			  </div>
-  			  <div class="form-group">
-  			    <label for="cusName">Nombre del cliente</label>
-  			    <input type="text" class="form-control" id="cusName" placeholder="Nombre de Cliente">
-  			  </div>
-  			  <button type="submit" class="btn btn-primary">Filtrar</button>
-  			</form>
-  		</div>
-  	</div>
+  	
   </div>
 
 </div>

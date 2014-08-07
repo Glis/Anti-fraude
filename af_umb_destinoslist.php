@@ -250,7 +250,7 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1372,12 +1372,18 @@ $af_umb_destinos_list->ShowMessage();
 
 
 	</script>
-
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Destino</label>
-		<input type="text" name="dest" id="dest" class="form-control">
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-2">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Destino</label>
+				<input type="text" name="dest" id="dest" class="form-control">
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="submit_dest">Buscar</button>
+		</div>
 	</div>
-	<button type="button" class="btn btn-primary" id="submit_dest">Buscar</button>
+	
 
 </div>
 

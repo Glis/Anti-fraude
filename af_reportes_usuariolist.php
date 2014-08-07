@@ -249,7 +249,7 @@ class caf_reportes_usuario_list extends caf_reportes_usuario {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1295,23 +1295,28 @@ $af_reportes_usuario_list->ShowMessage();
 	});
 	</script>
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Usuario</label>
-		<select id= "select_usuarios" class= "form-control">
-			<option value = 100>Seleccione un Usuario</option>
-			<option value = 1000>All</option>
-		<? $users = select_sql('select_usuarios');
-			$count = count($users);
-			$k = 1;
-			while ($k <= $count){
-				echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
-				$k++;
-			}
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Usuario</label>
+				<select id= "select_usuarios" class= "form-control">
+					<option value = 100>Seleccione un Usuario</option>
+					<option value = 1000>All</option>
+				<? $users = select_sql('select_usuarios');
+					$count = count($users);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
+						$k++;
+					}
 
-		?>
+				?>
 
-		</select>
+				</select>
+			</div>
+		</div>
 	</div>
+	
 </div>
 
 							<?/******************************************************

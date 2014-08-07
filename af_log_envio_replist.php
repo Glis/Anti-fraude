@@ -1240,7 +1240,7 @@ faf_log_envio_replist.Lists["x_st_Envio"] = {"LinkField":"x_rv_Low_Value","Ajax"
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_envio_rep_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_envio_rep_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_envio_rep_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1268,105 +1268,120 @@ $af_log_envio_rep_list->ShowMessage();
 					************************FILTROS**************************
 					*********************************************************/?>
 
-<script type="text/javascript">
-	$(document).on('click','#submit_filtros',function(){
+<div class="filterContainer">
+	<script type="text/javascript">
+		$(document).on('click','#submit_filtros',function(){
 
-		var desde = $('#initialDateFil').val();
-		var hasta = $('#endDateFil').val();
-		var estatus = $('#select_estatus').find("option:selected").val();
-		var reporte = $('#select_reporte').find("option:selected").val();
+			var desde = $('#initialDateFil').val();
+			var hasta = $('#endDateFil').val();
+			var estatus = $('#select_estatus').find("option:selected").val();
+			var reporte = $('#select_reporte').find("option:selected").val();
 
-		var dataString = "pag=log_env_reportes&filtro=x";
-		if (desde == ""){
-			dataString = dataString + "&desde=vacio";
-		}else{
-			dataString = dataString + "&desde=" + desde;
-		}
+			var dataString = "pag=log_env_reportes&filtro=x";
+			if (desde == ""){
+				dataString = dataString + "&desde=vacio";
+			}else{
+				dataString = dataString + "&desde=" + desde;
+			}
 
-		if (hasta == ""){
-			dataString = dataString + "&hasta=vacio";
-		}else{
-			dataString = dataString + "&hasta=" + hasta;
-		}
+			if (hasta == ""){
+				dataString = dataString + "&hasta=vacio";
+			}else{
+				dataString = dataString + "&hasta=" + hasta;
+			}
 
-		if (reporte == "vacio"){
-			dataString = dataString + "&reporte=vacio";
-		}else{
-			dataString = dataString + "&reporte=" + reporte;
-		}
+			if (reporte == "vacio"){
+				dataString = dataString + "&reporte=vacio";
+			}else{
+				dataString = dataString + "&reporte=" + reporte;
+			}
 
-		if (estatus == "vacio"){
-			dataString = dataString + "&estatus=vacio";
-		}else{
-			dataString = dataString + "&estatus=" + estatus;
-		}
+			if (estatus == "vacio"){
+				dataString = dataString + "&estatus=vacio";
+			}else{
+				dataString = dataString + "&estatus=" + estatus;
+			}
 
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
+
 		});
 
-	});
+	</script>
 
-</script>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="initialDateFil">Desde</label>
+				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label for="endDateFil">Hasta</label>
+				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<div class="form-group">
+				<label class= "filtro_label">Tipo de Reporte</label>
+				<select id= "select_reporte" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_reportes');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['c_IReporte']. ">". $dom_accion[$k]['x_NbReporte'] ."</option>";
+						$k++;
+					}
 
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			<div class="form-group">
+				<label class= "filtro_label">Estatus de Envío</label>
+				<select id= "select_estatus" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_STATUS_ENVIO');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
 
-<div class="col-sm-4">
-  		<h3>Filtros</h3>
-  		<div class="filtros form">
-				<div class="form-group">
-					<label for="initialDateFil">Desde</label>
-					<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
-				</div>
-				<div class="form-group">
-					<label for="endDateFil">Hasta</label>
-					<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
-				</div>
-				<div class="form-group">
-					<label class= "filtro_label">Tipo de Reporte</label>
-					<select id= "select_reporte" class= "form-control">
-					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_reportes');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['c_IReporte']. ">". $dom_accion[$k]['x_NbReporte'] ."</option>";
-							$k++;
-						}
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
+		</div>
+	</div>
 
-					?>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Estatus de Envío</label>
-					<select id= "select_estatus" class= "form-control">
-					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_dominio', 'DNIO_STATUS_ENVIO');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-							$k++;
-						}
-
-					?>
-					</select>
-				</div>
-
-
-  			  <button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
-  			
-  		</div>
-  	</div>
 <?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; 
   $_SESSION['filtros_log']['estatus']=""; $_SESSION['filtros_log']['reporte']="";
 ?>
+
+</div>
+
+					<?/******************************************************
+					************************ENDFILTROS**************************
+					*********************************************************/?>
+
+
+
 
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_log_envio_replist" id="faf_log_envio_replist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">

@@ -243,7 +243,7 @@ class caf_reportes_list extends caf_reportes {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();

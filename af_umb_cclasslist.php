@@ -249,7 +249,7 @@ class caf_umb_cclass_list extends caf_umb_cclass {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1410,38 +1410,47 @@ $af_umb_cclass_list->ShowMessage();
 
 	</script>
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Destino</label>
-		<input type="text" name="dest" id="dest" class="form-control">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Destino</label>
+				<input type="text" name="dest" id="dest" class="form-control">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Reseller</label>
+				<select id="resellers_filtro" class="form-control">
+				<option value="vacio">Todo</option>
+				<?
+				$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; 
+				$_SESSION['filtros_umb']['cclass'] = "";
+				$res = select_sql_PO('select_porta_customers');
+				$cant = count($res);
+				$k = 1;
+
+				while ($k <= $cant) {
+					echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+					$k++;
+				}
+
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Customer Class</label>
+				<select id="cclass_filtro" disabled class="form-control">
+				<option value="vacio">Todo</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Reseller</label>
-		<select id="resellers_filtro" class="form-control">
-		<option value="vacio">Todo</option>
-		<?
-		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = ""; 
-		$_SESSION['filtros_umb']['cclass'] = "";
-		$res = select_sql_PO('select_porta_customers');
-		$cant = count($res);
-		$k = 1;
-
-		while ($k <= $cant) {
-			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-			$k++;
-		}
-
-		?>
-		</select>
-	</div>
-
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Customer Class</label>
-		<select id="cclass_filtro" disabled class="form-control">
-		<option value="vacio">Todo</option>
-		</select>
-	</div>
-	<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 </div>
 
 							<?/******************************************************

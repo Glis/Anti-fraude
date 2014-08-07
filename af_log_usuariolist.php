@@ -1296,7 +1296,7 @@ faf_log_usuariolist.Lists["x_t_Campo"] = {"LinkField":"x_rv_Low_Value","Ajax":nu
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_usuario_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1323,151 +1323,168 @@ $af_log_usuario_list->ShowMessage();
 					************************FILTROS**************************
 					*********************************************************/?>
 
-<script type="text/javascript">
-	$(document).on('click','#submit_filtros',function(){
+<div class="filterContainer">
+	<script type="text/javascript">
+		$(document).on('click','#submit_filtros',function(){
 
-		var desde = $('#initialDateFil').val();
-		var hasta = $('#endDateFil').val();
-		var tabla = $('#select_tabla').find("option:selected").val();
-		var campo = $('#select_campo').find("option:selected").val();
-		var cambio = $('#select_tipocambio').find("option:selected").val();
-		var usuario = $("#user").val();
+			var desde = $('#initialDateFil').val();
+			var hasta = $('#endDateFil').val();
+			var tabla = $('#select_tabla').find("option:selected").val();
+			var campo = $('#select_campo').find("option:selected").val();
+			var cambio = $('#select_tipocambio').find("option:selected").val();
+			var usuario = $("#user").val();
 
-		var dataString = "pag=log_usuarios&filtro=x";
-		if (desde == ""){
-			dataString = dataString + "&desde=vacio";
-		}else{
-			dataString = dataString + "&desde=" + desde;
-		}
+			var dataString = "pag=log_usuarios&filtro=x";
+			if (desde == ""){
+				dataString = dataString + "&desde=vacio";
+			}else{
+				dataString = dataString + "&desde=" + desde;
+			}
 
-		if (hasta == ""){
-			dataString = dataString + "&hasta=vacio";
-		}else{
-			dataString = dataString + "&hasta=" + hasta;
-		}
+			if (hasta == ""){
+				dataString = dataString + "&hasta=vacio";
+			}else{
+				dataString = dataString + "&hasta=" + hasta;
+			}
 
-		if (tabla == ""){
-			dataString = dataString + "&tabla=vacio";
-		}else{
-			dataString = dataString + "&tabla=" + tabla;
-		}
+			if (tabla == ""){
+				dataString = dataString + "&tabla=vacio";
+			}else{
+				dataString = dataString + "&tabla=" + tabla;
+			}
 
-		if (campo == "vacio"){
-			dataString = dataString + "&campo=vacio";
-		}else{
-			dataString = dataString + "&campo=" + campo;
-		}
+			if (campo == "vacio"){
+				dataString = dataString + "&campo=vacio";
+			}else{
+				dataString = dataString + "&campo=" + campo;
+			}
 
-		if (cambio == "vacio"){
-			dataString = dataString + "&cambio=vacio";
-		}else{
-			dataString = dataString + "&cambio=" + cambio;
-		}
+			if (cambio == "vacio"){
+				dataString = dataString + "&cambio=vacio";
+			}else{
+				dataString = dataString + "&cambio=" + cambio;
+			}
 
-		if (usuario == ""){
-			dataString = dataString + "&usuario=vacio";
-		}else{
-			dataString = dataString + "&usuario=" + usuario;
-		}
+			if (usuario == ""){
+				dataString = dataString + "&usuario=vacio";
+			}else{
+				dataString = dataString + "&usuario=" + usuario;
+			}
 
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
+
 		});
 
-	});
 
+		$(document).on('change','#select_tabla',function(){
 
-	$(document).on('change','#select_tabla',function(){
-
-		if($("#select_tabla").find("option:selected").val() == "vacio"){
-			$( "#select_campo" ).prop( "disabled", true );
-		}else{
-			var dataString = "pag=tipo_campo_filtro&tabla="+$("#select_tabla").find("option:selected").val();
-			$.ajax({  
-				  type: "POST",  
-				  url: "lib/functions.php",  
-				  data: dataString,  
-				  success: function(response) {  
-					$('#select_campo').empty().append(response);
-					$( "#select_campo" ).prop( "disabled", false );
-				  }
-				});
-		}
-	});
+			if($("#select_tabla").find("option:selected").val() == "vacio"){
+				$( "#select_campo" ).prop( "disabled", true );
+			}else{
+				var dataString = "pag=tipo_campo_filtro&tabla="+$("#select_tabla").find("option:selected").val();
+				$.ajax({  
+					  type: "POST",  
+					  url: "lib/functions.php",  
+					  data: dataString,  
+					  success: function(response) {  
+						$('#select_campo').empty().append(response);
+						$( "#select_campo" ).prop( "disabled", false );
+					  }
+					});
+			}
+		});
 
 
 
-</script>
+	</script>
 
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Tabla Afectada</label>
+				<select id= "select_tabla" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_TABLA');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
 
-<div class="col-sm-4">
-  		<h3>Filtros</h3>
-  		<div class="filtros form">
-				<div class="form-group">
-					<label for="initialDateFil">Desde</label>
-					<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
-				</div>
-				<div class="form-group">
-					<label for="endDateFil">Hasta</label>
-					<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
-				</div>
-				<div class="form-group">
-					<label class= "filtro_label">Tabla Afectada</label>
-					<select id= "select_tabla" class= "form-control">
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Campo Afectado</label>
+				<select id= "select_campo" disabled class= "form-control">
 					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_TABLA');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-							$k++;
-						}
+				</select>
+			</div>
+		</div>	
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Tipo de Cambio</label>
+				<select id= "select_tipocambio" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_CAMBIO');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
 
-					?>
-					</select>
-				</div>
+				?>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="initialDateFil">Desde</label>
+				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label for="endDateFil">Hasta</label>
+				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Usuario</label>
+				<input type="text" name="user" id="user" class="form-control">
+			</div>
+		</div>
+		<div class="col-sm-2">
+  			<button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
+		</div>
+	</div>
 
-				<div class="form-group">
-					<label class= "filtro_label">Campo Afectado</label>
-					<select id= "select_campo" disabled class= "form-control">
-						<option value = 'vacio'>Todo</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Tipo de Cambio</label>
-					<select id= "select_tipocambio" class= "form-control">
-					<option value = 'vacio'>Todo</option>
-					<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_CAMBIO');
-						$count = count($dom_accion);
-						$k = 1;
-						while ($k <= $count){
-							echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-							$k++;
-						}
-
-					?>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label class= "filtro_label">Usuario</label>
-					<input type="text" name="user" id="user" class="form-control">
-				</div>
-
-  			  <button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
-  			
-  		</div>
-  	</div>
 <?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; $_SESSION['filtros_log']['tabla']="";
   $_SESSION['filtros_log']['campo']=""; $_SESSION['filtros_log']['cambio']="";$_SESSION['filtros_log']['usuario']="";
 ?>
+
+</div>
+
+					<?/******************************************************
+					************************ENDFILTROS**************************
+					*********************************************************/?>
+
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_log_usuariolist" id="faf_log_usuariolist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_log_usuario">

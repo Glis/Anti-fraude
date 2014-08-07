@@ -249,7 +249,7 @@ class caf_umb_cuentas_list extends caf_umb_cuentas {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1397,74 +1397,84 @@ $af_umb_cuentas_list->ShowMessage();
 							*********************************************************/?>
 <div id="filterContainer">
 
-<script type="text/javascript">
-$(document).on('click','#submit_filtros',function(){
+	<script type="text/javascript">
+	$(document).on('click','#submit_filtros',function(){
 
-		var destino = $("#dest").val();
-		var reseller = $("#resellers_filtro").find("option:selected").val();
-		var cname = $("#cname").val();
-		var dataString = "pag=umb_cuentas&filtro=destinos";
-		if (destino == ""){
-			dataString = dataString + "&destino=vacio";
-		}else{
-			dataString = dataString + "&destino=" + destino;
-		}
+			var destino = $("#dest").val();
+			var reseller = $("#resellers_filtro").find("option:selected").val();
+			var cname = $("#cname").val();
+			var dataString = "pag=umb_cuentas&filtro=destinos";
+			if (destino == ""){
+				dataString = dataString + "&destino=vacio";
+			}else{
+				dataString = dataString + "&destino=" + destino;
+			}
 
-		if (reseller == "vacio"){
-			dataString = dataString + "&reseller=vacio";
-		}else{
-			dataString = dataString + "&reseller=" + reseller;
-		}
+			if (reseller == "vacio"){
+				dataString = dataString + "&reseller=vacio";
+			}else{
+				dataString = dataString + "&reseller=" + reseller;
+			}
 
-		if (cname == ""){
-			dataString = dataString + "&cname=vacio";
-		}else{
-			dataString = dataString + "&cname=" + cname;
-		}
+			if (cname == ""){
+				dataString = dataString + "&cname=vacio";
+			}else{
+				dataString = dataString + "&cname=" + cname;
+			}
 
-		alert(dataString);
-		$.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			location.reload();
-		  }
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				location.reload();
+			  }
+			});
+
 		});
 
-	});
 
+	</script>
 
-</script>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Destino</label>
+				<input type="text" name="dest" id="dest" class="form-control">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Reseller</label>
+				<select id="resellers_filtro" class="form-control">
+				<option value="vacio">Todo</option>
+				<?
+				$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
+				$res = select_sql_PO('select_porta_customers');
+				$cant = count($res);
+				$k = 1;
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Destino</label>
-		<input type="text" name="dest" id="dest" class="form-control">
-	</div>	
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Reseller</label>
-		<select id="resellers_filtro" class="form-control">
-		<option value="vacio">Todo</option>
-		<?
-		$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
-		$res = select_sql_PO('select_porta_customers');
-		$cant = count($res);
-		$k = 1;
+				while ($k <= $cant) {
+					echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+					$k++;
+				}
 
-		while ($k <= $cant) {
-			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-			$k++;
-		}
-
-		?>
-		</select>
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label class= "filtro_label">Filtro Customer Name</label>
+				<input type="text" name="cnam" id="cname" class="form-control">
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
 	</div>
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Customer Name</label>
-		<input type="text" name="cnam" id="cname" class="form-control">
-	</div>
-	<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
-
+	
 </div>
 
 

@@ -250,7 +250,7 @@ class caf_acc_resellers_list extends caf_acc_resellers {
 		// Export options
 		$this->ExportOptions = new cListOptions();
 		$this->ExportOptions->Tag = "div";
-		$this->ExportOptions->TagClassName = "ewExportOption pull-right";
+		$this->ExportOptions->TagClassName = "ewExportOption";
 
 		// Other options
 		$this->OtherOptions['addedit'] = new cListOptions();
@@ -1378,58 +1378,72 @@ $(document).on('click', '#submit_filtros', function() {
 });
 </script>
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Clase Acción</label>
-		<select id= "select_accion" class= "form-control">
-			<option value = 100>Seleccione una Acción</option>
-			<option value = 'All'>All</option>
-		<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-			$count = count($dom_accion);
-			$k = 1;
-			while ($k <= $count){
-				echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-				$k++;
-			}
+<div class="row">
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label class= "filtro_label">Filtro Clase Acción</label>
+			<select id= "select_accion" class= "form-control">
+				<option value = 100>Seleccione una Acción</option>
+				<option value = 'All'>All</option>
+			<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
+				$count = count($dom_accion);
+				$k = 1;
+				while ($k <= $count){
+					echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+					$k++;
+				}
 
-		?>
-		</select>
+			?>
+			</select>
+		</div>
 	</div>
+	<div class="col-sm-3">
+		<div class="form-group">
+			<label class= "filtro_label">Filtro Tipo Acción</label>
+			<select id= "select_tipo_accion" class= "form-control">
+				<option value = 100>Seleccione un Tipo de Acción</option>
+				<option value = 'All'>All</option>
+			<? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
+				$count = count($dom_tipo_accion);
+				$k = 1;
+				while ($k <= $count){
+					echo "<option value= ".$dom_tipo_accion[$k]['rv_Low_Value']. ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
+					$k++;
+				}
 
-	<div class="form-group">
-		<label class= "filtro_label">Filtro Tipo Acción</label>
-		<select id= "select_tipo_accion" class= "form-control">
-			<option value = 100>Seleccione un Tipo de Acción</option>
-			<option value = 'All'>All</option>
-		<? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
-			$count = count($dom_tipo_accion);
-			$k = 1;
-			while ($k <= $count){
-				echo "<option value= ".$dom_tipo_accion[$k]['rv_Low_Value']. ">". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
-				$k++;
-			}
-
-		?>
-		</select>
+			?>
+			</select>
+		</div>
 	</div>
+	<div class="col-sm-4">
 		<div class="form-group">
 			<label class= "filtro_label" >Filtro Reseller</label>
-		<select id="resellers_filtro" class= "form-control">
-		<option value="vacio">Todo</option>
-		<?
-		$res = select_sql_PO('select_porta_customers');
-		$cant = count($res);
-		$k = 1;
+			<select id="resellers_filtro" class= "form-control">
+			<option value="vacio">Todo</option>
+			<?
+			$res = select_sql_PO('select_porta_customers');
+			$cant = count($res);
+			$k = 1;
 
-		while ($k <= $cant) {
-			echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-			$k++;
-		}
+			while ($k <= $cant) {
+				echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+				$k++;
+			}
 
-		?>
-		</select>
+			?>
+			</select>
+		</div>
+	</div>
+	<div class="col-sm-2">
+		<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+	</div>
 </div>
 
-<button type="button btn-primary" id="submit_filtros">Buscar</button>
+	
+
+	
+		
+
 
 </div>
 
