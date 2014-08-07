@@ -9,7 +9,11 @@ ob_start(); // Turn on output buffering
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
 <?php
-
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
 //
 // Page class
 //

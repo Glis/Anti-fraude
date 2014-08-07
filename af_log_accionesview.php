@@ -10,6 +10,12 @@ ob_start(); // Turn on output buffering
 <?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
+
 //
 // Page class
 //
