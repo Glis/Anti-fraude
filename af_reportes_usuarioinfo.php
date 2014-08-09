@@ -115,34 +115,20 @@ class caf_reportes_usuario extends cTable {
 
 	function SqlSelectList() { // Select for List page
 		
-		if($_SESSION['filtros'] != ""){
-			return "SELECT * 
-				FROM 
-					(SELECT *, 
-						(SELECT `c_Usuario` 
-				         FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` 
-				         WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_reportes_usuario`.`c_Usuario` 
-				         LIMIT 1) 
-							AS `EV__c_Usuario`, 
-				         (SELECT `x_NbReporte`
-				          FROM `af_reportes` `EW_TMP_LOOKUPTABLE` 
-				          WHERE `EW_TMP_LOOKUPTABLE`.`c_IReporte` = `af_reportes_usuario`.`c_IReporte` 
-				          LIMIT 1) 
-							AS `EV__c_IReporte` 
-					FROM `af_reportes_usuario`) `EW_TMP_TABLE` 
-				 WHERE `EW_TMP_TABLE`.`c_Usuario` = '".$_SESSION['filtros']."'";
-		}else{
-
 			return "SELECT * FROM (" .
 			"SELECT *, (SELECT `c_Usuario` FROM `af_usuarios` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_Usuario` = `af_reportes_usuario`.`c_Usuario` LIMIT 1) AS `EV__c_Usuario`, (SELECT `x_NbReporte` FROM `af_reportes` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`c_IReporte` = `af_reportes_usuario`.`c_IReporte` LIMIT 1) AS `EV__c_IReporte` FROM `af_reportes_usuario`" .
 			") `EW_TMP_TABLE`";
-		}
-				
 	}
 		
 		
 
 	function SqlWhere() { // Where
+		
+		if($_SESSION['filtros'] != ""){
+			$where = $this->SqlFrom() . ".`c_Usuario` = '" . $_SESSION['filtros'] . "'";
+			return $where;
+		}
+
 		$sWhere = "";
 		$this->TableFilter = "";
 		ew_AddFilter($sWhere, $this->TableFilter);

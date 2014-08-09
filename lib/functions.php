@@ -8,7 +8,7 @@ $pagina = $_POST['pag'];
 switch ($pagina) {
 	case 'reportes_usuario':
 		$_SESSION['filtros'] = $_POST['valor'];
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
+		if($_POST['valor'] == 'vacio')$_SESSION['filtros']="";
 		break;
 
 	case 'resellers_usuario':

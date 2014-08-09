@@ -16,7 +16,6 @@ date_default_timezone_set('America/Caracas');
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sistema de Prevención de Fraude NETUNO</title>
 
-        <link rel="stylesheet" type="text/css" media="all" href="css/index.css"/>
 
         <!-- Bootstrap -->
         <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -121,7 +120,7 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['filtros_log']['campo']="";
                                         $_SESSION['filtros_log']['cambio']="";
                                         $_SESSION['filtros_log']['usuario']="";
-                                        $_SESSION['filtros_log']['reportes']="";
+                                        $_SESSION['filtros_log']['reporte']="";
                                         $_SESSION['filtros_log']['estatus']="";
                                         $_SESSION['filtros_log']['clase']="";
                                         $_SESSION['filtros_log']['nivel']="";

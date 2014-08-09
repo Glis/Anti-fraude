@@ -198,6 +198,7 @@ class caf_log_acciones extends cTable {
 				}
 
 			}
+			print_r($where);
 			return $where;
 		}
 	}

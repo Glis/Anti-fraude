@@ -1276,13 +1276,16 @@ $af_reportes_usuario_list->ShowMessage();
 							*********************************************************/?>
 <div id="filterContainer">
 	<script type="text/javascript">
-	$(document).on('change', '#select_usuarios', function() { 
+	$(document).on('click', '#submit_filtros', function() { 
 
-		if($(this).val() != 100){
-		/*$("#tbl_af_reportes_usuariolist tbody tr").hide(); 
-		$("#tbl_af_reportes_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();*/
-		var option = $(this).find("option:selected").text();
-		var dataString = "pag=reportes_usuario&filtro=usuarios&valor=" + option;
+		var option = $('#select_usuarios').find("option:selected").text();
+		var dataString = "pag=reportes_usuario&filtro=usuarios";
+		if(option != "vacio"){
+			dataString = dataString + "&valor=" + option;
+		}else{
+			dataString = dataString + "&valor=vacio";
+		}
+		alert(dataString);
 		$.ajax({  
 		  type: "POST",  
 		  url: "lib/functions.php",  
@@ -1291,7 +1294,7 @@ $af_reportes_usuario_list->ShowMessage();
 			location.reload();
 		  }
 		  });
-		}
+		
 	});
 	</script>
 
@@ -1300,8 +1303,7 @@ $af_reportes_usuario_list->ShowMessage();
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Usuario</label>
 				<select id= "select_usuarios" class= "form-control">
-					<option value = 100>Seleccione un Usuario</option>
-					<option value = 1000>All</option>
+					<option value = "vacio">Todo</option>
 				<? $users = select_sql('select_usuarios');
 					$count = count($users);
 					$k = 1;
@@ -1309,11 +1311,14 @@ $af_reportes_usuario_list->ShowMessage();
 						echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
 						$k++;
 					}
-
+					$_SESSION['filtros'] = "";
 				?>
 
 				</select>
 			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 		</div>
 	</div>
 	
