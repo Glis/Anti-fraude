@@ -117,6 +117,7 @@ $chequeosCount = count($chequeos);
   
   <div class="row">
   <?php 
+    if ($chequeosCount > 0) {
     foreach ($chequeos as $check) {
       $destinos=select_custom_sql("*","af_chequeo_det","c_IChequeo='".$check['c_IChequeo']."'","","");
       $destinosCount = count($destinos);  
@@ -314,6 +315,7 @@ $chequeosCount = count($chequeos);
 
   <?php
     }
+  }
   ?>
     
   </div>
