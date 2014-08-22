@@ -322,6 +322,24 @@ Dropdown Submenus
 	margin-bottom: 0px;
 }
 
+#bit_table table{
+	margin-bottom: 0px;	
+	border: none;
+}
+
+.tablecell{
+	padding: 0px !important;
+}
+
+.titlecell{
+	background-image: none;
+	background-color: #428bca !important;
+	font-weight: bold;
+	text-align: center;
+	border-color: #357ebd;
+	color: white;
+}
+
 .panel{
 	margin-bottom: 1px;
 }

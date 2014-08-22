@@ -321,4 +321,15 @@ $chequeosCount = count($chequeos);
   </div>
 </div><!-- treeContainer -->
 
+<script>
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+  $('#initialDateFil').val(today);
+  $('#endDateFil').val(today);
+  $('#initialDateFil').attr("max",today);
+  $('#endDateFil').attr("max",today);
+</script>
+
 <?php include_once "footer.php" ?>

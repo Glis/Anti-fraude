@@ -17,7 +17,7 @@
         Reportes <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="">Bitácora</a></li>
+        <li><a href="af_bitacora.php">Bitácora</a></li>
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Logs</a>
           <ul class="dropdown-menu">

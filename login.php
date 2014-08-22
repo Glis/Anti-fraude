@@ -95,11 +95,11 @@ date_default_timezone_set('America/Caracas');
                                     $_SESSION = array();
                                     echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
                                 }else{
-                                     $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
-                                    if (!$salida->logged) {
+                                     // $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
+                                    /*if (!$salida->logged) {
                                         $_SESSION = array();
                                         echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
-                                    }else{
+                                    }else{*/
                                         //Redireccionamiento a pag. "af_reportes_usuariolist.php" cuando login/password es correcto y se inicio la sesion
                                         $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
                                         $_SESSION['USUARIO_TYPE']['admin'] = $datos[1]['i_Admin'];
@@ -127,7 +127,7 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['filtros_log']['destino']="";
                                         
                                         echo "<script language='javascript'>window.location='af_reportes_usuariolist.php'</script>"; 
-                                    }
+                                    /*}*/
                                 }
                                 //abrirConexion_PO();
                             }
