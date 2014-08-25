@@ -131,8 +131,13 @@ body{
 	background-color: #428bca;
 	font-weight: bold;
 	text-align: center;
+	vertical-align: middle;
 	border-color: #357ebd;
 	color: white;
+}
+
+.ewTable td,#treeContainer th, #treeContainer td, #tableContainer th, #tableContainer td{
+	vertical-align: middle !important;
 }
 
 .ewButtonGroup{
@@ -157,7 +162,6 @@ body{
 	margin-top: 24px;
 	width: 100%;
 }
-
 
 /*modificaciones de bootstrap viejo*/
 
