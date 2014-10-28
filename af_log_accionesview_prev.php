@@ -252,7 +252,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 	function Page_Init() {
 		global $gsExport, $gsExportFile, $UserProfile, $Language, $Security, $objForm;
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->c_ITransaccion->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -435,8 +434,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
 		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
 		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
-		$this->st_Accion->setDbValue($rs->fields('st_Accion'));
-		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
 	}
 
 	// Load DbValue from recordset
@@ -455,8 +452,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 		$this->c_ICClass->DbValue = $row['c_ICClass'];
 		$this->c_ICliente->DbValue = $row['c_ICliente'];
 		$this->c_ICuenta->DbValue = $row['c_ICuenta'];
-		$this->st_Accion->DbValue = $row['st_Accion'];
-		$this->x_Obs->DbValue = $row['x_Obs'];
 	}
 
 	// Render row values based on field settings
@@ -488,8 +483,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 		// c_ICClass
 		// c_ICliente
 		// c_ICuenta
-		// st_Accion
-		// x_Obs
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -505,6 +498,9 @@ class caf_log_acciones_view extends caf_log_acciones {
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
+
+			$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+			$this->c_IDestino->ViewValue = $result[1]['destination'];
 
 			// cl_Accion
 			if (strval($this->cl_Accion->CurrentValue) <> "") {
@@ -614,38 +610,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 			$this->c_ICuenta->ViewCustomAttributes = "";
 
-			// st_Accion
-			if (strval($this->st_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_ACCION'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->st_Accion, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->st_Accion->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->st_Accion->ViewValue = $this->st_Accion->CurrentValue;
-				}
-			} else {
-				$this->st_Accion->ViewValue = NULL;
-			}
-			$this->st_Accion->ViewCustomAttributes = "";
-
-			// x_Obs
-			$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
-			$this->x_Obs->ViewCustomAttributes = "";
-
 			// c_ITransaccion
 			$this->c_ITransaccion->LinkCustomAttributes = "";
 			$this->c_ITransaccion->HrefValue = "";
@@ -685,16 +649,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 			$this->c_IChequeo->LinkCustomAttributes = "";
 			$this->c_IChequeo->HrefValue = "";
 			$this->c_IChequeo->TooltipValue = "";
-
-			// st_Accion
-			$this->st_Accion->LinkCustomAttributes = "";
-			$this->st_Accion->HrefValue = "";
-			$this->st_Accion->TooltipValue = "";
-
-			// x_Obs
-			$this->x_Obs->LinkCustomAttributes = "";
-			$this->x_Obs->HrefValue = "";
-			$this->x_Obs->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -820,7 +774,6 @@ faf_log_accionesview.ValidateRequired = false;
 faf_log_accionesview.Lists["x_cl_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_log_accionesview.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_log_accionesview.Lists["x_nv_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_log_accionesview.Lists["x_st_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -949,6 +902,8 @@ $af_log_acciones_view->ShowMessage();
 </span>
 </td>
 	</tr>
+
+
 <?php } ?>
 <?php if ($af_log_acciones->q_Min_Destino->Visible) { // q_Min_Destino ?>
 	<tr id="r_q_Min_Destino">
@@ -968,28 +923,6 @@ $af_log_acciones_view->ShowMessage();
 <span id="el_af_log_acciones_c_IChequeo" class="control-group">
 <span<?php echo $af_log_acciones->c_IChequeo->ViewAttributes() ?>>
 <?php echo $af_log_acciones->c_IChequeo->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($af_log_acciones->st_Accion->Visible) { // st_Accion ?>
-	<tr id="r_st_Accion">
-		<td><span id="elh_af_log_acciones_st_Accion"><?php echo $af_log_acciones->st_Accion->FldCaption() ?></span></td>
-		<td<?php echo $af_log_acciones->st_Accion->CellAttributes() ?>>
-<span id="el_af_log_acciones_st_Accion" class="control-group">
-<span<?php echo $af_log_acciones->st_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->st_Accion->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($af_log_acciones->x_Obs->Visible) { // x_Obs ?>
-	<tr id="r_x_Obs">
-		<td><span id="elh_af_log_acciones_x_Obs"><?php echo $af_log_acciones->x_Obs->FldCaption() ?></span></td>
-		<td<?php echo $af_log_acciones->x_Obs->CellAttributes() ?>>
-<span id="el_af_log_acciones_x_Obs" class="control-group">
-<span<?php echo $af_log_acciones->x_Obs->ViewAttributes() ?>>
-<?php echo $af_log_acciones->x_Obs->ViewValue ?></span>
 </span>
 </td>
 	</tr>

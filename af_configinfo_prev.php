@@ -15,8 +15,6 @@ class caf_config extends cTable {
 	var $x_Url_Wsdl;
 	var $f_Ult_Mod;
 	var $c_Usuario_Ult_Mod;
-	var $c_IUltChequeo;
-	var $st_Ult_Chequeo;
 
 	//
 	// Table class constructor
@@ -53,7 +51,7 @@ class caf_config extends cTable {
 		$this->fields['q_Min_VentChequeo'] = &$this->q_Min_VentChequeo;
 
 		// f_Ult_Chequeo
-		$this->f_Ult_Chequeo = new cField('af_config', 'af_config', 'x_f_Ult_Chequeo', 'f_Ult_Chequeo', '`f_Ult_Chequeo`', '`f_Ult_Chequeo`', 200, 7, FALSE, '`f_Ult_Chequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->f_Ult_Chequeo = new cField('af_config', 'af_config', 'x_f_Ult_Chequeo', 'f_Ult_Chequeo', '`f_Ult_Chequeo`', 'DATE_FORMAT(`f_Ult_Chequeo`, \'%d/%m/%Y\')', 135, 7, FALSE, '`f_Ult_Chequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->f_Ult_Chequeo->FldDefaultErrMsg = str_replace("%s", "/", $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['f_Ult_Chequeo'] = &$this->f_Ult_Chequeo;
 
@@ -77,16 +75,6 @@ class caf_config extends cTable {
 		// c_Usuario_Ult_Mod
 		$this->c_Usuario_Ult_Mod = new cField('af_config', 'af_config', 'x_c_Usuario_Ult_Mod', 'c_Usuario_Ult_Mod', '`c_Usuario_Ult_Mod`', '`c_Usuario_Ult_Mod`', 200, -1, FALSE, '`c_Usuario_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_Usuario_Ult_Mod'] = &$this->c_Usuario_Ult_Mod;
-
-		// c_IUltChequeo
-		$this->c_IUltChequeo = new cField('af_config', 'af_config', 'x_c_IUltChequeo', 'c_IUltChequeo', '`c_IUltChequeo`', '`c_IUltChequeo`', 3, -1, FALSE, '`c_IUltChequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->c_IUltChequeo->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['c_IUltChequeo'] = &$this->c_IUltChequeo;
-
-		// st_Ult_Chequeo
-		$this->st_Ult_Chequeo = new cField('af_config', 'af_config', 'x_st_Ult_Chequeo', 'st_Ult_Chequeo', '`st_Ult_Chequeo`', '`st_Ult_Chequeo`', 3, -1, FALSE, '`st_Ult_Chequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->st_Ult_Chequeo->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['st_Ult_Chequeo'] = &$this->st_Ult_Chequeo;
 	}
 
 	// Multiple column sort
@@ -510,8 +498,6 @@ class caf_config extends cTable {
 		$this->x_Url_Wsdl->setDbValue($rs->fields('x_Url_Wsdl'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
-		$this->c_IUltChequeo->setDbValue($rs->fields('c_IUltChequeo'));
-		$this->st_Ult_Chequeo->setDbValue($rs->fields('st_Ult_Chequeo'));
 	}
 
 	// Render list row values
@@ -530,8 +516,6 @@ class caf_config extends cTable {
 		// x_Url_Wsdl
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
-		// c_IUltChequeo
-		// st_Ult_Chequeo
 		// q_Min_Chequeo
 
 		$this->q_Min_Chequeo->ViewValue = $this->q_Min_Chequeo->CurrentValue;
@@ -566,38 +550,6 @@ class caf_config extends cTable {
 		// c_Usuario_Ult_Mod
 		$this->c_Usuario_Ult_Mod->ViewValue = $this->c_Usuario_Ult_Mod->CurrentValue;
 		$this->c_Usuario_Ult_Mod->ViewCustomAttributes = "";
-
-		// c_IUltChequeo
-		$this->c_IUltChequeo->ViewValue = $this->c_IUltChequeo->CurrentValue;
-		$this->c_IUltChequeo->ViewCustomAttributes = "";
-
-		// st_Ult_Chequeo
-		if (strval($this->st_Ult_Chequeo->CurrentValue) <> "") {
-			$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Ult_Chequeo->CurrentValue, EW_DATATYPE_NUMBER);
-		$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-		$sWhereWrk = "";
-		$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_CHEQUEO'";
-		if (strval($lookuptblfilter) <> "") {
-			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		}
-		if ($sFilterWrk <> "") {
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-		}
-
-		// Call Lookup selecting
-		$this->Lookup_Selecting($this->st_Ult_Chequeo, $sWhereWrk);
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = $conn->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$this->st_Ult_Chequeo->ViewValue = $rswrk->fields('DispFld');
-				$rswrk->Close();
-			} else {
-				$this->st_Ult_Chequeo->ViewValue = $this->st_Ult_Chequeo->CurrentValue;
-			}
-		} else {
-			$this->st_Ult_Chequeo->ViewValue = NULL;
-		}
-		$this->st_Ult_Chequeo->ViewCustomAttributes = "";
 
 		// q_Min_Chequeo
 		$this->q_Min_Chequeo->LinkCustomAttributes = "";
@@ -639,16 +591,6 @@ class caf_config extends cTable {
 		$this->c_Usuario_Ult_Mod->HrefValue = "";
 		$this->c_Usuario_Ult_Mod->TooltipValue = "";
 
-		// c_IUltChequeo
-		$this->c_IUltChequeo->LinkCustomAttributes = "";
-		$this->c_IUltChequeo->HrefValue = "";
-		$this->c_IUltChequeo->TooltipValue = "";
-
-		// st_Ult_Chequeo
-		$this->st_Ult_Chequeo->LinkCustomAttributes = "";
-		$this->st_Ult_Chequeo->HrefValue = "";
-		$this->st_Ult_Chequeo->TooltipValue = "";
-
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -679,8 +621,6 @@ class caf_config extends cTable {
 				if ($this->x_Url_Wsdl->Exportable) $Doc->ExportCaption($this->x_Url_Wsdl);
 				if ($this->f_Ult_Mod->Exportable) $Doc->ExportCaption($this->f_Ult_Mod);
 				if ($this->c_Usuario_Ult_Mod->Exportable) $Doc->ExportCaption($this->c_Usuario_Ult_Mod);
-				if ($this->c_IUltChequeo->Exportable) $Doc->ExportCaption($this->c_IUltChequeo);
-				if ($this->st_Ult_Chequeo->Exportable) $Doc->ExportCaption($this->st_Ult_Chequeo);
 			} else {
 				if ($this->q_Min_Chequeo->Exportable) $Doc->ExportCaption($this->q_Min_Chequeo);
 				if ($this->q_Min_VentChequeo->Exportable) $Doc->ExportCaption($this->q_Min_VentChequeo);
@@ -690,8 +630,6 @@ class caf_config extends cTable {
 				if ($this->x_Url_Wsdl->Exportable) $Doc->ExportCaption($this->x_Url_Wsdl);
 				if ($this->f_Ult_Mod->Exportable) $Doc->ExportCaption($this->f_Ult_Mod);
 				if ($this->c_Usuario_Ult_Mod->Exportable) $Doc->ExportCaption($this->c_Usuario_Ult_Mod);
-				if ($this->c_IUltChequeo->Exportable) $Doc->ExportCaption($this->c_IUltChequeo);
-				if ($this->st_Ult_Chequeo->Exportable) $Doc->ExportCaption($this->st_Ult_Chequeo);
 			}
 			$Doc->EndExportRow();
 		}
@@ -729,8 +667,6 @@ class caf_config extends cTable {
 					if ($this->x_Url_Wsdl->Exportable) $Doc->ExportField($this->x_Url_Wsdl);
 					if ($this->f_Ult_Mod->Exportable) $Doc->ExportField($this->f_Ult_Mod);
 					if ($this->c_Usuario_Ult_Mod->Exportable) $Doc->ExportField($this->c_Usuario_Ult_Mod);
-					if ($this->c_IUltChequeo->Exportable) $Doc->ExportField($this->c_IUltChequeo);
-					if ($this->st_Ult_Chequeo->Exportable) $Doc->ExportField($this->st_Ult_Chequeo);
 				} else {
 					if ($this->q_Min_Chequeo->Exportable) $Doc->ExportField($this->q_Min_Chequeo);
 					if ($this->q_Min_VentChequeo->Exportable) $Doc->ExportField($this->q_Min_VentChequeo);
@@ -740,8 +676,6 @@ class caf_config extends cTable {
 					if ($this->x_Url_Wsdl->Exportable) $Doc->ExportField($this->x_Url_Wsdl);
 					if ($this->f_Ult_Mod->Exportable) $Doc->ExportField($this->f_Ult_Mod);
 					if ($this->c_Usuario_Ult_Mod->Exportable) $Doc->ExportField($this->c_Usuario_Ult_Mod);
-					if ($this->c_IUltChequeo->Exportable) $Doc->ExportField($this->c_IUltChequeo);
-					if ($this->st_Ult_Chequeo->Exportable) $Doc->ExportField($this->st_Ult_Chequeo);
 				}
 				$Doc->EndExportRow();
 			}

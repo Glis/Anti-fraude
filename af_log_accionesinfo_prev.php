@@ -19,8 +19,6 @@ class caf_log_acciones extends cTable {
 	var $c_ICClass;
 	var $c_ICliente;
 	var $c_ICuenta;
-	var $st_Accion;
-	var $x_Obs;
 
 	//
 	// Table class constructor
@@ -70,7 +68,7 @@ class caf_log_acciones extends cTable {
 		$this->fields['t_Accion'] = &$this->t_Accion;
 
 		// nv_Accion
-		$this->nv_Accion = new cField('af_log_acciones', 'af_log_acciones', 'x_nv_Accion', 'nv_Accion', '`nv_Accion`', '`nv_Accion`', 200, -1, FALSE, '`nv_Accion`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->nv_Accion = new cField('af_log_acciones', 'af_log_acciones', 'x_nv_Accion', 'nv_Accion', '`nv_Accion`', '`nv_Accion`', 3, -1, FALSE, '`nv_Accion`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['nv_Accion'] = &$this->nv_Accion;
 
 		// q_Min_Destino
@@ -98,14 +96,6 @@ class caf_log_acciones extends cTable {
 		// c_ICuenta
 		$this->c_ICuenta = new cField('af_log_acciones', 'af_log_acciones', 'x_c_ICuenta', 'c_ICuenta', '`c_ICuenta`', '`c_ICuenta`', 200, -1, FALSE, '`c_ICuenta`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_ICuenta'] = &$this->c_ICuenta;
-
-		// st_Accion
-		$this->st_Accion = new cField('af_log_acciones', 'af_log_acciones', 'x_st_Accion', 'st_Accion', '`st_Accion`', '`st_Accion`', 3, -1, FALSE, '`st_Accion`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->fields['st_Accion'] = &$this->st_Accion;
-
-		// x_Obs
-		$this->x_Obs = new cField('af_log_acciones', 'af_log_acciones', 'x_x_Obs', 'x_Obs', '`x_Obs`', '`x_Obs`', 200, -1, FALSE, '`x_Obs`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->fields['x_Obs'] = &$this->x_Obs;
 	}
 
 	// Multiple column sort
@@ -608,8 +598,6 @@ class caf_log_acciones extends cTable {
 		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
 		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
 		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
-		$this->st_Accion->setDbValue($rs->fields('st_Accion'));
-		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
 	}
 
 	// Render list row values
@@ -641,10 +629,7 @@ class caf_log_acciones extends cTable {
 		// c_ICuenta
 		$this->c_ICuenta->CellCssStyle = "white-space: nowrap;";
 
-		// st_Accion
-		// x_Obs
 		// c_ITransaccion
-
 		$this->c_ITransaccion->ViewValue = $this->c_ITransaccion->CurrentValue;
 		$this->c_ITransaccion->ViewCustomAttributes = "";
 
@@ -765,38 +750,6 @@ class caf_log_acciones extends cTable {
 		$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 		$this->c_ICuenta->ViewCustomAttributes = "";
 
-		// st_Accion
-		if (strval($this->st_Accion->CurrentValue) <> "") {
-			$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-		$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-		$sWhereWrk = "";
-		$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_ACCION'";
-		if (strval($lookuptblfilter) <> "") {
-			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		}
-		if ($sFilterWrk <> "") {
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-		}
-
-		// Call Lookup selecting
-		$this->Lookup_Selecting($this->st_Accion, $sWhereWrk);
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = $conn->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$this->st_Accion->ViewValue = $rswrk->fields('DispFld');
-				$rswrk->Close();
-			} else {
-				$this->st_Accion->ViewValue = $this->st_Accion->CurrentValue;
-			}
-		} else {
-			$this->st_Accion->ViewValue = NULL;
-		}
-		$this->st_Accion->ViewCustomAttributes = "";
-
-		// x_Obs
-		$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
-		$this->x_Obs->ViewCustomAttributes = "";
-
 		// c_ITransaccion
 		$this->c_ITransaccion->LinkCustomAttributes = "";
 		$this->c_ITransaccion->HrefValue = "";
@@ -857,16 +810,6 @@ class caf_log_acciones extends cTable {
 		$this->c_ICuenta->HrefValue = "";
 		$this->c_ICuenta->TooltipValue = "";
 
-		// st_Accion
-		$this->st_Accion->LinkCustomAttributes = "";
-		$this->st_Accion->HrefValue = "";
-		$this->st_Accion->TooltipValue = "";
-
-		// x_Obs
-		$this->x_Obs->LinkCustomAttributes = "";
-		$this->x_Obs->HrefValue = "";
-		$this->x_Obs->TooltipValue = "";
-
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -897,8 +840,6 @@ class caf_log_acciones extends cTable {
 				if ($this->nv_Accion->Exportable) $Doc->ExportCaption($this->nv_Accion);
 				if ($this->q_Min_Destino->Exportable) $Doc->ExportCaption($this->q_Min_Destino);
 				if ($this->c_IChequeo->Exportable) $Doc->ExportCaption($this->c_IChequeo);
-				if ($this->st_Accion->Exportable) $Doc->ExportCaption($this->st_Accion);
-				if ($this->x_Obs->Exportable) $Doc->ExportCaption($this->x_Obs);
 			} else {
 				if ($this->c_ITransaccion->Exportable) $Doc->ExportCaption($this->c_ITransaccion);
 				if ($this->f_Transaccion->Exportable) $Doc->ExportCaption($this->f_Transaccion);
@@ -912,8 +853,6 @@ class caf_log_acciones extends cTable {
 				if ($this->c_ICClass->Exportable) $Doc->ExportCaption($this->c_ICClass);
 				if ($this->c_ICliente->Exportable) $Doc->ExportCaption($this->c_ICliente);
 				if ($this->c_ICuenta->Exportable) $Doc->ExportCaption($this->c_ICuenta);
-				if ($this->st_Accion->Exportable) $Doc->ExportCaption($this->st_Accion);
-				if ($this->x_Obs->Exportable) $Doc->ExportCaption($this->x_Obs);
 			}
 			$Doc->EndExportRow();
 		}
@@ -951,8 +890,6 @@ class caf_log_acciones extends cTable {
 					if ($this->nv_Accion->Exportable) $Doc->ExportField($this->nv_Accion);
 					if ($this->q_Min_Destino->Exportable) $Doc->ExportField($this->q_Min_Destino);
 					if ($this->c_IChequeo->Exportable) $Doc->ExportField($this->c_IChequeo);
-					if ($this->st_Accion->Exportable) $Doc->ExportField($this->st_Accion);
-					if ($this->x_Obs->Exportable) $Doc->ExportField($this->x_Obs);
 				} else {
 					if ($this->c_ITransaccion->Exportable) $Doc->ExportField($this->c_ITransaccion);
 					if ($this->f_Transaccion->Exportable) $Doc->ExportField($this->f_Transaccion);
@@ -966,8 +903,6 @@ class caf_log_acciones extends cTable {
 					if ($this->c_ICClass->Exportable) $Doc->ExportField($this->c_ICClass);
 					if ($this->c_ICliente->Exportable) $Doc->ExportField($this->c_ICliente);
 					if ($this->c_ICuenta->Exportable) $Doc->ExportField($this->c_ICuenta);
-					if ($this->st_Accion->Exportable) $Doc->ExportField($this->st_Accion);
-					if ($this->x_Obs->Exportable) $Doc->ExportField($this->x_Obs);
 				}
 				$Doc->EndExportRow();
 			}

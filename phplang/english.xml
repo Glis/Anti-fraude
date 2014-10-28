@@ -615,6 +615,10 @@
 </field>
 <field id="c_icuenta"><phrase id="fldcaption" value="c ICuenta"/>
 </field>
+<field id="st_accion"><phrase id="fldcaption" value="Status Acción"/>
+</field>
+<field id="x_obs"><phrase id="fldcaption" value="Observaciones"/>
+</field>
 </table>
 <table id="af_log_envio_rep"><phrase id="tblcaption" value="af log envio rep"/>
 <field id="c_itransaccion"><phrase id="fldcaption" value="c ITransaccion"/>
@@ -812,6 +816,10 @@
 <field id="c_icliente"><phrase id="fldcaption" value="c ICliente"/>
 </field>
 <field id="c_icuenta"><phrase id="fldcaption" value="c ICuenta"/>
+</field>
+<field id="st_accion"><phrase id="fldcaption" value="Status Acción"/>
+</field>
+<field id="x_obs"><phrase id="fldcaption" value="Observaciones"/>
 </field>
 </table>
 <table id="af_log_envio_rep"><phrase id="tblcaption" value="Log Envío de Reportes"/>

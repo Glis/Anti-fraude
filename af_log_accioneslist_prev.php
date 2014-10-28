@@ -294,7 +294,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->c_ITransaccion->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -797,8 +796,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
 		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
 		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
-		$this->st_Accion->setDbValue($rs->fields('st_Accion'));
-		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
 	}
 
 	// Load DbValue from recordset
@@ -817,8 +814,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 		$this->c_ICClass->DbValue = $row['c_ICClass'];
 		$this->c_ICliente->DbValue = $row['c_ICliente'];
 		$this->c_ICuenta->DbValue = $row['c_ICuenta'];
-		$this->st_Accion->DbValue = $row['st_Accion'];
-		$this->x_Obs->DbValue = $row['x_Obs'];
 	}
 
 	// Load old record
@@ -880,10 +875,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 		// c_ICuenta
 		$this->c_ICuenta->CellCssStyle = "white-space: nowrap;";
-
-		// st_Accion
-		// x_Obs
-
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
 			// c_ITransaccion
@@ -898,6 +889,9 @@ class caf_log_acciones_list extends caf_log_acciones {
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
+			
+			$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+			$this->c_IDestino->ViewValue = $result[1]['description'];
 
 			// cl_Accion
 			if (strval($this->cl_Accion->CurrentValue) <> "") {
@@ -932,13 +926,13 @@ class caf_log_acciones_list extends caf_log_acciones {
 				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Accion->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			
+
 			if($this->nv_Accion->CurrentValue == 1)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
 			if($this->nv_Accion->CurrentValue == 2)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_RES'";
 			if($this->nv_Accion->CurrentValue == 3)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CCLASS'";
 			if($this->nv_Accion->CurrentValue == 4)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CLI'";
 			if($this->nv_Accion->CurrentValue == 5)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CTA'";
-
+			
 			//$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
@@ -1013,38 +1007,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 			// c_ICuenta
 			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 			$this->c_ICuenta->ViewCustomAttributes = "";
-
-			// st_Accion
-			if (strval($this->st_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_ACCION'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->st_Accion, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->st_Accion->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->st_Accion->ViewValue = $this->st_Accion->CurrentValue;
-				}
-			} else {
-				$this->st_Accion->ViewValue = NULL;
-			}
-			$this->st_Accion->ViewCustomAttributes = "";
-
-			// x_Obs
-			$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
-			$this->x_Obs->ViewCustomAttributes = "";
 
 			// c_ITransaccion
 			$this->c_ITransaccion->LinkCustomAttributes = "";
@@ -1287,10 +1249,16 @@ class caf_log_acciones_list extends caf_log_acciones {
 	// ListOptions Load event
 	function ListOptions_Load() {
 
+		// Example:
+		//$opt = &$this->ListOptions->Add("new");
+		//$opt->Header = "xxx";
+		//$opt->OnLeft = TRUE; // Link on left
+		//$opt->MoveTo(0); // Move to first column
 		$opt = &$this->ListOptions->Add("nv_AccionDet");
 		$opt->Header = "Nivel Acción Detalle";
 		$opt->OnLeft = FALSE; // Link on left
 		$opt->MoveTo(0); // Move to first column
+
 
 	}
 
@@ -1320,6 +1288,7 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$res = select_sql_PO('select_porta_accounts_where', array((int)$this->c_ICuenta->CurrentValue, (int)$this->c_ICliente->CurrentValue));
 			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['id'];
 		}
+
 
 	}
 
@@ -1393,7 +1362,7 @@ faf_log_accioneslist.Lists["x_nv_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax"
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_acciones_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1417,7 +1386,7 @@ $af_log_acciones_list->RenderOtherOptions();
 $af_log_acciones_list->ShowMessage();
 ?>
 
-<?/******************************************************
+					<?/******************************************************
 					************************FILTROS**************************
 					*********************************************************/?>
 
@@ -1556,6 +1525,9 @@ $af_log_acciones_list->ShowMessage();
 					<?/******************************************************
 					************************ENDFILTROS**************************
 					*********************************************************/?>
+
+
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_log_accioneslist" id="faf_log_accioneslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_log_acciones">

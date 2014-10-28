@@ -50,7 +50,7 @@ date_default_timezone_set('America/Caracas');
         <div class="container">
             <div id="logo"><a href="/Anti-fraude"><img src="img/logo-login.png" alt="" class="center-block"></a></div>
             <div id="cuerpo">
-                <h1 id="login-titulo">Sistema de Prevención de Fraude NETUNO</h1>
+                <h1 id="login-titulo">Control de Tráfico de Telefonía</h1>
                 <div class="row">
                     <div class="col-sm-6 col-sm-offset-3">
                         <div id="login-box" class="jumbotron">
@@ -67,7 +67,7 @@ date_default_timezone_set('America/Caracas');
                                     <input type="password" name="clave" id="clave" class="form-control inputlogin" placeholder="Password">
                                   </div>
                                 </div><br>
-                                <div id="campo3" class="form-group">
+                                <div id="campo3" class="form-group" type="hidden">
                                   <label for="portaone" id="label_select" class="col-sm-2 col-sm-offset-1 control-label labellogin">PortaOne</label>
                                   <div class="col-sm-6">
                                     <select name="portaone" id="portaone" class="form-control inputlogin">
@@ -98,7 +98,7 @@ date_default_timezone_set('America/Caracas');
                                      $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
                                     if (!$salida->logged) {
                                         $_SESSION = array();
-                                        echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
+                                        echo "<div id='error' class='alert alert-danger'>ERROR2: Login o password inválido</div>";
                                     }else{
                                         //Redireccionamiento a pag. "af_reportes_usuariolist.php" cuando login/password es correcto y se inicio la sesion
                                         $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);

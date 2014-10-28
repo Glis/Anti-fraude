@@ -15,6 +15,7 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
 //
 // Page class
 //
@@ -505,8 +506,6 @@ class caf_config_list extends caf_config {
 			$this->UpdateSort($this->x_Url_Wsdl, $bCtrl); // x_Url_Wsdl
 			$this->UpdateSort($this->f_Ult_Mod, $bCtrl); // f_Ult_Mod
 			$this->UpdateSort($this->c_Usuario_Ult_Mod, $bCtrl); // c_Usuario_Ult_Mod
-			$this->UpdateSort($this->c_IUltChequeo, $bCtrl); // c_IUltChequeo
-			$this->UpdateSort($this->st_Ult_Chequeo, $bCtrl); // st_Ult_Chequeo
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -543,8 +542,6 @@ class caf_config_list extends caf_config {
 				$this->x_Url_Wsdl->setSort("");
 				$this->f_Ult_Mod->setSort("");
 				$this->c_Usuario_Ult_Mod->setSort("");
-				$this->c_IUltChequeo->setSort("");
-				$this->st_Ult_Chequeo->setSort("");
 			}
 
 			// Reset start position
@@ -782,8 +779,6 @@ class caf_config_list extends caf_config {
 		$this->x_Url_Wsdl->setDbValue($rs->fields('x_Url_Wsdl'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
-		$this->c_IUltChequeo->setDbValue($rs->fields('c_IUltChequeo'));
-		$this->st_Ult_Chequeo->setDbValue($rs->fields('st_Ult_Chequeo'));
 	}
 
 	// Load DbValue from recordset
@@ -798,8 +793,6 @@ class caf_config_list extends caf_config {
 		$this->x_Url_Wsdl->DbValue = $row['x_Url_Wsdl'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
-		$this->c_IUltChequeo->DbValue = $row['c_IUltChequeo'];
-		$this->st_Ult_Chequeo->DbValue = $row['st_Ult_Chequeo'];
 	}
 
 	// Load old record
@@ -845,8 +838,6 @@ class caf_config_list extends caf_config {
 		// x_Url_Wsdl
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
-		// c_IUltChequeo
-		// st_Ult_Chequeo
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -883,38 +874,6 @@ class caf_config_list extends caf_config {
 			// c_Usuario_Ult_Mod
 			$this->c_Usuario_Ult_Mod->ViewValue = $this->c_Usuario_Ult_Mod->CurrentValue;
 			$this->c_Usuario_Ult_Mod->ViewCustomAttributes = "";
-
-			// c_IUltChequeo
-			$this->c_IUltChequeo->ViewValue = $this->c_IUltChequeo->CurrentValue;
-			$this->c_IUltChequeo->ViewCustomAttributes = "";
-
-			// st_Ult_Chequeo
-			if (strval($this->st_Ult_Chequeo->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Ult_Chequeo->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_CHEQUEO'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->st_Ult_Chequeo, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->st_Ult_Chequeo->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->st_Ult_Chequeo->ViewValue = $this->st_Ult_Chequeo->CurrentValue;
-				}
-			} else {
-				$this->st_Ult_Chequeo->ViewValue = NULL;
-			}
-			$this->st_Ult_Chequeo->ViewCustomAttributes = "";
 
 			// q_Min_Chequeo
 			$this->q_Min_Chequeo->LinkCustomAttributes = "";
@@ -955,16 +914,6 @@ class caf_config_list extends caf_config {
 			$this->c_Usuario_Ult_Mod->LinkCustomAttributes = "";
 			$this->c_Usuario_Ult_Mod->HrefValue = "";
 			$this->c_Usuario_Ult_Mod->TooltipValue = "";
-
-			// c_IUltChequeo
-			$this->c_IUltChequeo->LinkCustomAttributes = "";
-			$this->c_IUltChequeo->HrefValue = "";
-			$this->c_IUltChequeo->TooltipValue = "";
-
-			// st_Ult_Chequeo
-			$this->st_Ult_Chequeo->LinkCustomAttributes = "";
-			$this->st_Ult_Chequeo->HrefValue = "";
-			$this->st_Ult_Chequeo->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1219,8 +1168,6 @@ Page_Rendering();
 // Page Rendering event
 $af_config_list->Page_Render();
 ?>
-
-
 <?php include_once "header.php" ?>
 
 
@@ -1232,6 +1179,7 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
 	</div>"); exit;
 }?>
+
 <?php if ($af_config->Export == "") { ?>
 <script type="text/javascript">
 
@@ -1260,9 +1208,8 @@ faf_configlist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-faf_configlist.Lists["x_st_Ult_Chequeo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
@@ -1283,7 +1230,7 @@ $af_config_list->ShowMessage();
 
 		  $dom = select_sql('select_dominio_high', array("DNIO_ST_CHEQUEO",$res[1]['st_Ult_Chequeo']));
 	?>
-<table class="ewGrid"><tbody><tr><td>
+	<table class="ewGrid"><tbody><tr><td>
 	<table class="table table-bordered table-striped">
 		<tbody>
 			<tr>
