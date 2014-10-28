@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_config_reportesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
 <?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
@@ -18,8 +19,9 @@ if(!isset($_SESSION['USUARIO']))
 
 $options_res = select_sql_PO('select_porta_customers');
 $cant = count($options_res);
+
 $k = 1;
-$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
+$html_res_resellers = "<option value=''>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
 	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
@@ -27,7 +29,7 @@ while ($k <= $cant) {
 }
 
 echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
-
+echo '<div class="new_select_cclass"></div>';
 //
 // Page class
 //
@@ -1269,14 +1271,23 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 	<h1>Contenido no disponible...</h1>
 	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
 	</div>"); exit;
-}?>
+}
 
+//Buscar el que esta elegido
+$selectedValue = select_custom_sql("p_Reseller", "af_config_reportes", "c_IConfig=".$_GET["c_IConfig"], "", "");
+$val = $selectedValue[1]["p_Reseller"];
+
+?>
 <script type="text/javascript">
 $( document ).ready(function() {
+	//Seleccionar el que esta elegido
+	$(".new_select_reseller [value='<?php echo $val; ?>']").attr("selected", "selected");
 
-    $('#x_p_Reseller').empty();
+	$('#x_p_Reseller').empty();
     $('#x_p_Reseller').append($('.new_select_reseller').html());
 
+	console.log($("#x_p_Reseller").find("option:selected").val());
+    $('#x_p_Reseller').trigger("change");
     $('#x_p_CClass').prop('disabled', true);
 });
 
@@ -1288,7 +1299,17 @@ $(document).on('change','#x_p_Reseller',function(){
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(response) {  
-				$('#x_p_CClass').empty().append(response);
+			  	<?php
+				  	//Buscar el que esta elegido segun el reseller
+				  	$selectedValueCC = select_custom_sql("p_CClass", "af_config_reportes", "c_IConfig=".$_GET["c_IConfig"], "", "");
+					$valCC = $selectedValueCC[1]["p_CClass"];
+			  	?>
+			  	
+				//seleccionar el que esta elegido segun el reseller
+			  	$('.new_select_cclass').empty().append(response);
+				$(".new_select_cclass [value='<?php echo $valCC; ?>']").attr("selected", "selected");
+
+			  	$('#x_p_CClass').empty().append($(".new_select_cclass").html());
 				$( "#x_p_CClass" ).prop( "disabled", false );
 			  }
 			});

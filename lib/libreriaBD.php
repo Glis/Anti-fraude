@@ -158,6 +158,16 @@ function select_custom_sql($queryFields, $queryTable, $queryCondition, $queryOrd
     cerrarConexion();
 }
 
+function print_custom_sql($queryFields, $queryTable, $queryCondition, $queryOrderBy, $queryExtras){
+    $sql = "SELECT ".$queryFields.
+           " FROM netuno.".$queryTable;
+    if($queryCondition <> "") $sql.=" WHERE ".$queryCondition;
+    if($queryOrderBy <> "") $sql.= " ORDER BY ".$queryOrderBy;
+    if($queryExtras <> "") $sql.= " ".$queryExtras; 
+                
+    return $sql;
+}
+
 function update_sql ($nombre, $Params){
 
     switch ($nombre) {

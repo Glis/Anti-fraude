@@ -19,8 +19,34 @@ function is_On($value){
   return (intval($value) > 0);
 }
 
-$chequeos=select_custom_sql("*","af_chequeo","","", "LIMIT 5");
+//INICIALIZACIÓN DEL QUERY
+$chequeos=select_custom_sql("*","af_chequeo","","", "LIMIT 10");
 $chequeosCount = count($chequeos);
+
+function changeDate($date){
+  $newdate = "";
+  // YYYY-MM-DD
+  $parts = explode("-",$date);
+  $newdate = $parts[2]."/".$parts[1]."/".$parts[0];
+  return $newdate;
+}
+
+if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
+  $where = "";
+
+  if(isset($_POST['initialDateFil'])){
+    $where .= "STR_TO_DATE(f_Inicio,'%d/%m/%Y') >= STR_TO_DATE('".changeDate($_POST['initialDateFil'])."','%d/%m/%Y')"; 
+  }
+  if(isset($_POST['endDateFil'])){
+    $where .= " and STR_TO_DATE(f_Fin,'%d/%m/%Y') <= STR_TO_DATE('".changeDate($_POST['endDateFil'])."','%d/%m/%Y')";
+  }
+  
+  /*echo "<h2>POST: initialDateFil:".$_POST['initialDateFil']." endDateFil:".$_POST['endDateFil']."</h2>";
+  echo "<h2>".print_custom_sql("*","af_chequeo",$where,"", "")."</h2>";*/
+
+  $chequeos=select_custom_sql("*","af_chequeo",$where,"", "LIMIT 10");
+  $chequeosCount = count($chequeos);
+}
 
 ?>
 
@@ -57,18 +83,18 @@ $chequeosCount = count($chequeos);
 <div id="page_title" style="text-align:center; width:100%"></div>
 <!-- Tabla de chequeo  -->
 <div id="tableContainer" class="col-sm-12">
-  <form role="form">
+  <form role="form" action="" method="post">
     <div class="row">
       <div class="col-sm-5">
         <div class="form-group">
           <label for="initialDateFil">Desde</label>
-          <input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014">
+          <input type="date" class="form-control" id="initialDateFil" name="initialDateFil" required>
         </div>
       </div>
       <div class="col-sm-5">
         <div class="form-group">
           <label for="endDateFil">Hasta</label>
-          <input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014">
+          <input type="date" class="form-control" id="endDateFil" name="endDateFil" required>
         </div>
       </div>
       <div class="col-sm-2">
@@ -117,6 +143,7 @@ $chequeosCount = count($chequeos);
   
   <div class="row">
   <?php 
+    if ($chequeosCount > 0) {
     foreach ($chequeos as $check) {
       $destinos=select_custom_sql("*","af_chequeo_det","c_IChequeo='".$check['c_IChequeo']."'","","");
       $destinosCount = count($destinos);  
@@ -314,9 +341,39 @@ $chequeosCount = count($chequeos);
 
   <?php
     }
+  }
   ?>
     
   </div>
 </div><!-- treeContainer -->
+
+<script>
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+  $('#initialDateFil').val(today);
+  $('#endDateFil').val(today);
+  $('#initialDateFil').attr("max",today);
+  $('#endDateFil').attr("max",today);
+</script>
+
+<?php 
+  if(isset($_POST['initialDateFil']) && isset($_POST['endDateFil'])){
+?>
+  <script>
+  var initDate = "<?php echo $_POST['initialDateFil'] ?>";
+  var endDate = "<?php echo $_POST['endDateFil'] ?>";
+  
+  if(initDate != ""){
+    $('#initialDateFil').val(initDate);
+  }
+  if(endDate != ""){
+    $('#endDateFil').val(endDate);  
+  }
+  </script>
+<?php 
+  }
+?>
 
 <?php include_once "footer.php" ?>

@@ -98,7 +98,7 @@ date_default_timezone_set('America/Caracas');
                                      $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
                                     if (!$salida->logged) {
                                         $_SESSION = array();
-                                        echo "<div id='error' class='alert alert-danger'>ERROR2: Login o password inválido</div>";
+                                        echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
                                     }else{
                                         //Redireccionamiento a pag. "af_reportes_usuariolist.php" cuando login/password es correcto y se inicio la sesion
                                         $datos =  select_sql('select_usuario_all', $_SESSION['USUARIO']);
