@@ -13,7 +13,7 @@ switch ($pagina) {
 
 	case 'resellers_usuario':
 		$_SESSION['filtros'] = $_POST['valor'];
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
+		if($_POST['valor'] == 'vacio')$_SESSION['filtros']="";
 		break;
 
 	case 'config_reportes':

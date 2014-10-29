@@ -1278,7 +1278,7 @@ $af_reportes_usuario_list->ShowMessage();
 	<script type="text/javascript">
 	$(document).on('click', '#submit_filtros', function() { 
 
-		var option = $('#select_usuarios').find("option:selected").text();
+		var option = $('#select_usuarios').find("option:selected").val();
 		var dataString = "pag=reportes_usuario&filtro=usuarios";
 		if(option != "vacio"){
 			dataString = dataString + "&valor=" + option;

@@ -14,7 +14,7 @@ date_default_timezone_set('America/Caracas');
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Sistema de Prevención de Fraude NETUNO</title>
+        <title>Control de Tráfico de Telefonía</title>
 
 
         <!-- Bootstrap -->
@@ -67,7 +67,7 @@ date_default_timezone_set('America/Caracas');
                                     <input type="password" name="clave" id="clave" class="form-control inputlogin" placeholder="Password">
                                   </div>
                                 </div><br>
-                                <div id="campo3" class="form-group" type="hidden">
+                                <div id="campo3" class="form-group" style="display:none;">
                                   <label for="portaone" id="label_select" class="col-sm-2 col-sm-offset-1 control-label labellogin">PortaOne</label>
                                   <div class="col-sm-6">
                                     <select name="portaone" id="portaone" class="form-control inputlogin">

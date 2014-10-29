@@ -1293,25 +1293,25 @@ $af_resellers_usuario_list->ShowMessage();
 							*********************************************************/?>
 <div id="filterContainer">
 	<script type="text/javascript">
-	$(document).on('change', '#select_usuarios', function() { 
+	$(document).on('click', '#submit_filtros', function() { 
 
-		if($(this).val() != 100){
-			var option = $(this).find("option:selected").text();
-			var dataString = "pag=resellers_usuario&filtro=usuarios&valor=" + option;
-			$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(html) {  
-				location.reload();
-			  }
-			  });
+		var option = $('#select_usuarios').find("option:selected").val();
+		var dataString = "pag=resellers_usuario&filtro=usuarios";
+		if(option != "vacio"){
+			dataString = dataString + "&valor=" + option;
+		}else{
+			dataString = dataString + "&valor=vacio";
+		}
+		alert(dataString);
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
 		
-		/*$("#tbl_af_resellers_usuariolist tbody tr").hide(); 
-		if(($("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().attr('id').substring(0,30) == "af_resellers_usuario_list_row_" ))$("#tbl_af_resellers_usuariolist" ).find( "span:contains('"+$(this).val()+ "')").next().parent().parent().show();*/
-		}/*else{
-			$("#tbl_af_resellers_usuariolist tbody tr").show();
-		}*/
 	});
 	</script>
 
@@ -1320,8 +1320,7 @@ $af_resellers_usuario_list->ShowMessage();
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Usuario</label>
 				<select id= "select_usuarios" class= "form-control">
-					<option value = 100>Seleccione un Usuario</option>
-					<option value = 100>All</option>
+					<option value = "vacio">Todo</option>
 				<? $users = select_sql('select_usuarios');
 					$count = count($users);
 					$k = 1;
@@ -1329,11 +1328,14 @@ $af_resellers_usuario_list->ShowMessage();
 						echo "<option value= ".$users[$k]['c_Usuario']. ">". $users[$k]['c_Usuario'] ."</option>";
 						$k++;
 					}
-
+					$_SESSION['filtros'] = "";
 				?>
 
 				</select>
 			</div>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 		</div>
 	</div>
 	
