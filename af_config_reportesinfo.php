@@ -144,7 +144,9 @@ class caf_config_reportes extends cTable {
 
 	function SqlWhere() { // Where
 		if($_SESSION['filtros'] != ""){
-			return "`af_config_reportes`.`c_IReporte`=".$_SESSION['filtros'];
+			$where = $this->SqlFrom() . ".`c_IReporte` = '" . $_SESSION['filtros'] . "'";
+			return $where;
+		
 		}else{
 			$sWhere = "";
 			$this->TableFilter = "";

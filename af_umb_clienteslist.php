@@ -1392,6 +1392,24 @@ $(document).on('click','#submit_filtros',function(){
 	});
 
 
+	$(document).on('change','#resellers_filtro',function(){
+
+		if($("#resellers_filtro").find("option:selected").val() == "vacio"){
+			$( "#cname_filtro" ).prop( "disabled", true );
+		}else{
+			var dataString = "pag=customer_name_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#cname_filtro').empty().append(response);
+					$( "#cname_filtro" ).prop( "disabled", false );
+				  }
+				});
+		}
+	});
+
 </script>
 
 	<div class="row">
@@ -1423,8 +1441,10 @@ $(document).on('click','#submit_filtros',function(){
 		</div>
 		<div class="col-sm-3">
 			<div class="form-group">
-				<label class= "filtro_label">Filtro Customer Name</label>
-				<input type="text" name="cname" id="cname" class="form-control">
+				<label class= "filtro_label">Filtro Customer Class</label>
+				<select id="cname_filtro" disabled class="form-control">
+				<option value="vacio">Todo</option>
+				</select>
 			</div>
 		</div>
 		<div class="col-sm-2">

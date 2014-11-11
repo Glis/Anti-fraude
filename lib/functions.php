@@ -19,7 +19,7 @@ switch ($pagina) {
 	case 'config_reportes':
 		$_SESSION['filtros'] = $_POST['valor'];
 		$_SESSION['tipofiltro'] = $_POST['filtro'];
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
+		if($_POST['valor'] == 'vacio')$_SESSION['filtros']="";
 		break;
 	
 	case 'acc_cclass':
@@ -203,6 +203,21 @@ switch ($pagina) {
 		echo($html_res);
 		break;
 
+	case 'customer_name_filtro':
+
+		$res = select_sql_PO('select_customer_name_filtro', array($_POST['reseller']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='vacio'>Todo</option>";
+		if($_POST['reseller'] != "vacio"){
+			while ($k <= $cant) {
+				$html_res .= "<option value='".$res[$k]['i_customer']."''>".$res[$k]['name']."</option>";
+				$k++;
+			}
+		}
+		echo($html_res);
+		break;
+
 	case 'tipo_campo_filtro':
 
 		$res = select_sql('select_dominio_high', array('DNIO_TIPO_CAMPO', $_POST['tabla']));
@@ -223,10 +238,25 @@ switch ($pagina) {
 		$res = select_sql_PO('select_customer_class_filtro', array($_POST['reseller']));
 		$cant = count($res);
 		$k = 1;
-		$html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
+		$html_res = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
 		if($_POST['reseller'] != "vacio"){
 			while ($k <= $cant) {
 				$html_res .= "<option value='".$res[$k]['i_customer_class']."''>".$res[$k]['name']."</option>";
+				$k++;
+			}
+		}
+		echo($html_res);
+		break;
+
+	case 'customer_name_add':
+
+		$res = select_sql_PO('select_customer_name_filtro', array($_POST['reseller']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
+		if($_POST['reseller'] != "vacio"){
+			while ($k <= $cant) {
+				$html_res .= "<option value='".$res[$k]['i_customer']."''>".$res[$k]['name']."</option>";
 				$k++;
 			}
 		}

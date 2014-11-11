@@ -9,21 +9,16 @@ ob_start(); // Turn on output buffering
 <?php include_once "userfn10.php" ?>
 <?php
 
-if(!isset($_SESSION['USUARIO']))
-{
-    header("Location: login.php");
-    exit;
-}
 //
 // Page class
 //
 
-$af_usuarios_add = NULL; // Initialize page object first
+$af_usuarios_edit = NULL; // Initialize page object first
 
-class caf_usuarios_add extends caf_usuarios {
+class caf_usuarios_edit extends caf_usuarios {
 
 	// Page ID
-	var $PageID = 'add';
+	var $PageID = 'edit';
 
 	// Project ID
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
@@ -32,7 +27,7 @@ class caf_usuarios_add extends caf_usuarios {
 	var $TableName = 'af_usuarios';
 
 	// Page object name
-	var $PageObjName = 'af_usuarios_add';
+	var $PageObjName = 'af_usuarios_edit';
 
 	// Page name
 	function PageName() {
@@ -180,7 +175,7 @@ class caf_usuarios_add extends caf_usuarios {
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
-			define("EW_PAGE_ID", 'add', TRUE);
+			define("EW_PAGE_ID", 'edit', TRUE);
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
@@ -234,11 +229,9 @@ class caf_usuarios_add extends caf_usuarios {
 		}
 		exit();
 	}
-	var $DbMasterFilter = "";
-	var $DbDetailFilter = "";
-	var $Priv = 0;
-	var $OldRecordset;
-	var $CopyRecord;
+	var $DbMasterFilter;
+	var $DbDetailFilter;
+	var $HashValue; // Hash Value
 
 	// 
 	// Page main
@@ -246,74 +239,101 @@ class caf_usuarios_add extends caf_usuarios {
 	function Page_Main() {
 		global $objForm, $Language, $gsFormError;
 
-		// Process form if post back
-		if (@$_POST["a_add"] <> "") {
-			$this->CurrentAction = $_POST["a_add"]; // Get form action
-			$this->CopyRecord = $this->LoadOldRecord(); // Load old recordset
-			$this->LoadFormValues(); // Load form values
-		} else { // Not post back
-
-			// Load key values from QueryString
-			$this->CopyRecord = TRUE;
-			if (@$_GET["c_Usuario"] != "") {
-				$this->c_Usuario->setQueryStringValue($_GET["c_Usuario"]);
-				$this->setKey("c_Usuario", $this->c_Usuario->CurrentValue); // Set up key
-			} else {
-				$this->setKey("c_Usuario", ""); // Clear key
-				$this->CopyRecord = FALSE;
-			}
-			if ($this->CopyRecord) {
-				$this->CurrentAction = "C"; // Copy record
-			} else {
-				$this->CurrentAction = "I"; // Display blank record
-				$this->LoadDefaultValues(); // Load default values
-			}
+		// Load key from QueryString
+		if (@$_GET["c_Usuario"] <> "") {
+			$this->c_Usuario->setQueryStringValue($_GET["c_Usuario"]);
 		}
 
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
-		// Validate form if post back
-		if (@$_POST["a_add"] <> "") {
-			if (!$this->ValidateForm()) {
-				$this->CurrentAction = "I"; // Form error, reset action
-				$this->EventCancelled = TRUE; // Event cancelled
-				$this->RestoreFormValues(); // Restore form values
-				$this->setFailureMessage($gsFormError);
+		// Process form if post back
+		if (@$_POST["a_edit"] <> "") {
+			$this->CurrentAction = $_POST["a_edit"]; // Get action code
+			$this->LoadFormValues(); // Get form values
+
+			// Overwrite record, reload hash value
+			if ($this->CurrentAction == "overwrite") {
+				$this->LoadRowHash();
+				$this->CurrentAction = "U";
 			}
+		} else {
+			$this->CurrentAction = "I"; // Default action is display
 		}
 
-		// Perform action based on action code
+		// Check if valid key
+		if ($this->c_Usuario->CurrentValue == "")
+			$this->Page_Terminate("af_usuarioslist.php"); // Invalid key, return to list
+
+		// Validate form if post back
+		if (@$_POST["a_edit"] <> "") {
+			if (!$this->ValidateForm()) {
+				$this->CurrentAction = ""; // Form error, reset action
+				$this->setFailureMessage($gsFormError);
+				$this->EventCancelled = TRUE; // Event cancelled
+				$this->RestoreFormValues();
+			}
+		}
 		switch ($this->CurrentAction) {
-			case "I": // Blank record, no action required
-				break;
-			case "C": // Copy an existing record
+			case "I": // Get a record to display
 				if (!$this->LoadRow()) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
 					$this->Page_Terminate("af_usuarioslist.php"); // No matching record, return to list
 				}
 				break;
-			case "A": // Add new record
-				$this->SendEmail = TRUE; // Send email on add success
-				if ($this->AddRow($this->OldRecordset)) { // Add successful
+			Case "U": // Update
+				$this->SendEmail = TRUE; // Send email on update success
+				if ($this->EditRow()) { // Update record based on key
 					if ($this->getSuccessMessage() == "")
-						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
+						$this->setSuccessMessage($Language->Phrase("UpdateSuccess")); // Update success
 					$sReturnUrl = $this->getReturnUrl();
-					if (ew_GetPageName($sReturnUrl) == "af_usuariosview.php")
-						$sReturnUrl = $this->GetViewUrl(); // View paging, return to view page with keyurl directly
-					$this->Page_Terminate($sReturnUrl); // Clean up and return
+					$this->Page_Terminate($sReturnUrl); // Return to caller
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
-					$this->RestoreFormValues(); // Add failed, restore form values
+					$this->RestoreFormValues(); // Restore form values if update failed
 				}
 		}
 
-		// Render row based on row type
-		$this->RowType = EW_ROWTYPE_ADD;  // Render add type
-
-		// Render row
+		// Render the record
+		$this->RowType = EW_ROWTYPE_EDIT; // Render as Edit
 		$this->ResetAttrs();
 		$this->RenderRow();
+	}
+
+	// Set up starting record parameters
+	function SetUpStartRec() {
+		if ($this->DisplayRecs == 0)
+			return;
+		if ($this->IsPageRequest()) { // Validate request
+			if (@$_GET[EW_TABLE_START_REC] <> "") { // Check for "start" parameter
+				$this->StartRec = $_GET[EW_TABLE_START_REC];
+				$this->setStartRecordNumber($this->StartRec);
+			} elseif (@$_GET[EW_TABLE_PAGE_NO] <> "") {
+				$PageNo = $_GET[EW_TABLE_PAGE_NO];
+				if (is_numeric($PageNo)) {
+					$this->StartRec = ($PageNo-1)*$this->DisplayRecs+1;
+					if ($this->StartRec <= 0) {
+						$this->StartRec = 1;
+					} elseif ($this->StartRec >= intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1) {
+						$this->StartRec = intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1;
+					}
+					$this->setStartRecordNumber($this->StartRec);
+				}
+			}
+		}
+		$this->StartRec = $this->getStartRecordNumber();
+
+		// Check if correct start record counter
+		if (!is_numeric($this->StartRec) || $this->StartRec == "") { // Avoid invalid start record counter
+			$this->StartRec = 1; // Reset start record counter
+			$this->setStartRecordNumber($this->StartRec);
+		} elseif (intval($this->StartRec) > intval($this->TotalRecs)) { // Avoid starting record > total records
+			$this->StartRec = intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1; // Point to last page first record
+			$this->setStartRecordNumber($this->StartRec);
+		} elseif (($this->StartRec-1) % $this->DisplayRecs <> 0) {
+			$this->StartRec = intval(($this->StartRec-1)/$this->DisplayRecs)*$this->DisplayRecs+1; // Point to page boundary
+			$this->setStartRecordNumber($this->StartRec);
+		}
 	}
 
 	// Get upload files
@@ -321,24 +341,6 @@ class caf_usuarios_add extends caf_usuarios {
 		global $objForm;
 
 		// Get upload data
-	}
-
-	// Load default values
-	function LoadDefaultValues() {
-		$this->c_Usuario->CurrentValue = NULL;
-		$this->c_Usuario->OldValue = $this->c_Usuario->CurrentValue;
-		$this->i_Activo->CurrentValue = NULL;
-		$this->i_Activo->OldValue = $this->i_Activo->CurrentValue;
-		$this->i_Admin->CurrentValue = NULL;
-		$this->i_Admin->OldValue = $this->i_Admin->CurrentValue;
-		$this->i_Config->CurrentValue = NULL;
-		$this->i_Config->OldValue = $this->i_Config->CurrentValue;
-		$this->x_Obs->CurrentValue = NULL;
-		$this->x_Obs->OldValue = $this->x_Obs->CurrentValue;
-		$this->f_Ult_Mod->CurrentValue = NULL;
-		$this->f_Ult_Mod->OldValue = $this->f_Ult_Mod->CurrentValue;
-		$this->c_Usuario_Ult_Mod->CurrentValue = NULL;
-		$this->c_Usuario_Ult_Mod->OldValue = $this->c_Usuario_Ult_Mod->CurrentValue;
 	}
 
 	// Load form values
@@ -363,25 +365,29 @@ class caf_usuarios_add extends caf_usuarios {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
+			$this->f_Ult_Mod->CurrentValue = date('Y-m-d hh:mm:ss');/*ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);*/
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
 		}
+		if ($this->CurrentAction <> "overwrite")
+			$this->HashValue = $objForm->GetValue("k_hash");
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->LoadOldRecord();
+		$this->LoadRow();
 		$this->c_Usuario->CurrentValue = $this->c_Usuario->FormValue;
 		$this->i_Activo->CurrentValue = $this->i_Activo->FormValue;
 		$this->i_Admin->CurrentValue = $this->i_Admin->FormValue;
 		$this->i_Config->CurrentValue = $this->i_Config->FormValue;
 		$this->x_Obs->CurrentValue = $this->x_Obs->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
+		$this->f_Ult_Mod->CurrentValue = /*ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);*/date('Y-m-d hh:mm:ss');
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
+		if ($this->CurrentAction <> "overwrite")
+			$this->HashValue = $objForm->GetValue("k_hash");
 	}
 
 	// Load row based on key values
@@ -400,6 +406,8 @@ class caf_usuarios_add extends caf_usuarios {
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->LoadRowValues($rs); // Load row values
+			if (!$this->EventCancelled)
+				$this->HashValue = $this->GetRowHash($rs); // Get hash value for record
 			$rs->Close();
 		}
 		return $res;
@@ -438,28 +446,6 @@ class caf_usuarios_add extends caf_usuarios {
 		$this->x_Obs->DbValue = $row['x_Obs'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
-	}
-
-	// Load old record
-	function LoadOldRecord() {
-
-		// Load key values from Session
-		$bValidKey = TRUE;
-		if (strval($this->getKey("c_Usuario")) <> "")
-			$this->c_Usuario->CurrentValue = $this->getKey("c_Usuario"); // c_Usuario
-		else
-			$bValidKey = FALSE;
-
-		// Load old recordset
-		if ($bValidKey) {
-			$this->CurrentFilter = $this->KeyFilter();
-			$sSql = $this->SQL();
-			$this->OldRecordset = ew_LoadRecordset($sSql);
-			$this->LoadRowValues($this->OldRecordset); // Load row values
-		} else {
-			$this->OldRecordset = NULL;
-		}
-		return $bValidKey;
 	}
 
 	// Render row values based on field settings
@@ -581,7 +567,7 @@ class caf_usuarios_add extends caf_usuarios {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
+			$this->f_Ult_Mod->ViewValue = /*ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);*/ date('Y-m-d hh:mm:ss');
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -622,12 +608,12 @@ class caf_usuarios_add extends caf_usuarios {
 			$this->c_Usuario_Ult_Mod->LinkCustomAttributes = "";
 			$this->c_Usuario_Ult_Mod->HrefValue = "";
 			$this->c_Usuario_Ult_Mod->TooltipValue = "";
-		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
+		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
 			// c_Usuario
 			$this->c_Usuario->EditCustomAttributes = "";
-			$this->c_Usuario->EditValue = ew_HtmlEncode($this->c_Usuario->CurrentValue);
-			$this->c_Usuario->PlaceHolder = ew_RemoveHtml($this->c_Usuario->FldCaption());
+			$this->c_Usuario->EditValue = $this->c_Usuario->CurrentValue;
+			$this->c_Usuario->ViewCustomAttributes = "";
 
 			// i_Activo
 			$this->i_Activo->EditCustomAttributes = "";
@@ -746,9 +732,6 @@ class caf_usuarios_add extends caf_usuarios {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->c_Usuario->FldIsDetailKey && !is_null($this->c_Usuario->FormValue) && $this->c_Usuario->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_Usuario->FldCaption());
-		}
 		if (!$this->i_Activo->FldIsDetailKey && !is_null($this->i_Activo->FormValue) && $this->i_Activo->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->i_Activo->FldCaption());
 		}
@@ -771,89 +754,106 @@ class caf_usuarios_add extends caf_usuarios {
 		return $ValidateForm;
 	}
 
-	// Add record
-	function AddRow($rsold = NULL) {
-		global $conn, $Language, $Security;
-
-		// Load db values from rsold
-		if ($rsold) {
-			$this->LoadDbValues($rsold);
-		}
-		$rsnew = array();
-
-		// c_Usuario
-		$this->c_Usuario->SetDbValueDef($rsnew, $this->c_Usuario->CurrentValue, "", FALSE);
-
-		// i_Activo
-		$this->i_Activo->SetDbValueDef($rsnew, $this->i_Activo->CurrentValue, 0, FALSE);
-
-		// i_Admin
-		$this->i_Admin->SetDbValueDef($rsnew, $this->i_Admin->CurrentValue, 0, FALSE);
-
-		// i_Config
-		$this->i_Config->SetDbValueDef($rsnew, $this->i_Config->CurrentValue, 0, FALSE);
-
-		// x_Obs
-		$this->x_Obs->SetDbValueDef($rsnew, $this->x_Obs->CurrentValue, NULL, FALSE);
-
-		// f_Ult_Mod
-		$this->f_Ult_Mod->SetDbValueDef($rsnew, ew_CurrentDate(), NULL);
-		$rsnew['f_Ult_Mod'] = &$this->f_Ult_Mod->DbValue;
-
-		// c_Usuario_Ult_Mod
-		$this->c_Usuario_Ult_Mod->SetDbValueDef($rsnew, CurrentUserName(), NULL);
-		$rsnew['c_Usuario_Ult_Mod'] = &$this->c_Usuario_Ult_Mod->DbValue;
-
-		// Call Row Inserting event
-		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
-		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
-
-		// Check if key value entered
-		if ($bInsertRow && $this->ValidateKey && $this->c_Usuario->CurrentValue == "" && $this->c_Usuario->getSessionValue() == "") {
-			$this->setFailureMessage($Language->Phrase("InvalidKeyValue"));
-			$bInsertRow = FALSE;
-		}
-
-		// Check for duplicate key
-		if ($bInsertRow && $this->ValidateKey) {
-			$sFilter = $this->KeyFilter();
-			$rsChk = $this->LoadRs($sFilter);
-			if ($rsChk && !$rsChk->EOF) {
-				$sKeyErrMsg = str_replace("%f", $sFilter, $Language->Phrase("DupKey"));
-				$this->setFailureMessage($sKeyErrMsg);
-				$rsChk->Close();
-				$bInsertRow = FALSE;
-			}
-		}
-		if ($bInsertRow) {
-			$conn->raiseErrorFn = 'ew_ErrorFn';
-			$AddRow = $this->Insert($rsnew);
-			$conn->raiseErrorFn = '';
-			if ($AddRow) {
-			}
+	// Update record based on key values
+	function EditRow() {
+		global $conn, $Security, $Language;
+		$sFilter = $this->KeyFilter();
+		$this->CurrentFilter = $sFilter;
+		$sSql = $this->SQL();
+		$conn->raiseErrorFn = 'ew_ErrorFn';
+		$rs = $conn->Execute($sSql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$EditRow = FALSE; // Update Failed
 		} else {
-			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
 
-				// Use the message, do nothing
-			} elseif ($this->CancelMessage <> "") {
-				$this->setFailureMessage($this->CancelMessage);
-				$this->CancelMessage = "";
-			} else {
-				$this->setFailureMessage($Language->Phrase("InsertCancelled"));
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->LoadDbValues($rsold);
+			$rsnew = array();
+
+			// i_Activo
+			$this->i_Activo->SetDbValueDef($rsnew, $this->i_Activo->CurrentValue, 0, $this->i_Activo->ReadOnly);
+
+			// i_Admin
+			$this->i_Admin->SetDbValueDef($rsnew, $this->i_Admin->CurrentValue, 0, $this->i_Admin->ReadOnly);
+
+			// i_Config
+			$this->i_Config->SetDbValueDef($rsnew, $this->i_Config->CurrentValue, 0, $this->i_Config->ReadOnly);
+
+			// x_Obs
+			$this->x_Obs->SetDbValueDef($rsnew, $this->x_Obs->CurrentValue, NULL, $this->x_Obs->ReadOnly);
+
+			// Check hash value
+			$bRowHasConflict = ($this->GetRowHash($rs) <> $this->HashValue);
+
+			// Call Row Update Conflict event
+			if ($bRowHasConflict)
+				$bRowHasConflict = $this->Row_UpdateConflict($rsold, $rsnew);
+			if ($bRowHasConflict) {
+				$this->setFailureMessage($Language->Phrase("RecordChangedByOtherUser"));
+				$this->UpdateConflict = "U";
+				$rs->Close();
+				return FALSE; // Update Failed
 			}
-			$AddRow = FALSE;
+
+			// Call Row Updating event
+			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($bUpdateRow) {
+				$conn->raiseErrorFn = 'ew_ErrorFn';
+				if (count($rsnew) > 0)
+					$EditRow = $this->Update($rsnew, "", $rsold);
+				else
+					$EditRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($EditRow) {
+				}
+			} else {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
+
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->Phrase("UpdateCancelled"));
+				}
+				$EditRow = FALSE;
+			}
 		}
 
-		// Get insert id if necessary
-		if ($AddRow) {
-		}
-		if ($AddRow) {
+		// Call Row_Updated event
+		if ($EditRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->Close();
+		return $EditRow;
+	}
 
-			// Call Row Inserted event
-			$rs = ($rsold == NULL) ? NULL : $rsold->fields;
-			$this->Row_Inserted($rs, $rsnew);
-		}
-		return $AddRow;
+	// Load row hash
+	function LoadRowHash() {
+		global $conn;
+		$sFilter = $this->KeyFilter();
+
+		// Load SQL based on filter
+		$this->CurrentFilter = $sFilter;
+		$sSql = $this->SQL();
+		$RsRow = $conn->Execute($sSql);
+		$this->HashValue = ($RsRow && !$RsRow->EOF) ? $this->GetRowHash($RsRow) : ""; // Get hash value for record
+		$RsRow->Close();
+	}
+
+	// Get Row Hash
+	function GetRowHash(&$rs) {
+		if (!$rs)
+			return "";
+		$sHash = "";
+		$sHash .= ew_GetFldHash($rs->fields('i_Activo')); // i_Activo
+		$sHash .= ew_GetFldHash($rs->fields('i_Admin')); // i_Admin
+		$sHash .= ew_GetFldHash($rs->fields('i_Config')); // i_Config
+		$sHash .= ew_GetFldHash($rs->fields('x_Obs')); // x_Obs
+		return md5($sHash);
 	}
 
 	// Set up Breadcrumb
@@ -861,8 +861,8 @@ class caf_usuarios_add extends caf_usuarios {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$Breadcrumb->Add("list", $this->TableVar, "af_usuarioslist.php", $this->TableVar, TRUE);
-		$PageId = ($this->CurrentAction == "C") ? "Copy" : "Add";
-		$Breadcrumb->Add("add", $PageId, ew_CurrentUrl());
+		$PageId = "edit";
+		$Breadcrumb->Add("edit", $PageId, ew_CurrentUrl());
 	}
 
 	// Page Load event
@@ -913,9 +913,11 @@ class caf_usuarios_add extends caf_usuarios {
 	function Page_DataRendering(&$header) {
 
 		// Example:
-		//$header = "your header";
+		//$header = "your header"; 
+		//$conn2 = ew_Connect("192.168.10.13", "dbread", "panama_178$", "porta-billing"); 
+		//echo($conn2->ew_Execute("Select * from 'Currencies' where 'name'= 'Lek'"));                       
 
-	}
+	}                                                          
 
 	// Page Data Rendered event
 	function Page_DataRendered(&$footer) {
@@ -937,43 +939,33 @@ class caf_usuarios_add extends caf_usuarios {
 <?php
 
 // Create page object
-if (!isset($af_usuarios_add)) $af_usuarios_add = new caf_usuarios_add();
+if (!isset($af_usuarios_edit)) $af_usuarios_edit = new caf_usuarios_edit();
 
 // Page init
-$af_usuarios_add->Page_Init();
+$af_usuarios_edit->Page_Init();
 
 // Page main
-$af_usuarios_add->Page_Main();
+$af_usuarios_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_usuarios_add->Page_Render();
+$af_usuarios_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-
-<?          /**********************SI NO ES USUARIO ADMIN**********************/
-
-if($_SESSION['USUARIO_TYPE']['admin']==0){
-	echo ("<div class='jumbotron' style='background-color:#fff'>
-	<h1>Contenido no disponible...</h1>
-	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
-	</div>"); exit;
-}?>
-
 <script type="text/javascript">
 
 // Page object
-var af_usuarios_add = new ew_Page("af_usuarios_add");
-af_usuarios_add.PageID = "add"; // Page ID
-var EW_PAGE_ID = af_usuarios_add.PageID; // For backward compatibility
+var af_usuarios_edit = new ew_Page("af_usuarios_edit");
+af_usuarios_edit.PageID = "edit"; // Page ID
+var EW_PAGE_ID = af_usuarios_edit.PageID; // For backward compatibility
 
 // Form object
-var faf_usuariosadd = new ew_Form("faf_usuariosadd");
+var faf_usuariosedit = new ew_Form("faf_usuariosedit");
 
 // Validate form
-faf_usuariosadd.Validate = function() {
+faf_usuariosedit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -988,9 +980,6 @@ faf_usuariosadd.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_c_Usuario");
-			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_usuarios->c_Usuario->FldCaption()) ?>");
 			elm = this.GetElements("x" + infix + "_i_Activo");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_usuarios->i_Activo->FldCaption()) ?>");
@@ -1021,7 +1010,7 @@ faf_usuariosadd.Validate = function() {
 }
 
 // Form_CustomValidate event
-faf_usuariosadd.Form_CustomValidate = 
+faf_usuariosedit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1030,15 +1019,15 @@ faf_usuariosadd.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_usuariosadd.ValidateRequired = true;
+faf_usuariosedit.ValidateRequired = true;
 <?php } else { ?>
-faf_usuariosadd.ValidateRequired = false; 
+faf_usuariosedit.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_usuariosadd.Lists["x_i_Activo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_usuariosadd.Lists["x_i_Admin"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_usuariosadd.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosedit.Lists["x_i_Activo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosedit.Lists["x_i_Admin"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosedit.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -1047,22 +1036,25 @@ faf_usuariosadd.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null,
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<?php $af_usuarios_add->ShowPageHeader(); ?>
+<?php $af_usuarios_edit->ShowPageHeader(); ?>
 <?php
-$af_usuarios_add->ShowMessage();
+$af_usuarios_edit->ShowMessage();  
 ?>
-<form name="faf_usuariosadd" id="faf_usuariosadd" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<form name="faf_usuariosedit" id="faf_usuariosedit" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_usuarios">
-<input type="hidden" name="a_add" id="a_add" value="A">
+<input type="hidden" name="a_edit" id="a_edit" value="U">
+<input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_usuarios_edit->HashValue ?>">
 <table class="ewGrid"><tr><td>
-<table id="tbl_af_usuariosadd" class="table table-bordered table-striped">
+<table id="tbl_af_usuariosedit" class="table table-bordered table-striped">
 <?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>
 	<tr id="r_c_Usuario">
-		<td><span id="elh_af_usuarios_c_Usuario"><?php echo $af_usuarios->c_Usuario->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td><span id="elh_af_usuarios_c_Usuario"><?php echo $af_usuarios->c_Usuario->FldCaption() ?></span></td>
 		<td<?php echo $af_usuarios->c_Usuario->CellAttributes() ?>>
 <span id="el_af_usuarios_c_Usuario" class="control-group">
-<input class = "form-control" type="text" data-field="x_c_Usuario" name="x_c_Usuario" id="x_c_Usuario" size="30" maxlength="20" placeholder="<?php echo ew_HtmlEncode($af_usuarios->c_Usuario->PlaceHolder) ?>" value="<?php echo $af_usuarios->c_Usuario->EditValue ?>"<?php echo $af_usuarios->c_Usuario->EditAttributes() ?>>
+<span<?php echo $af_usuarios->c_Usuario->ViewAttributes() ?>>
+<?php echo $af_usuarios->c_Usuario->EditValue ?></span>
 </span>
+<input type="hidden" data-field="x_c_Usuario" name="x_c_Usuario" id="x_c_Usuario" value="<?php echo ew_HtmlEncode($af_usuarios->c_Usuario->CurrentValue) ?>">
 <?php echo $af_usuarios->c_Usuario->CustomMsg ?></td>
 	</tr>
 <?php } ?>
@@ -1071,7 +1063,7 @@ $af_usuarios_add->ShowMessage();
 		<td><span id="elh_af_usuarios_i_Activo"><?php echo $af_usuarios->i_Activo->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Activo->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Activo" class="control-group">
-<select class = "form-control" data-field="x_i_Activo" id="x_i_Activo" name="x_i_Activo"<?php echo $af_usuarios->i_Activo->EditAttributes() ?>>
+<select class="form-control" data-field="x_i_Activo" id="x_i_Activo" name="x_i_Activo"<?php echo $af_usuarios->i_Activo->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Activo->EditValue)) {
 	$arwrk = $af_usuarios->i_Activo->EditValue;
@@ -1090,7 +1082,7 @@ if (is_array($af_usuarios->i_Activo->EditValue)) {
 ?>
 </select>
 <script type="text/javascript">
-faf_usuariosadd.Lists["x_i_Activo"].Options = <?php echo (is_array($af_usuarios->i_Activo->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Activo->EditValue, 1) : "[]" ?>;
+faf_usuariosedit.Lists["x_i_Activo"].Options = <?php echo (is_array($af_usuarios->i_Activo->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Activo->EditValue, 1) : "[]" ?>;
 </script>
 </span>
 <?php echo $af_usuarios->i_Activo->CustomMsg ?></td>
@@ -1101,7 +1093,7 @@ faf_usuariosadd.Lists["x_i_Activo"].Options = <?php echo (is_array($af_usuarios-
 		<td><span id="elh_af_usuarios_i_Admin"><?php echo $af_usuarios->i_Admin->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Admin->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Admin" class="control-group">
-<select class = "form-control" data-field="x_i_Admin" id="x_i_Admin" name="x_i_Admin"<?php echo $af_usuarios->i_Admin->EditAttributes() ?>>
+<select class="form-control" data-field="x_i_Admin" id="x_i_Admin" name="x_i_Admin"<?php echo $af_usuarios->i_Admin->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Admin->EditValue)) {
 	$arwrk = $af_usuarios->i_Admin->EditValue;
@@ -1120,7 +1112,7 @@ if (is_array($af_usuarios->i_Admin->EditValue)) {
 ?>
 </select>
 <script type="text/javascript">
-faf_usuariosadd.Lists["x_i_Admin"].Options = <?php echo (is_array($af_usuarios->i_Admin->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Admin->EditValue, 1) : "[]" ?>;
+faf_usuariosedit.Lists["x_i_Admin"].Options = <?php echo (is_array($af_usuarios->i_Admin->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Admin->EditValue, 1) : "[]" ?>;
 </script>
 </span>
 <?php echo $af_usuarios->i_Admin->CustomMsg ?></td>
@@ -1131,7 +1123,7 @@ faf_usuariosadd.Lists["x_i_Admin"].Options = <?php echo (is_array($af_usuarios->
 		<td><span id="elh_af_usuarios_i_Config"><?php echo $af_usuarios->i_Config->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_usuarios->i_Config->CellAttributes() ?>>
 <span id="el_af_usuarios_i_Config" class="control-group">
-<select class = "form-control" data-field="x_i_Config" id="x_i_Config" name="x_i_Config"<?php echo $af_usuarios->i_Config->EditAttributes() ?>>
+<select class="form-control" data-field="x_i_Config" id="x_i_Config" name="x_i_Config"<?php echo $af_usuarios->i_Config->EditAttributes() ?>>
 <?php
 if (is_array($af_usuarios->i_Config->EditValue)) {
 	$arwrk = $af_usuarios->i_Config->EditValue;
@@ -1150,7 +1142,7 @@ if (is_array($af_usuarios->i_Config->EditValue)) {
 ?>
 </select>
 <script type="text/javascript">
-faf_usuariosadd.Lists["x_i_Config"].Options = <?php echo (is_array($af_usuarios->i_Config->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Config->EditValue, 1) : "[]" ?>;
+faf_usuariosedit.Lists["x_i_Config"].Options = <?php echo (is_array($af_usuarios->i_Config->EditValue)) ? ew_ArrayToJson($af_usuarios->i_Config->EditValue, 1) : "[]" ?>;
 </script>
 </span>
 <?php echo $af_usuarios->i_Config->CustomMsg ?></td>
@@ -1161,23 +1153,28 @@ faf_usuariosadd.Lists["x_i_Config"].Options = <?php echo (is_array($af_usuarios-
 		<td><span id="elh_af_usuarios_x_Obs"><?php echo $af_usuarios->x_Obs->FldCaption() ?></span></td>
 		<td<?php echo $af_usuarios->x_Obs->CellAttributes() ?>>
 <span id="el_af_usuarios_x_Obs" class="control-group">
-<input class = "form-control" type="text" data-field="x_x_Obs" name="x_x_Obs" id="x_x_Obs" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_usuarios->x_Obs->PlaceHolder) ?>" value="<?php echo $af_usuarios->x_Obs->EditValue ?>"<?php echo $af_usuarios->x_Obs->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_Obs" name="x_x_Obs" id="x_x_Obs" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_usuarios->x_Obs->PlaceHolder) ?>" value="<?php echo $af_usuarios->x_Obs->EditValue ?>"<?php echo $af_usuarios->x_Obs->EditAttributes() ?>>
 </span>
 <?php echo $af_usuarios->x_Obs->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 </table>
 </td></tr></table>
-<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("AddBtn") ?></button>
+<?php if ($af_usuarios->UpdateConflict == "U") { // Record already updated by other user ?>
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit" onclick="this.form.a_edit.value='overwrite';"><?php echo $Language->Phrase("OverwriteBtn") ?></button>
+<button class="btn ewButton" name="btnReload" id="btnReload" type="submit" onclick="this.form.a_edit.value='I';"><?php echo $Language->Phrase("ReloadBtn") ?></button>
+<?php } else { ?>
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("EditBtn") ?></button>
+<?php } ?>
 </form>
 <script type="text/javascript">
-faf_usuariosadd.Init();
+faf_usuariosedit.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php
-$af_usuarios_add->ShowPageFooter();
+$af_usuarios_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1189,5 +1186,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$af_usuarios_add->Page_Terminate();
+$af_usuarios_edit->Page_Terminate();
 ?>

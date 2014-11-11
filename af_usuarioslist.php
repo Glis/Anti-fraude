@@ -369,6 +369,7 @@ class caf_usuarios_list extends caf_usuarios {
 	var $MultiSelectKey;
 	var $Command;
 	var $RestoreSearch = FALSE;
+	var $HashValue; // Hash value
 	var $Recordset;
 	var $OldRecordset;
 
@@ -556,6 +557,12 @@ class caf_usuarios_list extends caf_usuarios {
 		$item->Visible = TRUE;
 		$item->OnLeft = FALSE;
 
+		// "edit"
+		$item = &$this->ListOptions->Add("edit");
+		$item->CssStyle = "white-space: nowrap;";
+		$item->Visible = TRUE;
+		$item->OnLeft = FALSE;
+
 		// "checkbox"
 		$item = &$this->ListOptions->Add("checkbox");
 		$item->Visible = TRUE;
@@ -588,6 +595,14 @@ class caf_usuarios_list extends caf_usuarios {
 		else
 			$oListOpt->Body = "";
 
+		// "edit"
+		$oListOpt = &$this->ListOptions->Items["edit"];
+		if (TRUE) {
+			$oListOpt->Body = "<a class=\"ewRowLink ewEdit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("EditLink") . "</a>";
+		} else {
+			$oListOpt->Body = "";
+		}
+
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
 		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->c_Usuario->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
@@ -605,13 +620,13 @@ class caf_usuarios_list extends caf_usuarios {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"btn-primary ewAddEdit  ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
+		$item->Body = "<a class=\"ewAddEdit ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 		$option = $options["action"];
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"btn-primary ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = (TRUE);
 
 		// Set up options default
@@ -960,7 +975,7 @@ class caf_usuarios_list extends caf_usuarios {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -1251,7 +1266,6 @@ if($_SESSION['USUARIO_TYPE']['admin']==0){
 	</div>"); exit;
 }?>
 
-
 <?php if ($af_usuarios->Export == "") { ?>
 <script type="text/javascript">
 
@@ -1295,7 +1309,7 @@ faf_usuarioslist.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_usuarios_list->ExportOptions->Visible()) { ?>
-<div id="page_title" class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
+<div class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1521,7 +1535,7 @@ if ($af_usuarios_list->Recordset)
 	<?php if ($af_usuarios_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
-	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
+	<p><?php echo $Language->Phrase("NoRecord") ?></p>
 	<?php } ?>
 <?php } ?>
 </td>

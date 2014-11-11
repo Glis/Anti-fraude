@@ -9,6 +9,11 @@ ob_start(); // Turn on output buffering
 <?php include_once "userfn10.php" ?>
 <?php
 
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
 //
 // Page class
 //
@@ -340,17 +345,12 @@ class caf_usuarios_view extends caf_usuarios {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("ViewPageAddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
-
-		// Edit
-		$item = &$option->Add("edit");
-		$item->Body = "<a class=\"ewAction ewEdit\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("ViewPageEditLink") . "</a>";
-		$item->Visible = ($this->EditUrl <> "");
 
 		// Delete
 		$item = &$option->Add("delete");
-		$item->Body = "<a class=\"ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewDelete\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl <> "");
 
 		// Set up options default
@@ -582,7 +582,7 @@ class caf_usuarios_view extends caf_usuarios {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -719,6 +719,17 @@ Page_Rendering();
 $af_usuarios_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+<?          /**********************SI NO ES USUARIO ADMIN**********************/
+
+if($_SESSION['USUARIO_TYPE']['admin']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
+
 <script type="text/javascript">
 
 // Page object
@@ -756,7 +767,7 @@ faf_usuariosview.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<div class="ewViewExportOptions">
+<div id="page_title" style="text-align:center; width:100%" class="ewViewExportOptions"> - Ver
 <?php $af_usuarios_view->ExportOptions->Render("body") ?>
 <?php if (!$af_usuarios_view->ExportOptions->UseDropDownButton) { ?>
 </div>

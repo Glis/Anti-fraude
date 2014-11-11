@@ -26,7 +26,7 @@ while ($k <= $cant) {
 	$k++;
 }
 
-echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+echo('<div class="new_select_reseller" style="display:none;">'); echo $html_res_resellers; echo'</div>';
 
 //
 // Page class
@@ -1243,7 +1243,7 @@ $( document ).ready(function() {
     $('#x_p_Reseller').empty();
     $('#x_p_Reseller').append($('.new_select_reseller').html());
 
-    $('#x_p_CClass').prop('disabled', true); alert("algo");
+    $('#x_p_CClass').prop('disabled', true); 
 });
 
 $(document).on('change','#x_p_Reseller',function(){

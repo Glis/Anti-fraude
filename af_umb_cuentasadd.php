@@ -19,38 +19,38 @@ if(!isset($_SESSION['USUARIO']))
 $options_res = select_sql_PO('select_porta_customers');
 $cant = count($options_res);
 $k = 1;
-$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
+$html_res_resellers = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
 	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
 	$k++;
 }
 
-echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+echo('<div class="new_select_reseller" style="display:none">'); echo $html_res_resellers; echo'</div>';
 
 $options_dest = select_sql_PO('select_destinos_all');
 $cant = count($options_dest);
 $k = 1;
-$html_res_dest = "<option value='' selected='selected'>Por favor Seleccione</option>";
+$html_res_dest = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
-	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. "</option>"; 
+	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. " - " . $options_dest[$k]['description'] . "</option>"; 
 	$k++;
 }
 
-echo('<div class="new_select_destino">'); echo $html_res_dest; echo'</div>';
+echo('<div class="new_select_destino" style="display:none">'); echo $html_res_dest; echo'</div>';
 
 $options_clientes = select_sql_PO('select_clientes_all');
 $cant = count($options_clientes);
 $k = 1;
-$html_res_cname = "<option value='' selected='selected'>Por favor Seleccione</option>";
+$html_res_cname = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
 	$html_res_cname .= "<option value='". $options_clientes[$k]['i_customer']."'>". $options_clientes[$k]['name']. "</option>"; 
 	$k++;
 }
 
-echo('<div class="new_select_cname">'); echo $html_res_cname; echo'</div>';
+echo('<div class="new_select_cname" style="display:none">'); echo $html_res_cname; echo'</div>';
 
 //
 // Page class
@@ -1100,26 +1100,54 @@ $( document ).ready(function() {
     $('#x_c_IReseller').empty();
     $('#x_c_IReseller').append($('.new_select_reseller').html());
 
-    $('#x_c_ICliente').empty();
-    $('#x_c_ICliente').append($('.new_select_cname').html());
+    /*$('#x_c_ICliente').empty();
+    $('#x_c_ICliente').append($('.new_select_cname').html());*/
 
     $( "#x_c_ICuenta" ).prop( "disabled", true );
+    $( "#x_c_ICliente" ).prop( "disabled", true );
     
 });
 $(document).on('change','#x_c_ICliente',function(){
 
-		var dataString = "pag=accounts_filtro&cliente="+$("#x_c_ICliente").find("option:selected").val();
+		if($("#x_c_ICliente").find("option:selected").val() == "vacio"){
+			$('#x_c_ICuenta').empty().append("<option value='vacio' selected='selected'>Por favor Seleccione</option>");
+			$( "#x_c_ICuenta" ).prop( "disabled", true );
+		}else{
+			var dataString = "pag=accounts_filtro&cliente="+$("#x_c_ICliente").find("option:selected").val();
+			alert(dataString);
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#x_c_ICuenta').empty().append(response);
+					$( "#x_c_ICuenta" ).prop( "disabled", false );
+				  }
+				});
+		}
+});
+
+$(document).on('change','#x_c_IReseller',function(){
+
+		if($("#x_c_IReseller").find("option:selected").val() == "vacio"){
+			$('#x_c_ICliente').empty().append("<option value='vacio' selected='selected'>Por favor Seleccione</option>");
+			$('#x_c_ICuenta').empty().append("<option value='vacio' selected='selected'>Por favor Seleccione</option>");
+			
+			$( "#x_c_ICliente" ).prop( "disabled", true );
+			$( "#x_c_ICuenta" ).prop( "disabled", true );
+		}else{
+		var dataString = "pag=customer_name_add&reseller="+$("#x_c_IReseller").find("option:selected").val();
 		alert(dataString);
 		$.ajax({  
 			  type: "POST",  
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(response) {  
-				$('#x_c_ICuenta').empty().append(response);
-				$( "#x_c_ICuenta" ).prop( "disabled", false );
+				$('#x_c_ICliente').empty().append(response);
+				$( "#x_c_ICliente" ).prop( "disabled", false );
 			  }
 			});
-		
+		}
 });
 
 </script>

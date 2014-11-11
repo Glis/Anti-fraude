@@ -1281,7 +1281,7 @@ $af_config_list->ShowMessage();
 <form action='' method='POST' style="text-align: center;">
 	<?php $res = select_sql('select_config_data'); 
 
-		  $dom = select_sql('select_dominio_high', array("DNIO_ST_CHEQUEO",$res[1]['st_Ult_Chequeo']));
+		  $dom = select_sql('select_dominio_low', array("DNIO_ST_CHEQUEO",$res[1]['st_Ult_Chequeo']));
 	?>
 <table class="ewGrid"><tbody><tr><td>
 	<table class="table table-bordered table-striped">
@@ -1307,7 +1307,7 @@ $af_config_list->ShowMessage();
 					<label>Fecha de Ult Chequeo</label>
 				</td>
 				<td>
-					<input type="date" name="fecha_ult_chq" class="form-control" value= <?echo($res[1]['f_Ult_Chequeo'])?> >
+					<input type="date" name="fecha_ult_chq" class="form-control" value= "<?echo($res[1]['f_Ult_Chequeo'])?>" >
 				</td>
 			</tr>
 			<tr>
@@ -1347,16 +1347,25 @@ $af_config_list->ShowMessage();
 					<label>Fecha Ult Modif</label>
 				</td>
 				<td>
-					<input type="text" readonly class="form-control" value= <?echo($res[1]['f_Ult_Mod'])?> >
+					<input type="text" readonly class="form-control" value= "<?echo($res[1]['f_Ult_Mod'])?>" >
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<label>Status Ult Modif</label>
+					<label>Status de Ult Chequeo</label>
 				</td>
 				<td>
-					<input type="text" readonly class="form-control" value= <?echo($res[1]['st_Ult_Chequeo'])?> >
+					<input type="text" readonly class="form-control" value= "<?echo($dom[1]['rv_Meaning'])?>" >
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label>Codigo de Ult Chequeo</label>
+				</td>
+				<td>
+					<input type="text" readonly class="form-control" value= <?echo($res[1]['c_IUltChequeo'])?> >
 				</td>
 			</tr>
 		</tbody>

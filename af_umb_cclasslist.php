@@ -1393,17 +1393,20 @@ $af_umb_cclass_list->ShowMessage();
 
 	$(document).on('change','#resellers_filtro',function(){
 
-		var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
-		$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(response) {  
-				$('#cclass_filtro').empty().append(response);
-				$( "#cclass_filtro" ).prop( "disabled", false );
-			  }
-			});
-		
+		if($("#resellers_filtro").find("option:selected").val() == "vacio"){
+			$( "#cclass_filtro" ).prop( "disabled", true );
+		}else{
+			var dataString = "pag=customer_class_filtro&reseller="+$("#resellers_filtro").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#cclass_filtro').empty().append(response);
+					$( "#cclass_filtro" ).prop( "disabled", false );
+				  }
+				});
+		}
 	});
 
 

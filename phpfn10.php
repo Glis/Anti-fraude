@@ -2815,6 +2815,7 @@ class cAdvancedSecurity {
 	// Current user name
 	function getCurrentUserName() {
 		return strval(@$_SESSION[EW_SESSION_USER_NAME]);
+		//return strval(@$_SESSION['USERNAME']);
 	}
 
 	function setCurrentUserName($v) {
@@ -2986,7 +2987,8 @@ class cAdvancedSecurity {
 			$CustomValidateUser = $this->User_CustomValidate($usr, $pwd);
 			if ($CustomValidateUser) {
 				$_SESSION[EW_SESSION_STATUS] = "login";
-				$this->setCurrentUserName($usr); // Load user name
+				//$this->setCurrentUserName($usr); // Load user name
+				$this->setCurrentUserName($_SESSION['USERNAME']); // Load user name
 			}
 		}
 		if ($CustomValidateUser)
@@ -5389,7 +5391,9 @@ function ew_CurrentDate($namedformat = -1) {
 		} else {
 			$DT = ew_FormatDateTime(date('Y-m-d'), 7);
 		}
-		return $DT;
+
+		return "2014-01-03 11:12:11";
+		//return $DT;
 	} else {
 		return date('Y-m-d');
 	}

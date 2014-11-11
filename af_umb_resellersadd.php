@@ -26,7 +26,7 @@ while ($k <= $cant) {
 	$k++;
 }
 
-echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+echo('<div class="new_select_reseller" style="display:none">'); echo $html_res_resellers; echo'</div>';
 
 $options_dest = select_sql_PO('select_destinos_all');
 $cant = count($options_dest);
@@ -34,11 +34,11 @@ $k = 1;
 $html_res_dest = "<option value='' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
-	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. "</option>"; 
+	$html_res_dest .= "<option value='". $options_dest[$k]['i_dest']."'>". $options_dest[$k]['destination']. " - " . $options_dest[$k]['description'] . "</option>"; 
 	$k++;
 }
 
-echo('<div class="new_select_destino">'); echo $html_res_dest; echo'</div>';
+echo('<div class="new_select_destino" style="display:none">'); echo $html_res_dest; echo'</div>';
 
 //
 // Page class

@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_reportes_usuarioinfo.php" ?>
+<?php include_once "af_usuariosinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php
 
@@ -18,9 +18,9 @@ if(!isset($_SESSION['USUARIO']))
 // Page class
 //
 
-$af_reportes_usuario_delete = NULL; // Initialize page object first
+$af_usuarios_delete = NULL; // Initialize page object first
 
-class caf_reportes_usuario_delete extends caf_reportes_usuario {
+class caf_usuarios_delete extends caf_usuarios {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -29,10 +29,10 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_reportes_usuario';
+	var $TableName = 'af_usuarios';
 
 	// Page object name
-	var $PageObjName = 'af_reportes_usuario_delete';
+	var $PageObjName = 'af_usuarios_delete';
 
 	// Page name
 	function PageName() {
@@ -172,10 +172,10 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_reportes_usuario)
-		if (!isset($GLOBALS["af_reportes_usuario"]) || get_class($GLOBALS["af_reportes_usuario"]) == "caf_reportes_usuario") {
-			$GLOBALS["af_reportes_usuario"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_reportes_usuario"];
+		// Table object (af_usuarios)
+		if (!isset($GLOBALS["af_usuarios"]) || get_class($GLOBALS["af_usuarios"]) == "caf_usuarios") {
+			$GLOBALS["af_usuarios"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_usuarios"];
 		}
 
 		// Page ID
@@ -184,7 +184,7 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_reportes_usuario', TRUE);
+			define("EW_TABLE_NAME", 'af_usuarios', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -251,10 +251,10 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("af_reportes_usuariolist.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("af_usuarioslist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in af_reportes_usuario class, af_reportes_usuarioinfo.php
+		// SQL constructor in af_usuarios class, af_usuariosinfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -326,17 +326,15 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->c_Usuario->setDbValue($rs->fields('c_Usuario'));
-		if (array_key_exists('EV__c_Usuario', $rs->fields)) {
-			$this->c_Usuario->VirtualValue = $rs->fields('EV__c_Usuario'); // Set up virtual field value
+		$this->i_Activo->setDbValue($rs->fields('i_Activo'));
+		$this->i_Admin->setDbValue($rs->fields('i_Admin'));
+		$this->i_Config->setDbValue($rs->fields('i_Config'));
+		if (array_key_exists('EV__i_Config', $rs->fields)) {
+			$this->i_Config->VirtualValue = $rs->fields('EV__i_Config'); // Set up virtual field value
 		} else {
-			$this->c_Usuario->VirtualValue = ""; // Clear value
+			$this->i_Config->VirtualValue = ""; // Clear value
 		}
-		$this->c_IReporte->setDbValue($rs->fields('c_IReporte'));
-		if (array_key_exists('EV__c_IReporte', $rs->fields)) {
-			$this->c_IReporte->VirtualValue = $rs->fields('EV__c_IReporte'); // Set up virtual field value
-		} else {
-			$this->c_IReporte->VirtualValue = ""; // Clear value
-		}
+		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -346,7 +344,10 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->c_Usuario->DbValue = $row['c_Usuario'];
-		$this->c_IReporte->DbValue = $row['c_IReporte'];
+		$this->i_Activo->DbValue = $row['i_Activo'];
+		$this->i_Admin->DbValue = $row['i_Admin'];
+		$this->i_Config->DbValue = $row['i_Config'];
+		$this->x_Obs->DbValue = $row['x_Obs'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
 	}
@@ -363,67 +364,110 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 
 		// Common render codes for all row types
 		// c_Usuario
-		// c_IReporte
+		// i_Activo
+		// i_Admin
+		// i_Config
+		// x_Obs
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
 			// c_Usuario
-			if ($this->c_Usuario->VirtualValue <> "") {
-				$this->c_Usuario->ViewValue = $this->c_Usuario->VirtualValue;
-			} else {
-			if (strval($this->c_Usuario->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_Usuario->CurrentValue, EW_DATATYPE_STRING);
-			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
-			$sWhereWrk = "";
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_Usuario, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_Usuario->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
-				}
-			} else {
-				$this->c_Usuario->ViewValue = NULL;
-			}
-			}
+			$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
 			$this->c_Usuario->ViewCustomAttributes = "";
 
-			// c_IReporte
-			if ($this->c_IReporte->VirtualValue <> "") {
-				$this->c_IReporte->ViewValue = $this->c_IReporte->VirtualValue;
-			} else {
-			if (strval($this->c_IReporte->CurrentValue) <> "") {
-				$sFilterWrk = "`c_IReporte`" . ew_SearchString("=", $this->c_IReporte->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `x_NbReporte` AS `DispFld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_reportes`";
+			// i_Activo
+			if (strval($this->i_Activo->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Activo->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_IReporte, $sWhereWrk);
+			$this->Lookup_Selecting($this->i_Activo, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_IReporte->ViewValue = $rswrk->fields('DispFld');
+					$this->i_Activo->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
 				} else {
-					$this->c_IReporte->ViewValue = $this->c_IReporte->CurrentValue;
+					$this->i_Activo->ViewValue = $this->i_Activo->CurrentValue;
 				}
 			} else {
-				$this->c_IReporte->ViewValue = NULL;
+				$this->i_Activo->ViewValue = NULL;
+			}
+			$this->i_Activo->ViewCustomAttributes = "";
+
+			// i_Admin
+			if (strval($this->i_Admin->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Admin->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Admin, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->i_Admin->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->i_Admin->ViewValue = $this->i_Admin->CurrentValue;
+				}
+			} else {
+				$this->i_Admin->ViewValue = NULL;
+			}
+			$this->i_Admin->ViewCustomAttributes = "";
+
+			// i_Config
+			if ($this->i_Config->VirtualValue <> "") {
+				$this->i_Config->ViewValue = $this->i_Config->VirtualValue;
+			} else {
+			if (strval($this->i_Config->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Config->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Config, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->i_Config->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->i_Config->ViewValue = $this->i_Config->CurrentValue;
+				}
+			} else {
+				$this->i_Config->ViewValue = NULL;
 			}
 			}
-			$this->c_IReporte->ViewCustomAttributes = "";
+			$this->i_Config->ViewCustomAttributes = "";
+
+			// x_Obs
+			$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
+			$this->x_Obs->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
@@ -439,10 +483,20 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 			$this->c_Usuario->HrefValue = "";
 			$this->c_Usuario->TooltipValue = "";
 
-			// c_IReporte
-			$this->c_IReporte->LinkCustomAttributes = "";
-			$this->c_IReporte->HrefValue = "";
-			$this->c_IReporte->TooltipValue = "";
+			// i_Activo
+			$this->i_Activo->LinkCustomAttributes = "";
+			$this->i_Activo->HrefValue = "";
+			$this->i_Activo->TooltipValue = "";
+
+			// i_Admin
+			$this->i_Admin->LinkCustomAttributes = "";
+			$this->i_Admin->HrefValue = "";
+			$this->i_Admin->TooltipValue = "";
+
+			// i_Config
+			$this->i_Config->LinkCustomAttributes = "";
+			$this->i_Config->HrefValue = "";
+			$this->i_Config->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -491,8 +545,6 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
 				$sThisKey .= $row['c_Usuario'];
-				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['c_IReporte'];
 				$conn->raiseErrorFn = 'ew_ErrorFn';
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -533,7 +585,7 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
-		$Breadcrumb->Add("list", $this->TableVar, "af_reportes_usuariolist.php", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, "af_usuarioslist.php", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, ew_CurrentUrl());
 	}
@@ -603,19 +655,19 @@ class caf_reportes_usuario_delete extends caf_reportes_usuario {
 <?php
 
 // Create page object
-if (!isset($af_reportes_usuario_delete)) $af_reportes_usuario_delete = new caf_reportes_usuario_delete();
+if (!isset($af_usuarios_delete)) $af_usuarios_delete = new caf_usuarios_delete();
 
 // Page init
-$af_reportes_usuario_delete->Page_Init();
+$af_usuarios_delete->Page_Init();
 
 // Page main
-$af_reportes_usuario_delete->Page_Main();
+$af_usuarios_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_reportes_usuario_delete->Page_Render();
+$af_usuarios_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 
@@ -632,15 +684,15 @@ if($_SESSION['USUARIO_TYPE']['admin']==0){
 <script type="text/javascript">
 
 // Page object
-var af_reportes_usuario_delete = new ew_Page("af_reportes_usuario_delete");
-af_reportes_usuario_delete.PageID = "delete"; // Page ID
-var EW_PAGE_ID = af_reportes_usuario_delete.PageID; // For backward compatibility
+var af_usuarios_delete = new ew_Page("af_usuarios_delete");
+af_usuarios_delete.PageID = "delete"; // Page ID
+var EW_PAGE_ID = af_usuarios_delete.PageID; // For backward compatibility
 
 // Form object
-var faf_reportes_usuariodelete = new ew_Form("faf_reportes_usuariodelete");
+var faf_usuariosdelete = new ew_Form("faf_usuariosdelete");
 
 // Form_CustomValidate event
-faf_reportes_usuariodelete.Form_CustomValidate = 
+faf_usuariosdelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -649,14 +701,15 @@ faf_reportes_usuariodelete.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_reportes_usuariodelete.ValidateRequired = true;
+faf_usuariosdelete.ValidateRequired = true;
 <?php } else { ?>
-faf_reportes_usuariodelete.ValidateRequired = false; 
+faf_usuariosdelete.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_reportes_usuariodelete.Lists["x_c_Usuario"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_reportes_usuariodelete.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","Ajax":null,"AutoFill":false,"DisplayFields":["x_x_NbReporte","x_x_NbReporte","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosdelete.Lists["x_i_Activo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosdelete.Lists["x_i_Admin"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuariosdelete.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -667,81 +720,103 @@ faf_reportes_usuariodelete.Lists["x_c_IReporte"] = {"LinkField":"x_c_IReporte","
 <?php
 
 // Load records for display
-if ($af_reportes_usuario_delete->Recordset = $af_reportes_usuario_delete->LoadRecordset())
-	$af_reportes_usuario_deleteTotalRecs = $af_reportes_usuario_delete->Recordset->RecordCount(); // Get record count
-if ($af_reportes_usuario_deleteTotalRecs <= 0) { // No record found, exit
-	if ($af_reportes_usuario_delete->Recordset)
-		$af_reportes_usuario_delete->Recordset->Close();
-	$af_reportes_usuario_delete->Page_Terminate("af_reportes_usuariolist.php"); // Return to list
+if ($af_usuarios_delete->Recordset = $af_usuarios_delete->LoadRecordset())
+	$af_usuarios_deleteTotalRecs = $af_usuarios_delete->Recordset->RecordCount(); // Get record count
+if ($af_usuarios_deleteTotalRecs <= 0) { // No record found, exit
+	if ($af_usuarios_delete->Recordset)
+		$af_usuarios_delete->Recordset->Close();
+	$af_usuarios_delete->Page_Terminate("af_usuarioslist.php"); // Return to list
 }
 ?>
 <?php $Breadcrumb->Render(); ?>
-<?php $af_reportes_usuario_delete->ShowPageHeader(); ?>
+<?php $af_usuarios_delete->ShowPageHeader(); ?>
 <?php
-$af_reportes_usuario_delete->ShowMessage();
+$af_usuarios_delete->ShowMessage();
 ?>
-<form name="faf_reportes_usuariodelete" id="faf_reportes_usuariodelete" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_reportes_usuario">
+<form name="faf_usuariosdelete" id="faf_usuariosdelete" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_usuarios">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($af_reportes_usuario_delete->RecKeys as $key) { ?>
+<?php foreach ($af_usuarios_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
 <div id="page_title" style="text-align:center; width:100%"> - Eliminar</div>
 <table class="ewGrid"><tr><td class="ewGridContent">
 <div class="ewGridMiddlePanel">
-<table id="tbl_af_reportes_usuariodelete" class="ewTable ewTableSeparate">
-<?php echo $af_reportes_usuario->TableCustomInnerHtml ?>
+<table id="tbl_af_usuariosdelete" class="ewTable ewTableSeparate">
+<?php echo $af_usuarios->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($af_reportes_usuario->c_Usuario->Visible) { // c_Usuario ?>
-		<td><span id="elh_af_reportes_usuario_c_Usuario" class="af_reportes_usuario_c_Usuario"><?php echo $af_reportes_usuario->c_Usuario->FldCaption() ?></span></td>
+<?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>
+		<td><span id="elh_af_usuarios_c_Usuario" class="af_usuarios_c_Usuario"><?php echo $af_usuarios->c_Usuario->FldCaption() ?></span></td>
 <?php } ?>
-<?php if ($af_reportes_usuario->c_IReporte->Visible) { // c_IReporte ?>
-		<td><span id="elh_af_reportes_usuario_c_IReporte" class="af_reportes_usuario_c_IReporte"><?php echo $af_reportes_usuario->c_IReporte->FldCaption() ?></span></td>
+<?php if ($af_usuarios->i_Activo->Visible) { // i_Activo ?>
+		<td><span id="elh_af_usuarios_i_Activo" class="af_usuarios_i_Activo"><?php echo $af_usuarios->i_Activo->FldCaption() ?></span></td>
+<?php } ?>
+<?php if ($af_usuarios->i_Admin->Visible) { // i_Admin ?>
+		<td><span id="elh_af_usuarios_i_Admin" class="af_usuarios_i_Admin"><?php echo $af_usuarios->i_Admin->FldCaption() ?></span></td>
+<?php } ?>
+<?php if ($af_usuarios->i_Config->Visible) { // i_Config ?>
+		<td><span id="elh_af_usuarios_i_Config" class="af_usuarios_i_Config"><?php echo $af_usuarios->i_Config->FldCaption() ?></span></td>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$af_reportes_usuario_delete->RecCnt = 0;
+$af_usuarios_delete->RecCnt = 0;
 $i = 0;
-while (!$af_reportes_usuario_delete->Recordset->EOF) {
-	$af_reportes_usuario_delete->RecCnt++;
-	$af_reportes_usuario_delete->RowCnt++;
+while (!$af_usuarios_delete->Recordset->EOF) {
+	$af_usuarios_delete->RecCnt++;
+	$af_usuarios_delete->RowCnt++;
 
 	// Set row properties
-	$af_reportes_usuario->ResetAttrs();
-	$af_reportes_usuario->RowType = EW_ROWTYPE_VIEW; // View
+	$af_usuarios->ResetAttrs();
+	$af_usuarios->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$af_reportes_usuario_delete->LoadRowValues($af_reportes_usuario_delete->Recordset);
+	$af_usuarios_delete->LoadRowValues($af_usuarios_delete->Recordset);
 
 	// Render row
-	$af_reportes_usuario_delete->RenderRow();
+	$af_usuarios_delete->RenderRow();
 ?>
-	<tr<?php echo $af_reportes_usuario->RowAttributes() ?>>
-<?php if ($af_reportes_usuario->c_Usuario->Visible) { // c_Usuario ?>
-		<td<?php echo $af_reportes_usuario->c_Usuario->CellAttributes() ?>>
-<span id="el<?php echo $af_reportes_usuario_delete->RowCnt ?>_af_reportes_usuario_c_Usuario" class="control-group af_reportes_usuario_c_Usuario">
-<span<?php echo $af_reportes_usuario->c_Usuario->ViewAttributes() ?>>
-<?php echo $af_reportes_usuario->c_Usuario->ListViewValue() ?></span>
+	<tr<?php echo $af_usuarios->RowAttributes() ?>>
+<?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>
+		<td<?php echo $af_usuarios->c_Usuario->CellAttributes() ?>>
+<span id="el<?php echo $af_usuarios_delete->RowCnt ?>_af_usuarios_c_Usuario" class="control-group af_usuarios_c_Usuario">
+<span<?php echo $af_usuarios->c_Usuario->ViewAttributes() ?>>
+<?php echo $af_usuarios->c_Usuario->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($af_reportes_usuario->c_IReporte->Visible) { // c_IReporte ?>
-		<td<?php echo $af_reportes_usuario->c_IReporte->CellAttributes() ?>>
-<span id="el<?php echo $af_reportes_usuario_delete->RowCnt ?>_af_reportes_usuario_c_IReporte" class="control-group af_reportes_usuario_c_IReporte">
-<span<?php echo $af_reportes_usuario->c_IReporte->ViewAttributes() ?>>
-<?php echo $af_reportes_usuario->c_IReporte->ListViewValue() ?></span>
+<?php if ($af_usuarios->i_Activo->Visible) { // i_Activo ?>
+		<td<?php echo $af_usuarios->i_Activo->CellAttributes() ?>>
+<span id="el<?php echo $af_usuarios_delete->RowCnt ?>_af_usuarios_i_Activo" class="control-group af_usuarios_i_Activo">
+<span<?php echo $af_usuarios->i_Activo->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Activo->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($af_usuarios->i_Admin->Visible) { // i_Admin ?>
+		<td<?php echo $af_usuarios->i_Admin->CellAttributes() ?>>
+<span id="el<?php echo $af_usuarios_delete->RowCnt ?>_af_usuarios_i_Admin" class="control-group af_usuarios_i_Admin">
+<span<?php echo $af_usuarios->i_Admin->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Admin->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($af_usuarios->i_Config->Visible) { // i_Config ?>
+		<td<?php echo $af_usuarios->i_Config->CellAttributes() ?>>
+<span id="el<?php echo $af_usuarios_delete->RowCnt ?>_af_usuarios_i_Config" class="control-group af_usuarios_i_Config">
+<span<?php echo $af_usuarios->i_Config->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Config->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$af_reportes_usuario_delete->Recordset->MoveNext();
+	$af_usuarios_delete->Recordset->MoveNext();
 }
-$af_reportes_usuario_delete->Recordset->Close();
+$af_usuarios_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -752,10 +827,10 @@ $af_reportes_usuario_delete->Recordset->Close();
 </div>
 </form>
 <script type="text/javascript">
-faf_reportes_usuariodelete.Init();
+faf_usuariosdelete.Init();
 </script>
 <?php
-$af_reportes_usuario_delete->ShowPageFooter();
+$af_usuarios_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -767,5 +842,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$af_reportes_usuario_delete->Page_Terminate();
+$af_usuarios_delete->Page_Terminate();
 ?>

@@ -5,9 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_umb_resellersinfo.php" ?>
+<?php include_once "af_usuariosinfo.php" ?>
 <?php include_once "userfn10.php" ?>
-<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -19,9 +18,9 @@ if(!isset($_SESSION['USUARIO']))
 // Page class
 //
 
-$af_umb_resellers_list = NULL; // Initialize page object first
+$af_usuarios_list = NULL; // Initialize page object first
 
-class caf_umb_resellers_list extends caf_umb_resellers {
+class caf_usuarios_list extends caf_usuarios {
 
 	// Page ID
 	var $PageID = 'list';
@@ -30,13 +29,13 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_umb_resellers';
+	var $TableName = 'af_usuarios';
 
 	// Page object name
-	var $PageObjName = 'af_umb_resellers_list';
+	var $PageObjName = 'af_usuarios_list';
 
 	// Grid form hidden field names
-	var $FormName = 'faf_umb_resellerslist';
+	var $FormName = 'faf_usuarioslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -207,10 +206,10 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_umb_resellers)
-		if (!isset($GLOBALS["af_umb_resellers"]) || get_class($GLOBALS["af_umb_resellers"]) == "caf_umb_resellers") {
-			$GLOBALS["af_umb_resellers"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_umb_resellers"];
+		// Table object (af_usuarios)
+		if (!isset($GLOBALS["af_usuarios"]) || get_class($GLOBALS["af_usuarios"]) == "caf_usuarios") {
+			$GLOBALS["af_usuarios"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_usuarios"];
 		}
 
 		// Initialize URLs
@@ -221,12 +220,12 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "af_umb_resellersadd.php";
+		$this->AddUrl = "af_usuariosadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "af_umb_resellersdelete.php";
-		$this->MultiUpdateUrl = "af_umb_resellersupdate.php";
+		$this->MultiDeleteUrl = "af_usuariosdelete.php";
+		$this->MultiUpdateUrl = "af_usuariosupdate.php";
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -234,7 +233,7 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_umb_resellers', TRUE);
+			define("EW_TABLE_NAME", 'af_usuarios', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -370,7 +369,6 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 	var $MultiSelectKey;
 	var $Command;
 	var $RestoreSearch = FALSE;
-	var $HashValue; // Hash value
 	var $Recordset;
 	var $OldRecordset;
 
@@ -481,9 +479,8 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 	// Set up key values
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
-		if (count($arrKeyFlds) >= 2) {
-			$this->c_IDestino->setFormValue($arrKeyFlds[0]);
-			$this->c_IReseller->setFormValue($arrKeyFlds[1]);
+		if (count($arrKeyFlds) >= 1) {
+			$this->c_Usuario->setFormValue($arrKeyFlds[0]);
 		}
 		return TRUE;
 	}
@@ -498,10 +495,10 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->c_IDestino, $bCtrl); // c_IDestino
-			$this->UpdateSort($this->c_IReseller, $bCtrl); // c_IReseller
-			$this->UpdateSort($this->q_MinAl_Res, $bCtrl); // q_MinAl_Res
-			$this->UpdateSort($this->q_MinCu_Res, $bCtrl); // q_MinCu_Res
+			$this->UpdateSort($this->c_Usuario, $bCtrl); // c_Usuario
+			$this->UpdateSort($this->i_Activo, $bCtrl); // i_Activo
+			$this->UpdateSort($this->i_Admin, $bCtrl); // i_Admin
+			$this->UpdateSort($this->i_Config, $bCtrl); // i_Config
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -530,10 +527,11 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->c_IDestino->setSort("");
-				$this->c_IReseller->setSort("");
-				$this->q_MinAl_Res->setSort("");
-				$this->q_MinCu_Res->setSort("");
+				$this->setSessionOrderByList($sOrderBy);
+				$this->c_Usuario->setSort("");
+				$this->i_Activo->setSort("");
+				$this->i_Admin->setSort("");
+				$this->i_Config->setSort("");
 			}
 
 			// Reset start position
@@ -554,12 +552,6 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// "view"
 		$item = &$this->ListOptions->Add("view");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = TRUE;
-		$item->OnLeft = FALSE;
-
-		// "edit"
-		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = TRUE;
 		$item->OnLeft = FALSE;
@@ -596,17 +588,9 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		else
 			$oListOpt->Body = "";
 
-		// "edit"
-		$oListOpt = &$this->ListOptions->Items["edit"];
-		if (TRUE) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewEdit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("EditLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->c_IDestino->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IReseller->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
+		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->c_Usuario->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -627,7 +611,7 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"btn-primary ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_umb_resellerslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = (TRUE);
 
 		// Set up options default
@@ -653,7 +637,7 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 				// Add custom action
 				$item = &$option->Add("custom_" . $action);
-				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_umb_resellerslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
+				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
 			}
 
 			// Hide grid edit, multi-delete and multi-update
@@ -802,10 +786,16 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		// Call Row Selected event
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
-		$this->c_IDestino->setDbValue($rs->fields('c_IDestino'));
-		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
-		$this->q_MinAl_Res->setDbValue($rs->fields('q_MinAl_Res'));
-		$this->q_MinCu_Res->setDbValue($rs->fields('q_MinCu_Res'));
+		$this->c_Usuario->setDbValue($rs->fields('c_Usuario'));
+		$this->i_Activo->setDbValue($rs->fields('i_Activo'));
+		$this->i_Admin->setDbValue($rs->fields('i_Admin'));
+		$this->i_Config->setDbValue($rs->fields('i_Config'));
+		if (array_key_exists('EV__i_Config', $rs->fields)) {
+			$this->i_Config->VirtualValue = $rs->fields('EV__i_Config'); // Set up virtual field value
+		} else {
+			$this->i_Config->VirtualValue = ""; // Clear value
+		}
+		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -814,10 +804,11 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 	function LoadDbValues(&$rs) {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->c_IDestino->DbValue = $row['c_IDestino'];
-		$this->c_IReseller->DbValue = $row['c_IReseller'];
-		$this->q_MinAl_Res->DbValue = $row['q_MinAl_Res'];
-		$this->q_MinCu_Res->DbValue = $row['q_MinCu_Res'];
+		$this->c_Usuario->DbValue = $row['c_Usuario'];
+		$this->i_Activo->DbValue = $row['i_Activo'];
+		$this->i_Admin->DbValue = $row['i_Admin'];
+		$this->i_Config->DbValue = $row['i_Config'];
+		$this->x_Obs->DbValue = $row['x_Obs'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
 	}
@@ -827,12 +818,8 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("c_IDestino")) <> "")
-			$this->c_IDestino->CurrentValue = $this->getKey("c_IDestino"); // c_IDestino
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("c_IReseller")) <> "")
-			$this->c_IReseller->CurrentValue = $this->getKey("c_IReseller"); // c_IReseller
+		if (strval($this->getKey("c_Usuario")) <> "")
+			$this->c_Usuario->CurrentValue = $this->getKey("c_Usuario"); // c_Usuario
 		else
 			$bValidKey = FALSE;
 
@@ -865,78 +852,111 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// c_IDestino
-		// c_IReseller
-		// q_MinAl_Res
-		// q_MinCu_Res
+		// c_Usuario
+		// i_Activo
+		// i_Admin
+		// i_Config
+		// x_Obs
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-			// c_IDestino
-			if (strval($this->c_IDestino->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IDestino->CurrentValue, EW_DATATYPE_STRING);
-			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			// c_Usuario
+			$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
+			$this->c_Usuario->ViewCustomAttributes = "";
+
+			// i_Activo
+			if (strval($this->i_Activo->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Activo->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_IDestino, $sWhereWrk);
+			$this->Lookup_Selecting($this->i_Activo, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
+					$this->i_Activo->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->ViewValue = $result[1]['destination'];
 				} else {
-					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->ViewValue = $result[1]['destination'];
+					$this->i_Activo->ViewValue = $this->i_Activo->CurrentValue;
 				}
 			} else {
-				$this->c_IDestino->ViewValue = NULL;
+				$this->i_Activo->ViewValue = NULL;
 			}
-			$this->c_IDestino->ViewCustomAttributes = "";
+			$this->i_Activo->ViewCustomAttributes = "";
 
-			// c_IReseller
-			if (strval($this->c_IReseller->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_IReseller->CurrentValue, EW_DATATYPE_STRING);
-			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			// i_Admin
+			if (strval($this->i_Admin->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Admin->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_IReseller, $sWhereWrk);
+			$this->Lookup_Selecting($this->i_Admin, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
+					$this->i_Admin->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->ViewValue = $result[1]['name'];
 				} else {
-					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->ViewValue = $result[1]['name'];
+					$this->i_Admin->ViewValue = $this->i_Admin->CurrentValue;
 				}
 			} else {
-				$this->c_IReseller->ViewValue = NULL;
+				$this->i_Admin->ViewValue = NULL;
 			}
-			$this->c_IReseller->ViewCustomAttributes = "";
+			$this->i_Admin->ViewCustomAttributes = "";
 
-			// q_MinAl_Res
-			$this->q_MinAl_Res->ViewValue = $this->q_MinAl_Res->CurrentValue;
-			$this->q_MinAl_Res->ViewCustomAttributes = "";
+			// i_Config
+			if ($this->i_Config->VirtualValue <> "") {
+				$this->i_Config->ViewValue = $this->i_Config->VirtualValue;
+			} else {
+			if (strval($this->i_Config->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->i_Config->CurrentValue, EW_DATATYPE_NUMBER);
+			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
+			$sWhereWrk = "";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_SI_NO'";
+			if (strval($lookuptblfilter) <> "") {
+				ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			}
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
 
-			// q_MinCu_Res
-			$this->q_MinCu_Res->ViewValue = $this->q_MinCu_Res->CurrentValue;
-			$this->q_MinCu_Res->ViewCustomAttributes = "";
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->i_Config, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->i_Config->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+				} else {
+					$this->i_Config->ViewValue = $this->i_Config->CurrentValue;
+				}
+			} else {
+				$this->i_Config->ViewValue = NULL;
+			}
+			}
+			$this->i_Config->ViewCustomAttributes = "";
+
+			// x_Obs
+			$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
+			$this->x_Obs->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
@@ -947,25 +967,25 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 			$this->c_Usuario_Ult_Mod->ViewValue = $this->c_Usuario_Ult_Mod->CurrentValue;
 			$this->c_Usuario_Ult_Mod->ViewCustomAttributes = "";
 
-			// c_IDestino
-			$this->c_IDestino->LinkCustomAttributes = "";
-			$this->c_IDestino->HrefValue = "";
-			$this->c_IDestino->TooltipValue = "";
+			// c_Usuario
+			$this->c_Usuario->LinkCustomAttributes = "";
+			$this->c_Usuario->HrefValue = "";
+			$this->c_Usuario->TooltipValue = "";
 
-			// c_IReseller
-			$this->c_IReseller->LinkCustomAttributes = "";
-			$this->c_IReseller->HrefValue = "";
-			$this->c_IReseller->TooltipValue = "";
+			// i_Activo
+			$this->i_Activo->LinkCustomAttributes = "";
+			$this->i_Activo->HrefValue = "";
+			$this->i_Activo->TooltipValue = "";
 
-			// q_MinAl_Res
-			$this->q_MinAl_Res->LinkCustomAttributes = "";
-			$this->q_MinAl_Res->HrefValue = "";
-			$this->q_MinAl_Res->TooltipValue = "";
+			// i_Admin
+			$this->i_Admin->LinkCustomAttributes = "";
+			$this->i_Admin->HrefValue = "";
+			$this->i_Admin->TooltipValue = "";
 
-			// q_MinCu_Res
-			$this->q_MinCu_Res->LinkCustomAttributes = "";
-			$this->q_MinCu_Res->HrefValue = "";
-			$this->q_MinCu_Res->TooltipValue = "";
+			// i_Config
+			$this->i_Config->LinkCustomAttributes = "";
+			$this->i_Config->HrefValue = "";
+			$this->i_Config->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1014,7 +1034,7 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
-		$item->Body = "<a id=\"emf_af_umb_resellers\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_umb_resellers',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_umb_resellerslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a id=\"emf_af_usuarios\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_usuarios',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_usuarioslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1183,10 +1203,6 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
-		$opt = &$this->ListOptions->Add("nb_Destino");
-		$opt->Header = "Nombre Destino";
-		$opt->OnLeft = TRUE; // Link on left
-		$opt->MoveTo(2); // Move to first column
 
 	}
 
@@ -1195,8 +1211,6 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
-		$res = select_sql_PO('select_destino_where', array((int)$this->c_IDestino->CurrentValue));
-		$this->ListOptions->Items["nb_Destino"]->Body = $res[1]['description'];
 
 	}
 
@@ -1212,25 +1226,25 @@ class caf_umb_resellers_list extends caf_umb_resellers {
 <?php
 
 // Create page object
-if (!isset($af_umb_resellers_list)) $af_umb_resellers_list = new caf_umb_resellers_list();
+if (!isset($af_usuarios_list)) $af_usuarios_list = new caf_usuarios_list();
 
 // Page init
-$af_umb_resellers_list->Page_Init();
+$af_usuarios_list->Page_Init();
 
 // Page main
-$af_umb_resellers_list->Page_Main();
+$af_usuarios_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_umb_resellers_list->Page_Render();
+$af_usuarios_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 
-<?          /**********************SI NO ES USUARIO CONFIG**********************/
+<?          /**********************SI NO ES USUARIO ADMIN**********************/
 
-if($_SESSION['USUARIO_TYPE']['config']==0){
+if($_SESSION['USUARIO_TYPE']['admin']==0){
 	echo ("<div class='jumbotron' style='background-color:#fff'>
 	<h1>Contenido no disponible...</h1>
 	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
@@ -1238,20 +1252,20 @@ if($_SESSION['USUARIO_TYPE']['config']==0){
 }?>
 
 
-<?php if ($af_umb_resellers->Export == "") { ?>
+<?php if ($af_usuarios->Export == "") { ?>
 <script type="text/javascript">
 
 // Page object
-var af_umb_resellers_list = new ew_Page("af_umb_resellers_list");
-af_umb_resellers_list.PageID = "list"; // Page ID
-var EW_PAGE_ID = af_umb_resellers_list.PageID; // For backward compatibility
+var af_usuarios_list = new ew_Page("af_usuarios_list");
+af_usuarios_list.PageID = "list"; // Page ID
+var EW_PAGE_ID = af_usuarios_list.PageID; // For backward compatibility
 
 // Form object
-var faf_umb_resellerslist = new ew_Form("faf_umb_resellerslist");
-faf_umb_resellerslist.FormKeyCountName = '<?php echo $af_umb_resellers_list->FormKeyCountName ?>';
+var faf_usuarioslist = new ew_Form("faf_usuarioslist");
+faf_usuarioslist.FormKeyCountName = '<?php echo $af_usuarios_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-faf_umb_resellerslist.Form_CustomValidate = 
+faf_usuarioslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1260,14 +1274,15 @@ faf_umb_resellerslist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_umb_resellerslist.ValidateRequired = true;
+faf_usuarioslist.ValidateRequired = true;
 <?php } else { ?>
-faf_umb_resellerslist.ValidateRequired = false; 
+faf_usuarioslist.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_umb_resellerslist.Lists["x_c_IDestino"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_umb_resellerslist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuarioslist.Lists["x_i_Activo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuarioslist.Lists["x_i_Admin"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_usuarioslist.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -1276,267 +1291,190 @@ faf_umb_resellerslist.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax"
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($af_umb_resellers->Export == "") { ?>
+<?php if ($af_usuarios->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($af_umb_resellers_list->ExportOptions->Visible()) { ?>
-<div id="page_title" class="ewListExportOptions"><?php $af_umb_resellers_list->ExportOptions->Render("body") ?></div>
+<?php if ($af_usuarios_list->ExportOptions->Visible()) { ?>
+<div id="page_title" class="ewListExportOptions">Usuarios<?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
 	if ($bSelectLimit) {
-		$af_umb_resellers_list->TotalRecs = $af_umb_resellers->SelectRecordCount();
+		$af_usuarios_list->TotalRecs = $af_usuarios->SelectRecordCount();
 	} else {
-		if ($af_umb_resellers_list->Recordset = $af_umb_resellers_list->LoadRecordset())
-			$af_umb_resellers_list->TotalRecs = $af_umb_resellers_list->Recordset->RecordCount();
+		if ($af_usuarios_list->Recordset = $af_usuarios_list->LoadRecordset())
+			$af_usuarios_list->TotalRecs = $af_usuarios_list->Recordset->RecordCount();
 	}
-	$af_umb_resellers_list->StartRec = 1;
-	if ($af_umb_resellers_list->DisplayRecs <= 0 || ($af_umb_resellers->Export <> "" && $af_umb_resellers->ExportAll)) // Display all records
-		$af_umb_resellers_list->DisplayRecs = $af_umb_resellers_list->TotalRecs;
-	if (!($af_umb_resellers->Export <> "" && $af_umb_resellers->ExportAll))
-		$af_umb_resellers_list->SetUpStartRec(); // Set up start record position
+	$af_usuarios_list->StartRec = 1;
+	if ($af_usuarios_list->DisplayRecs <= 0 || ($af_usuarios->Export <> "" && $af_usuarios->ExportAll)) // Display all records
+		$af_usuarios_list->DisplayRecs = $af_usuarios_list->TotalRecs;
+	if (!($af_usuarios->Export <> "" && $af_usuarios->ExportAll))
+		$af_usuarios_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$af_umb_resellers_list->Recordset = $af_umb_resellers_list->LoadRecordset($af_umb_resellers_list->StartRec-1, $af_umb_resellers_list->DisplayRecs);
-$af_umb_resellers_list->RenderOtherOptions();
+		$af_usuarios_list->Recordset = $af_usuarios_list->LoadRecordset($af_usuarios_list->StartRec-1, $af_usuarios_list->DisplayRecs);
+$af_usuarios_list->RenderOtherOptions();
 ?>
-<?php $af_umb_resellers_list->ShowPageHeader(); ?>
+<?php $af_usuarios_list->ShowPageHeader(); ?>
 <?php
-$af_umb_resellers_list->ShowMessage();
+$af_usuarios_list->ShowMessage();
 ?>
-
-							<?/******************************************************
-							************************FILTROS**************************
-							*********************************************************/?>
-<div id="filterContainer">
-	<script type="text/javascript">
-	$(document).on('click','#submit_filtros',function(){
-
-			var destino = $("#dest").val();
-			var reseller = $("#resellers_filtro").find("option:selected").val();
-			var dataString = "pag=umb_resellers&filtro1=destinos";
-			if (destino == ""){
-				dataString = dataString + "&destino=vacio";
-			}else{
-				dataString = dataString + "&destino=" + destino;
-			}
-
-			if (reseller == "vacio"){
-				dataString = dataString + "&reseller=vacio";
-			}else{
-				dataString = dataString + "&reseller=" + reseller;
-			}
-			alert(dataString);
-			$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(html) {  
-				location.reload();
-			  }
-			});
-
-		});
-
-
-	</script>
-
-	<div class="row">
-		<div class="col-sm-5">
-			<div class="form-group">
-				<label class= "filtro_label">Filtro Destino</label>
-				<input type="text" name="dest" id="dest" class="form-control">
-			</div>
-		</div>
-		<div class="col-sm-5">
-			<div class="form-group">
-				<label class= "filtro_label">Filtro Reseller</label>
-				<select id="resellers_filtro" class="form-control">
-				<option value="vacio">Todo</option>
-				<?
-				$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
-				$res = select_sql_PO('select_porta_customers');
-				$cant = count($res);
-				$k = 1;
-
-				while ($k <= $cant) {
-					echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
-					$k++;
-				}
-
-				?>
-				</select>
-			</div>
-		</div>
-		<div class="col-sm-2">
-			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
-		</div>
-	</div>
-	
-</div>
-
-
-							<?/******************************************************
-							************************END FILTROS**************************
-							*********************************************************/?>
-
-
 <table class="ewGrid"><tr><td class="ewGridContent">
-<form name="faf_umb_resellerslist" id="faf_umb_resellerslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_umb_resellers">
-<div id="gmp_af_umb_resellers" class="ewGridMiddlePanel">
-<?php if ($af_umb_resellers_list->TotalRecs > 0) { ?>
-<table id="tbl_af_umb_resellerslist" class="ewTable ewTableSeparate">
-<?php echo $af_umb_resellers->TableCustomInnerHtml ?>
+<form name="faf_usuarioslist" id="faf_usuarioslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_usuarios">
+<div id="gmp_af_usuarios" class="ewGridMiddlePanel">
+<?php if ($af_usuarios_list->TotalRecs > 0) { ?>
+<table id="tbl_af_usuarioslist" class="ewTable ewTableSeparate">
+<?php echo $af_usuarios->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Render list options
-$af_umb_resellers_list->RenderListOptions();
+$af_usuarios_list->RenderListOptions();
 
 // Render list options (header, left)
-$af_umb_resellers_list->ListOptions->Render("header", "left");
+$af_usuarios_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($af_umb_resellers->c_IDestino->Visible) { // c_IDestino ?>
-	<?php if ($af_umb_resellers->SortUrl($af_umb_resellers->c_IDestino) == "") { ?>
-		<td><div id="elh_af_umb_resellers_c_IDestino" class="af_umb_resellers_c_IDestino"><div class="ewTableHeaderCaption"><?php echo $af_umb_resellers->c_IDestino->FldCaption() ?></div></div></td>
+<?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>
+	<?php if ($af_usuarios->SortUrl($af_usuarios->c_Usuario) == "") { ?>
+		<td><div id="elh_af_usuarios_c_Usuario" class="af_usuarios_c_Usuario"><div class="ewTableHeaderCaption"><?php echo $af_usuarios->c_Usuario->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_umb_resellers->SortUrl($af_umb_resellers->c_IDestino) ?>',2);"><div id="elh_af_umb_resellers_c_IDestino" class="af_umb_resellers_c_IDestino">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_umb_resellers->c_IDestino->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_umb_resellers->c_IDestino->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_umb_resellers->c_IDestino->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_usuarios->SortUrl($af_usuarios->c_Usuario) ?>',2);"><div id="elh_af_usuarios_c_Usuario" class="af_usuarios_c_Usuario">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_usuarios->c_Usuario->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_usuarios->c_Usuario->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_usuarios->c_Usuario->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_umb_resellers->c_IReseller->Visible) { // c_IReseller ?>
-	<?php if ($af_umb_resellers->SortUrl($af_umb_resellers->c_IReseller) == "") { ?>
-		<td><div id="elh_af_umb_resellers_c_IReseller" class="af_umb_resellers_c_IReseller"><div class="ewTableHeaderCaption"><?php echo $af_umb_resellers->c_IReseller->FldCaption() ?></div></div></td>
+<?php if ($af_usuarios->i_Activo->Visible) { // i_Activo ?>
+	<?php if ($af_usuarios->SortUrl($af_usuarios->i_Activo) == "") { ?>
+		<td><div id="elh_af_usuarios_i_Activo" class="af_usuarios_i_Activo"><div class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Activo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_umb_resellers->SortUrl($af_umb_resellers->c_IReseller) ?>',2);"><div id="elh_af_umb_resellers_c_IReseller" class="af_umb_resellers_c_IReseller">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_umb_resellers->c_IReseller->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_umb_resellers->c_IReseller->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_umb_resellers->c_IReseller->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_usuarios->SortUrl($af_usuarios->i_Activo) ?>',2);"><div id="elh_af_usuarios_i_Activo" class="af_usuarios_i_Activo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Activo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_usuarios->i_Activo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_usuarios->i_Activo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_umb_resellers->q_MinAl_Res->Visible) { // q_MinAl_Res ?>
-	<?php if ($af_umb_resellers->SortUrl($af_umb_resellers->q_MinAl_Res) == "") { ?>
-		<td><div id="elh_af_umb_resellers_q_MinAl_Res" class="af_umb_resellers_q_MinAl_Res"><div class="ewTableHeaderCaption"><?php echo $af_umb_resellers->q_MinAl_Res->FldCaption() ?></div></div></td>
+<?php if ($af_usuarios->i_Admin->Visible) { // i_Admin ?>
+	<?php if ($af_usuarios->SortUrl($af_usuarios->i_Admin) == "") { ?>
+		<td><div id="elh_af_usuarios_i_Admin" class="af_usuarios_i_Admin"><div class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Admin->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_umb_resellers->SortUrl($af_umb_resellers->q_MinAl_Res) ?>',2);"><div id="elh_af_umb_resellers_q_MinAl_Res" class="af_umb_resellers_q_MinAl_Res">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_umb_resellers->q_MinAl_Res->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_umb_resellers->q_MinAl_Res->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_umb_resellers->q_MinAl_Res->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_usuarios->SortUrl($af_usuarios->i_Admin) ?>',2);"><div id="elh_af_usuarios_i_Admin" class="af_usuarios_i_Admin">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Admin->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_usuarios->i_Admin->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_usuarios->i_Admin->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_umb_resellers->q_MinCu_Res->Visible) { // q_MinCu_Res ?>
-	<?php if ($af_umb_resellers->SortUrl($af_umb_resellers->q_MinCu_Res) == "") { ?>
-		<td><div id="elh_af_umb_resellers_q_MinCu_Res" class="af_umb_resellers_q_MinCu_Res"><div class="ewTableHeaderCaption"><?php echo $af_umb_resellers->q_MinCu_Res->FldCaption() ?></div></div></td>
+<?php if ($af_usuarios->i_Config->Visible) { // i_Config ?>
+	<?php if ($af_usuarios->SortUrl($af_usuarios->i_Config) == "") { ?>
+		<td><div id="elh_af_usuarios_i_Config" class="af_usuarios_i_Config"><div class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Config->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_umb_resellers->SortUrl($af_umb_resellers->q_MinCu_Res) ?>',2);"><div id="elh_af_umb_resellers_q_MinCu_Res" class="af_umb_resellers_q_MinCu_Res">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_umb_resellers->q_MinCu_Res->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_umb_resellers->q_MinCu_Res->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_umb_resellers->q_MinCu_Res->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_usuarios->SortUrl($af_usuarios->i_Config) ?>',2);"><div id="elh_af_usuarios_i_Config" class="af_usuarios_i_Config">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_usuarios->i_Config->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_usuarios->i_Config->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_usuarios->i_Config->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$af_umb_resellers_list->ListOptions->Render("header", "right");
+$af_usuarios_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($af_umb_resellers->ExportAll && $af_umb_resellers->Export <> "") {
-	$af_umb_resellers_list->StopRec = $af_umb_resellers_list->TotalRecs;
+if ($af_usuarios->ExportAll && $af_usuarios->Export <> "") {
+	$af_usuarios_list->StopRec = $af_usuarios_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($af_umb_resellers_list->TotalRecs > $af_umb_resellers_list->StartRec + $af_umb_resellers_list->DisplayRecs - 1)
-		$af_umb_resellers_list->StopRec = $af_umb_resellers_list->StartRec + $af_umb_resellers_list->DisplayRecs - 1;
+	if ($af_usuarios_list->TotalRecs > $af_usuarios_list->StartRec + $af_usuarios_list->DisplayRecs - 1)
+		$af_usuarios_list->StopRec = $af_usuarios_list->StartRec + $af_usuarios_list->DisplayRecs - 1;
 	else
-		$af_umb_resellers_list->StopRec = $af_umb_resellers_list->TotalRecs;
+		$af_usuarios_list->StopRec = $af_usuarios_list->TotalRecs;
 }
-$af_umb_resellers_list->RecCnt = $af_umb_resellers_list->StartRec - 1;
-if ($af_umb_resellers_list->Recordset && !$af_umb_resellers_list->Recordset->EOF) {
-	$af_umb_resellers_list->Recordset->MoveFirst();
-	if (!$bSelectLimit && $af_umb_resellers_list->StartRec > 1)
-		$af_umb_resellers_list->Recordset->Move($af_umb_resellers_list->StartRec - 1);
-} elseif (!$af_umb_resellers->AllowAddDeleteRow && $af_umb_resellers_list->StopRec == 0) {
-	$af_umb_resellers_list->StopRec = $af_umb_resellers->GridAddRowCount;
+$af_usuarios_list->RecCnt = $af_usuarios_list->StartRec - 1;
+if ($af_usuarios_list->Recordset && !$af_usuarios_list->Recordset->EOF) {
+	$af_usuarios_list->Recordset->MoveFirst();
+	if (!$bSelectLimit && $af_usuarios_list->StartRec > 1)
+		$af_usuarios_list->Recordset->Move($af_usuarios_list->StartRec - 1);
+} elseif (!$af_usuarios->AllowAddDeleteRow && $af_usuarios_list->StopRec == 0) {
+	$af_usuarios_list->StopRec = $af_usuarios->GridAddRowCount;
 }
 
 // Initialize aggregate
-$af_umb_resellers->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$af_umb_resellers->ResetAttrs();
-$af_umb_resellers_list->RenderRow();
-while ($af_umb_resellers_list->RecCnt < $af_umb_resellers_list->StopRec) {
-	$af_umb_resellers_list->RecCnt++;
-	if (intval($af_umb_resellers_list->RecCnt) >= intval($af_umb_resellers_list->StartRec)) {
-		$af_umb_resellers_list->RowCnt++;
+$af_usuarios->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$af_usuarios->ResetAttrs();
+$af_usuarios_list->RenderRow();
+while ($af_usuarios_list->RecCnt < $af_usuarios_list->StopRec) {
+	$af_usuarios_list->RecCnt++;
+	if (intval($af_usuarios_list->RecCnt) >= intval($af_usuarios_list->StartRec)) {
+		$af_usuarios_list->RowCnt++;
 
 		// Set up key count
-		$af_umb_resellers_list->KeyCount = $af_umb_resellers_list->RowIndex;
+		$af_usuarios_list->KeyCount = $af_usuarios_list->RowIndex;
 
 		// Init row class and style
-		$af_umb_resellers->ResetAttrs();
-		$af_umb_resellers->CssClass = "";
-		if ($af_umb_resellers->CurrentAction == "gridadd") {
+		$af_usuarios->ResetAttrs();
+		$af_usuarios->CssClass = "";
+		if ($af_usuarios->CurrentAction == "gridadd") {
 		} else {
-			$af_umb_resellers_list->LoadRowValues($af_umb_resellers_list->Recordset); // Load row values
+			$af_usuarios_list->LoadRowValues($af_usuarios_list->Recordset); // Load row values
 		}
-		$af_umb_resellers->RowType = EW_ROWTYPE_VIEW; // Render view
+		$af_usuarios->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$af_umb_resellers->RowAttrs = array_merge($af_umb_resellers->RowAttrs, array('data-rowindex'=>$af_umb_resellers_list->RowCnt, 'id'=>'r' . $af_umb_resellers_list->RowCnt . '_af_umb_resellers', 'data-rowtype'=>$af_umb_resellers->RowType));
+		$af_usuarios->RowAttrs = array_merge($af_usuarios->RowAttrs, array('data-rowindex'=>$af_usuarios_list->RowCnt, 'id'=>'r' . $af_usuarios_list->RowCnt . '_af_usuarios', 'data-rowtype'=>$af_usuarios->RowType));
 
 		// Render row
-		$af_umb_resellers_list->RenderRow();
+		$af_usuarios_list->RenderRow();
 
 		// Render list options
-		$af_umb_resellers_list->RenderListOptions();
+		$af_usuarios_list->RenderListOptions();
 ?>
-	<tr<?php echo $af_umb_resellers->RowAttributes() ?>>
+	<tr<?php echo $af_usuarios->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$af_umb_resellers_list->ListOptions->Render("body", "left", $af_umb_resellers_list->RowCnt);
+$af_usuarios_list->ListOptions->Render("body", "left", $af_usuarios_list->RowCnt);
 ?>
-	<?php if ($af_umb_resellers->c_IDestino->Visible) { // c_IDestino ?>
-		<td<?php echo $af_umb_resellers->c_IDestino->CellAttributes() ?>>
-<span<?php echo $af_umb_resellers->c_IDestino->ViewAttributes() ?>>
-<?php echo $af_umb_resellers->c_IDestino->ListViewValue() ?></span>
-<a id="<?php echo $af_umb_resellers_list->PageObjName . "_row_" . $af_umb_resellers_list->RowCnt ?>"></a></td>
+	<?php if ($af_usuarios->c_Usuario->Visible) { // c_Usuario ?>
+		<td<?php echo $af_usuarios->c_Usuario->CellAttributes() ?>>
+<span<?php echo $af_usuarios->c_Usuario->ViewAttributes() ?>>
+<?php echo $af_usuarios->c_Usuario->ListViewValue() ?></span>
+<a id="<?php echo $af_usuarios_list->PageObjName . "_row_" . $af_usuarios_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($af_umb_resellers->c_IReseller->Visible) { // c_IReseller ?>
-		<td<?php echo $af_umb_resellers->c_IReseller->CellAttributes() ?>>
-<span<?php echo $af_umb_resellers->c_IReseller->ViewAttributes() ?>>
-<?php echo $af_umb_resellers->c_IReseller->ListViewValue() ?></span>
+	<?php if ($af_usuarios->i_Activo->Visible) { // i_Activo ?>
+		<td<?php echo $af_usuarios->i_Activo->CellAttributes() ?>>
+<span<?php echo $af_usuarios->i_Activo->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Activo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_umb_resellers->q_MinAl_Res->Visible) { // q_MinAl_Res ?>
-		<td<?php echo $af_umb_resellers->q_MinAl_Res->CellAttributes() ?>>
-<span<?php echo $af_umb_resellers->q_MinAl_Res->ViewAttributes() ?>>
-<?php echo $af_umb_resellers->q_MinAl_Res->ListViewValue() ?></span>
+	<?php if ($af_usuarios->i_Admin->Visible) { // i_Admin ?>
+		<td<?php echo $af_usuarios->i_Admin->CellAttributes() ?>>
+<span<?php echo $af_usuarios->i_Admin->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Admin->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_umb_resellers->q_MinCu_Res->Visible) { // q_MinCu_Res ?>
-		<td<?php echo $af_umb_resellers->q_MinCu_Res->CellAttributes() ?>>
-<span<?php echo $af_umb_resellers->q_MinCu_Res->ViewAttributes() ?>>
-<?php echo $af_umb_resellers->q_MinCu_Res->ListViewValue() ?></span>
+	<?php if ($af_usuarios->i_Config->Visible) { // i_Config ?>
+		<td<?php echo $af_usuarios->i_Config->CellAttributes() ?>>
+<span<?php echo $af_usuarios->i_Config->ViewAttributes() ?>>
+<?php echo $af_usuarios->i_Config->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$af_umb_resellers_list->ListOptions->Render("body", "right", $af_umb_resellers_list->RowCnt);
+$af_usuarios_list->ListOptions->Render("body", "right", $af_usuarios_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($af_umb_resellers->CurrentAction <> "gridadd")
-		$af_umb_resellers_list->Recordset->MoveNext();
+	if ($af_usuarios->CurrentAction <> "gridadd")
+		$af_usuarios_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($af_umb_resellers->CurrentAction == "") { ?>
+<?php if ($af_usuarios->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -1544,43 +1482,43 @@ $af_umb_resellers_list->ListOptions->Render("body", "right", $af_umb_resellers_l
 <?php
 
 // Close recordset
-if ($af_umb_resellers_list->Recordset)
-	$af_umb_resellers_list->Recordset->Close();
+if ($af_usuarios_list->Recordset)
+	$af_usuarios_list->Recordset->Close();
 ?>
-<?php if ($af_umb_resellers->Export == "") { ?>
+<?php if ($af_usuarios->Export == "") { ?>
 <div class="ewGridLowerPanel">
-<?php if ($af_umb_resellers->CurrentAction <> "gridadd" && $af_umb_resellers->CurrentAction <> "gridedit") { ?>
+<?php if ($af_usuarios->CurrentAction <> "gridadd" && $af_usuarios->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
 <table class="ewPager">
 <tr><td>
-<?php if (!isset($af_umb_resellers_list->Pager)) $af_umb_resellers_list->Pager = new cNumericPager($af_umb_resellers_list->StartRec, $af_umb_resellers_list->DisplayRecs, $af_umb_resellers_list->TotalRecs, $af_umb_resellers_list->RecRange) ?>
-<?php if ($af_umb_resellers_list->Pager->RecordCount > 0) { ?>
+<?php if (!isset($af_usuarios_list->Pager)) $af_usuarios_list->Pager = new cNumericPager($af_usuarios_list->StartRec, $af_usuarios_list->DisplayRecs, $af_usuarios_list->TotalRecs, $af_usuarios_list->RecRange) ?>
+<?php if ($af_usuarios_list->Pager->RecordCount > 0) { ?>
 <table class="ewStdTable"><tbody><tr><td>
 <div class="pagination"><ul>
-	<?php if ($af_umb_resellers_list->Pager->FirstButton->Enabled) { ?>
-	<li><a href="<?php echo $af_umb_resellers_list->PageUrl() ?>start=<?php echo $af_umb_resellers_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php if ($af_usuarios_list->Pager->FirstButton->Enabled) { ?>
+	<li><a href="<?php echo $af_usuarios_list->PageUrl() ?>start=<?php echo $af_usuarios_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
 	<?php } ?>
-	<?php if ($af_umb_resellers_list->Pager->PrevButton->Enabled) { ?>
-	<li><a href="<?php echo $af_umb_resellers_list->PageUrl() ?>start=<?php echo $af_umb_resellers_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php if ($af_usuarios_list->Pager->PrevButton->Enabled) { ?>
+	<li><a href="<?php echo $af_usuarios_list->PageUrl() ?>start=<?php echo $af_usuarios_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
 	<?php } ?>
-	<?php foreach ($af_umb_resellers_list->Pager->Items as $PagerItem) { ?>
-		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_umb_resellers_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
+	<?php foreach ($af_usuarios_list->Pager->Items as $PagerItem) { ?>
+		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_usuarios_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
 	<?php } ?>
-	<?php if ($af_umb_resellers_list->Pager->NextButton->Enabled) { ?>
-	<li><a href="<?php echo $af_umb_resellers_list->PageUrl() ?>start=<?php echo $af_umb_resellers_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php if ($af_usuarios_list->Pager->NextButton->Enabled) { ?>
+	<li><a href="<?php echo $af_usuarios_list->PageUrl() ?>start=<?php echo $af_usuarios_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
 	<?php } ?>
-	<?php if ($af_umb_resellers_list->Pager->LastButton->Enabled) { ?>
-	<li><a href="<?php echo $af_umb_resellers_list->PageUrl() ?>start=<?php echo $af_umb_resellers_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php if ($af_usuarios_list->Pager->LastButton->Enabled) { ?>
+	<li><a href="<?php echo $af_usuarios_list->PageUrl() ?>start=<?php echo $af_usuarios_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
 	<?php } ?>
 </ul></div>
 </td>
 <td>
-	<?php if ($af_umb_resellers_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
-	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_umb_resellers_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_umb_resellers_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_umb_resellers_list->Pager->RecordCount ?>
+	<?php if ($af_usuarios_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
+	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_usuarios_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_usuarios_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_usuarios_list->Pager->RecordCount ?>
 </td>
 </tr></tbody></table>
 <?php } else { ?>
-	<?php if ($af_umb_resellers_list->SearchWhere == "0=101") { ?>
+	<?php if ($af_usuarios_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
 	<div class="alert alert-info"><?php echo $Language->Phrase("NoRecord") ?></div>
@@ -1592,27 +1530,27 @@ if ($af_umb_resellers_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($af_umb_resellers_list->OtherOptions as &$option)
+	foreach ($af_usuarios_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
 </div>
 <?php } ?>
 </td></tr></table>
-<?php if ($af_umb_resellers->Export == "") { ?>
+<?php if ($af_usuarios->Export == "") { ?>
 <script type="text/javascript">
-faf_umb_resellerslist.Init();
+faf_usuarioslist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php } ?>
 <?php
-$af_umb_resellers_list->ShowPageFooter();
+$af_usuarios_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($af_umb_resellers->Export == "") { ?>
+<?php if ($af_usuarios->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1622,5 +1560,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$af_umb_resellers_list->Page_Terminate();
+$af_usuarios_list->Page_Terminate();
 ?>

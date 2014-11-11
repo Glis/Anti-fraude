@@ -5,6 +5,7 @@ if (!isset($Language)) {
 	include_once "ewcfg10.php";
 	include_once "ewshared10.php";
 	$Language = new cLanguage();
+	
 }
 ?>
 <!DOCTYPE html>

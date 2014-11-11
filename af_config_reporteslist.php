@@ -1448,14 +1448,14 @@ $af_config_reportes_list->ShowMessage();
 							*********************************************************/?>
 <div id="filterContainer">
 	<script type="text/javascript">
-	$(document).on('change', '#select_reportes', function() { 
+	/*$(document).on('change', '#select_reportes', function() { 
 
 		if($(this).val() != 100){
 		/*$("#tbl_af_config_reporteslist tbody tr").hide(); 
 		$("#tbl_af_config_reporteslist" ).find( "span:contains('"+$(this).val()+ "')").parent().parent().show();
 		}else{
 			$("#tbl_af_config_reporteslist tbody tr").show();*/
-			var option = $(this).find("option:selected").val();
+		/*	var option = $(this).find("option:selected").val();
 			
 			var dataString = "pag=config_reportes&filtro=reporte&valor=" + option;
 			$.ajax({  
@@ -1468,6 +1468,29 @@ $af_config_reportes_list->ShowMessage();
 			  });
 		
 		}
+	});*/
+	</script>
+
+	<script type="text/javascript">
+	$(document).on('click', '#submit_filtros', function() { 
+
+		var option = $('#select_reportes').find("option:selected").val();
+		var dataString = "pag=config_reportes&filtro=reporte";
+		if(option != "vacio"){
+			dataString = dataString + "&valor=" + option;
+		}else{
+			dataString = dataString + "&valor=vacio";
+		}
+		alert(dataString);
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			location.reload();
+		  }
+		  });
+		
 	});
 	</script>
 	
@@ -1476,8 +1499,7 @@ $af_config_reportes_list->ShowMessage();
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Reporte</label>
 				<select id= "select_reportes" class= "form-control">
-					<option value = 100>Seleccione un Reporte</option>
-					<option value = 'All'>All</option>
+					<option value = 'vacio'>Todo</option>
 				<? $reportes = select_sql('select_reportes'); print_r($reportes);
 					$count = count($reportes);
 					$k = 1;
@@ -1489,6 +1511,12 @@ $af_config_reportes_list->ShowMessage();
 				?>
 
 				</select>
+			</div>
+
+			
+		</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 			</div>
 		</div>
 	</div>

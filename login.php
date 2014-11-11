@@ -1,5 +1,5 @@
 <?php
-include_once ("lib/nui.php");
+include_once ("lib/nui2.php");
 include ("lib/libreriaBD.php");
 include ("lib/libreriaBD_portaone.php");
 session_start();
@@ -95,7 +95,8 @@ date_default_timezone_set('America/Caracas');
                                     $_SESSION = array();
                                     echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";
                                 }else{
-                                     $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$_SESSION["PORTAONE"]);
+                                     $wsdl = select_sql('select_url_wsdl');
+                                     $salida = new nui($_SESSION["USUARIO"],$_SESSION["CLAVE"],$wsdl[1]['x_Url_Wsdl']);
                                     if (!$salida->logged) {
                                         $_SESSION = array();
                                         echo "<div id='error' class='alert alert-danger'>ERROR: Login o password inválido</div>";

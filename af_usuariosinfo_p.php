@@ -1,5 +1,5 @@
 <?php
-include ("lib/libreriaBD.php");
+
 // Global variable for table object
 $af_usuarios = NULL;
 
@@ -63,7 +63,7 @@ class caf_usuarios extends cTable {
 		$this->fields['x_Obs'] = &$this->x_Obs;
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod = new cField('af_usuarios', 'af_usuarios', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 9, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->f_Ult_Mod = new cField('af_usuarios', 'af_usuarios', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 7, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->f_Ult_Mod->FldDefaultErrMsg = str_replace("%s", "/", $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['f_Ult_Mod'] = &$this->f_Ult_Mod;
 
@@ -364,8 +364,8 @@ class caf_usuarios extends cTable {
 			$sql = substr($sql, 0, -1);
 		$filter = $this->CurrentFilter;
 		ew_AddFilter($filter, $where);
-		if ($filter <> "")	$sql .= " WHERE " . $filter; 
-		return $sql; 
+		if ($filter <> "")	$sql .= " WHERE " . $filter;
+		return $sql;
 	}
 
 	// Update
@@ -669,7 +669,7 @@ class caf_usuarios extends cTable {
 
 		// f_Ult_Mod
 		$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
+		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
 		$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 		// c_Usuario_Ult_Mod
@@ -865,8 +865,7 @@ class caf_usuarios extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d h:m:s"),'c_Usuario' ,"'".$rsold[0]."'"));
-		update_sql('update_username', array('af_usuarios', $_SESSION['USUARIO'],'c_Usuario' ,"'".$rsold[0]."'"));
+
 		//echo "Row Updated";
 	}
 
@@ -881,8 +880,7 @@ class caf_usuarios extends cTable {
 
 	// Row Deleting event
 	function Row_Deleting(&$rs) {
-		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d h:m:s"),'c_Usuario' ,"'".$rs[0]."'"));
-		update_sql('update_username', array('af_usuarios', $_SESSION['USUARIO'],'c_Usuario' ,"'".$rs[0]."'"));
+
 		// Enter your code here
 		// To cancel, set return value to False
 

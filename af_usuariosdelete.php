@@ -9,11 +9,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "userfn10.php" ?>
 <?php
 
-if(!isset($_SESSION['USUARIO']))
-{
-    header("Location: login.php");
-    exit;
-}
 //
 // Page class
 //
@@ -471,7 +466,7 @@ class caf_usuarios_delete extends caf_usuarios {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -670,17 +665,6 @@ Page_Rendering();
 $af_usuarios_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-
-<?          /**********************SI NO ES USUARIO ADMIN**********************/
-
-if($_SESSION['USUARIO_TYPE']['admin']==0){
-	echo ("<div class='jumbotron' style='background-color:#fff'>
-	<h1>Contenido no disponible...</h1>
-	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
-	</div>"); exit;
-}?>
-
-
 <script type="text/javascript">
 
 // Page object
@@ -740,7 +724,6 @@ $af_usuarios_delete->ShowMessage();
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
-<div id="page_title" style="text-align:center; width:100%"> - Eliminar</div>
 <table class="ewGrid"><tr><td class="ewGridContent">
 <div class="ewGridMiddlePanel">
 <table id="tbl_af_usuariosdelete" class="ewTable ewTableSeparate">

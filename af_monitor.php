@@ -98,7 +98,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
         </div>
       </div>
       <div class="col-sm-2">
-        <button type="submit" class="btn btn-primary" id="submit_filtros">Filtrar</button>
+        <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
       </div>
     </div>
   </form>

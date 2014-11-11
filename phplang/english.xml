@@ -306,11 +306,11 @@
 		<phrase id="unmatchedvalue" value="Value does not exist" imageurl="phpimages/warn.gif" imagewidth="16" imageheight="15"/>
 		<phrase id="update" value="Actualizar"/>
 		<phrase id="updatebtn" value="Actualizar"/>
-		<phrase id="updatecancelled" value="Update cancelled"/>
-		<phrase id="updatefailed" value="Update failed"/>
+		<phrase id="updatecancelled" value="Actualización Cancelada"/>
+		<phrase id="updatefailed" value="Actualización Fallida"/>
 		<phrase id="updatelink" value="Update" imageurl="phpimages/update.gif" imagewidth="16" imageheight="16"/>
 		<phrase id="updateselectedlink" value="Update Selected Records"/>
-		<phrase id="updatesuccess" value="Update succeeded"/>
+		<phrase id="updatesuccess" value="Actualización Exitosa"/>
 		<phrase id="uploading" value="Uploading..." client="1"/>
 		<phrase id="uploadstart" value="Emepezar" client="1"/>
 		<phrase id="uploadcancel" value="Cancelar" client="1"/>
@@ -371,7 +371,7 @@
 		<phrase id="and" value="y"/>
 		<phrase id="or" value="o"/>
 	</global>
-	<project><phrase id="bodytitle" value="Antifraude"/>
+	<project><phrase id="bodytitle" value="Netuno"/>
 <phrase id="footertext" value="&amp;copy;2013 e.World Technology Ltd. All rights reserved."/>
 <menu id="26"><phrase id="menutext" value="af log acciones"/>
 </menu>
@@ -526,7 +526,7 @@
 <table id="af_chequeo_det_clientes"/>
 <table id="af_chequeo_det_cuentas"/>
 <table id="af_chequeo_det_resellers"/>
-<table id="af_config"><phrase id="tblcaption" value="Configuraciones"/>
+<table id="af_config"><phrase id="tblcaption" value="Configuración"/>
 <field id="q_min_chequeo"><phrase id="fldcaption" value="q Min Chequeo"/>
 </field>
 <field id="q_min_ventchequeo"><phrase id="fldcaption" value="q Min Vent Chequeo"/>
@@ -734,7 +734,7 @@
 <field id="c_usuario_ult_mod"><phrase id="fldcaption" value="Usuario Ult Modificación"/>
 </field>
 </table>
-<table id="af_umb_destinos"><phrase id="tblcaption" value="Umbrales Destinos"/>
+<table id="af_umb_destinos"><phrase id="tblcaption" value="Umbrales Plataforma"/>
 <field id="c_idestino"><phrase id="fldcaption" value="Destino"/>
 </field>
 <field id="q_minal_plataf"><phrase id="fldcaption" value="Min Alerta Plataf"/>

@@ -22,11 +22,11 @@ $k = 1;
 $html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
-	$html_res .= "<option value='". $options[$k]['i_dest']."'>". $options[$k]['destination']. "</option>"; 
+	$html_res .= "<option value='". $options[$k]['i_dest']."'>". $options[$k]['destination'] . " - " . $options[$k]['description'] . "</option>"; 
 	$k++;
 }
 
-echo('<div class="new_select">'); echo $html_res; echo'</div>';
+echo('<div class="new_select" style="display:none">'); echo $html_res; echo'</div>';
 
 //
 // Page class

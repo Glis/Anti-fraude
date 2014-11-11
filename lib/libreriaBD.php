@@ -80,6 +80,10 @@ function select_sql($nombre, $x = NULL){
             $sql = "SELECT * FROM netuno.af_dominios WHERE rv_Domain ='". $x[0] ."' AND rv_High_Value=" . $x[1];
             break; 
 
+        case 'select_dominio_low':
+            $sql = "SELECT * FROM netuno.af_dominios WHERE rv_Domain ='". $x[0] ."' AND rv_Low_Value=" . $x[1];
+            break; 
+
         case 'select_reportes':
             $sql = "SELECT c_IReporte, x_NbReporte " .
                    " FROM netuno.af_reportes " .
@@ -96,6 +100,12 @@ function select_sql($nombre, $x = NULL){
             $sql = "SELECT * FROM netuno.af_log_usuario WHERE c_Usuario LIKE '%". $x ."%'";
             break;
 
+        case 'select_url_wsdl':
+            $sql = "SELECT x_Url_Wsdl FROM netuno.af_config";   
+            break;
+
+        case 'select_cclass_config':
+            $sql = "SELECT p_CClass FROM netuno.af_config_reportes WHERE c_IConfig=" .$x;   
             break;
         }
     
@@ -177,6 +187,16 @@ function update_sql ($nombre, $Params){
             "', x_Url_Wsdl='" .$Params[5]. "' , f_Ult_Mod='" .$Params[6]. "' , c_Usuario_Ult_Mod='".$Params[7]."'";
             break;
         
+        case 'update_fecha': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_usuarios set f_Ult_Mod= '".gmdate('Y-m-d h:m:s')."' where c_Usuario=".$Params[3];
+            $sql = "UPDATE netuno." . $Params[0] . " set f_Ult_Mod='" . $Params[1] . "' WHERE " . $Params[2] . "=" . $Params[3];
+            break;
+
+        case 'update_username': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_usuarios set f_Ult_Mod= '".gmdate('Y-m-d h:m:s')."' where c_Usuario=".$Params[3];
+            $sql = "UPDATE netuno." . $Params[0] . " set c_Usuario_Ult_Mod='" . $Params[1] . "' WHERE " . $Params[2] . "=" . $Params[3];
+            break;
+
         default:
             break;
     }

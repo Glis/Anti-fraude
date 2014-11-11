@@ -1376,7 +1376,7 @@ $af_log_envio_rep_list->ShowMessage();
 			</div>
 		</div>
 		<div class="col-sm-2">
-			<button type="submit" id ="submit_filtros" class="btn btn-primary">Filtrar</button>
+			<button type="submit" id ="submit_filtros" class="btn btn-primary">Buscar</button>
 		</div>
 	</div>
 
