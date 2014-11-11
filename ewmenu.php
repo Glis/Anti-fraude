@@ -21,12 +21,20 @@
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Logs</a>
           <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="af_log_accioneslist.php">Acciones</a></li>
+            <li><a href="af_log_accioneslist.php">Acciones</a></li>
             <li><a href="af_log_envio_replist.php">Envío Reportes</a></li>
             <li><a href="af_log_usuariolist.php">Usuarios</a></li>
           </ul>
         </li>
-        <li><a href="">Reportes</a></li>
+        <li class="dropdown-submenu">
+          <a tabindex="-1" href="#">Reportes</a>
+          <ul class="dropdown-menu">
+            <li><a href="">Calidad por Destino</a></li>
+            <li><a href="">Minutos por Destino</a></li>
+            <li><a href="">Clientes Bloqueados</a></li>
+            <li><a href="">Cuentas Bloqueadas</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <?if ($_SESSION['USUARIO_TYPE']['config'] == 1){?>
@@ -38,7 +46,7 @@
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Acciones</a>
           <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="af_acc_clienteslist.php">Clientes</a></li>
+            <li><a href="af_acc_clienteslist.php">Clientes</a></li>
             <li><a href="af_acc_cuentaslist.php">Cuentas</a></li>
             <li><a href="af_acc_cclasslist.php">Customer Class</a></li>
             <li><a href="af_acc_resellerslist.php">Reseller</a></li>
@@ -48,11 +56,11 @@
         
         <li><a href="af_configlist.php">Configuración</a></li>
         <li><a href="af_config_reporteslist.php">Config Env Reportes</a></li>
-        <li><a href="af_umb_destinoslist.php">Destinos</a></li>
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Umbrales</a>
           <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="af_umb_clienteslist.php">Clientes</a></li>
+            <li><a href="af_umb_destinoslist.php">Plataforma</a></li>
+            <li><a href="af_umb_clienteslist.php">Clientes</a></li>
             <li><a href="af_umb_cuentaslist.php">Cuentas</a></li>
             <li><a href="af_umb_cclasslist.php">Customer Class</a></li>
             <li><a href="af_umb_resellerslist.php">Reseller</a></li>

@@ -16,7 +16,7 @@ if(!isset($_SESSION['USUARIO']))
 } 
 
 function is_On($value){
-  return (intval($value) > 0);
+  return (intval($value) < 2);
 }
 
 //INICIALIZACIÓN DEL QUERY
@@ -117,7 +117,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
               foreach ($chequeos as $check) {
           ?>
               <tr>
-                <td><a href="#dTree<?php echo $check['c_IChequeo'];?>" data-toggle="collapse" data-parent="#treeContainer"><?php echo $check['c_IChequeo'];?></a></td>
+                <td><a class="chequeo_link" href="#dTree<?php echo $check['c_IChequeo'];?>" data-toggle="collapse" data-parent="#treeContainer"><?php echo $check['c_IChequeo'];?></a></td>
                 <td><?php echo $check['f_Inicio'];?></td>
                 <td><?php echo $check['f_Fin'];?></td>
               </tr>
@@ -356,6 +356,28 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
   $('#endDateFil').val(today);
   $('#initialDateFil').attr("max",today);
   $('#endDateFil').attr("max",today);
+
+  //plus icon toggle
+  $("a>span.glyphicon").on('click', function(){
+    console.log("hice click en un mas "+$(this).html());
+    var icon = $(this); 
+    if(icon.hasClass("glyphicon-plus")){
+      icon.removeClass( "glyphicon-plus" ).addClass( "glyphicon-minus" );
+    }else if (icon.hasClass("glyphicon-minus")){
+      setTimeout(function(){
+        icon.removeClass( "glyphicon-minus" ).addClass( "glyphicon-plus" );
+      }, 400);
+    }
+  });
+
+  $(".chequeo_link").on("click",function(){
+    $(".collapsible_open").collapse("hide").removeClass("collapsible_open");
+    
+    var collapsible_id = $(this).attr('href');
+    console.log("collapsible_id:"+collapsible_id);
+    $(collapsible_id).addClass("collapsible_open");
+  });
+
 </script>
 
 <?php 

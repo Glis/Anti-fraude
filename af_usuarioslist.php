@@ -620,13 +620,13 @@ class caf_usuarios_list extends caf_usuarios {
 
 		// Add
 		$item = &$option->Add("add");
-		$item->Body = "<a class=\"ewAddEdit ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAddEdit ewAdd\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "");
 		$option = $options["action"];
 
 		// Add multi delete
 		$item = &$option->Add("multidelete");
-		$item->Body = "<a class=\"ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
+		$item->Body = "<a class=\"btn-primary ewAction ewMultiDelete\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_usuarioslist, '" . $this->MultiDeleteUrl . "');return false;\">" . $Language->Phrase("DeleteSelectedLink") . "</a>";
 		$item->Visible = (TRUE);
 
 		// Set up options default
@@ -1309,7 +1309,7 @@ faf_usuarioslist.Lists["x_i_Config"] = {"LinkField":"x_rv_Low_Value","Ajax":null
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_usuarios_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_usuarios_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

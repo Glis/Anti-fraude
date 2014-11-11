@@ -16,7 +16,7 @@ if(!isset($_SESSION['USUARIO']))
 } 
 
 function is_On($value){
-  return (intval($value) > 0);
+  return (intval($value) > 1);
 }
 
 $order="";
