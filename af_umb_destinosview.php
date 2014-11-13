@@ -8,6 +8,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "af_umb_destinosinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD_portaone.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -932,7 +933,11 @@ $af_umb_destinos_view->ShowMessage();
 		<td<?php echo $af_umb_destinos->f_Ult_Mod->CellAttributes() ?>>
 <span id="el_af_umb_destinos_f_Ult_Mod" class="control-group">
 <span<?php echo $af_umb_destinos->f_Ult_Mod->ViewAttributes() ?>>
-<?php echo $af_umb_destinos->f_Ult_Mod->ViewValue ?></span>
+
+<!-- Mostrar Fecha! -->
+<?php $f = select_sql('select_fecha_umb', array('af_umb_destinos', $af_umb_destinos->c_IDestino->CurrentValue))?>
+<?php /*echo $af_umb_destinos->f_Ult_Mod->ViewValue */ echo $f[1]['f_Ult_Mod'] ?></span>
+<!-- Mostrar Fecha! -->
 </span>
 </td>
 	</tr>

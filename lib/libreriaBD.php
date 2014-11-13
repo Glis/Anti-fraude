@@ -107,6 +107,10 @@ function select_sql($nombre, $x = NULL){
         case 'select_cclass_config':
             $sql = "SELECT p_CClass FROM netuno.af_config_reportes WHERE c_IConfig=" .$x;   
             break;
+
+        case 'select_fecha_umb':
+            $sql = "SELECT f_Ult_Mod FROM netuno.". $x[0] ." WHERE c_IDestino=" .$x[1];   
+            break;
         }
     
     abrirConexion();

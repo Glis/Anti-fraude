@@ -1307,7 +1307,7 @@ $af_config_list->ShowMessage();
 					<label>Fecha de Ult Chequeo</label>
 				</td>
 				<td>
-					<input type="date" name="fecha_ult_chq" class="form-control" value= "<?echo($res[1]['f_Ult_Chequeo'])?>" >
+					<input type="text" readonly name="fecha_ult_chq" class="form-control" value= "<?echo($res[1]['f_Ult_Chequeo'])?>" >
 				</td>
 			</tr>
 			<tr>
@@ -1323,7 +1323,7 @@ $af_config_list->ShowMessage();
 					<label>Contraseña API</label>
 				</td>
 				<td>
-					<input type= "text" name="pw_api" class="form-control" value= <?echo($res[1]['x_Passw_Api'])?> >
+					<input type= "password" name="pw_api" class="form-control" value= <?echo($res[1]['x_Passw_Api'])?> >
 				</td>
 			</tr>
 			<tr>
