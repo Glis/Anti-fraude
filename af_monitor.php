@@ -170,7 +170,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
               <td><?php echo $dest['c_IDestino']; ?></td>
               <td>Destino <?php echo $dest['c_IDestino']; ?></td> <!-- Traer de PortaOne -->
               <td><?php echo $dest['q_Min_Plataf']; ?></td>
-              <td><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
@@ -193,7 +193,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" data-toggle="collapse" data-parent="#tbResellers"><span class="glyphicon glyphicon-plus"></span></a></td>
                       <td>Reseller <? echo $res['c_IReseller']; ?></td> <!-- Traer de PortaOne -->
                       <td><? echo $res['q_Min_Reseller']; ?></td>
-                      <td><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                     </tr>
                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" class="collapse">
                       <td></td>
@@ -216,7 +216,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" data-toggle="collapse" data-parent="#tbCClass"><span class="glyphicon glyphicon-plus"></span></a></td>
                               <td>CClass <? echo $cc['c_ICClass']; ?></td> <!-- Traer de PortaOne -->
                               <td><? echo $cc['q_Min_CClass']; ?></td>
-                              <td><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                             </tr>
                             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" class="collapse">
                               <td></td>
@@ -240,10 +240,10 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                     <tr class="<? if(is_On($cus['i_Alerta'])) echo('warning'); echo ' '; if(is_On($cus['i_Cuarentena'])) echo('danger'); ?>">
                                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" data-toggle="collapse" data-parent="#tbCustomer"><span class="glyphicon glyphicon-plus"></span></a></td>
                                       <td>Cliente <? echo $cus['c_ICliente']; ?></td> <!-- Traer de PortaOne -->
-                                      <td><? echo $cus['q_Min_Cliente']; ?></td>i_Bloqueo
-                                      <td><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Si' class='glyphicon glyphicon-ban-circle'></span>"; else echo "<span title='No' class='glyphicon glyphicon-ok-circle'></span>"; ?></td>
+                                      <td><? echo $cus['q_Min_Cliente']; ?></td>
+                                      <td><? if(is_On($cus['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
                                       <td><? echo $cus['f_Desbloqueo']; ?></td>
-                                      <td><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo " • <span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
+                                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                     </tr>
                                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" class="collapse">
                                       <td></td>
@@ -264,9 +264,9 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                             <tr class="<? if(is_On($acc['i_Alerta'])) echo('warning'); echo ' '; if(is_On($acc['i_Cuarentena'])) echo('danger'); ?>">
                                               <td>Cuenta <? echo $acc['c_ICuenta']; ?></td> <!-- Traer de PortaOne -->
                                               <td><? echo $acc['q_Min_Cuenta']; ?></td>
-                                              <td><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Si' class='glyphicon glyphicon-ban-circle'></span>"; else echo "<span title='No' class='glyphicon glyphicon-ok-circle'></span>"; ?></td>
+                                              <td><? if(is_On($acc['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
                                               <td><? echo $acc['f_Desbloqueo']; ?></td>
-                                              <td><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo " • <span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
+                                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
                                                 }

@@ -15,7 +15,7 @@ if(!isset($_SESSION['USUARIO']))
     exit;
 } 
 
-$accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","", "LIMIT 10");
+$accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", "LIMIT 10");
 $accountCount = count($accounts);
 
 ?>
@@ -92,7 +92,7 @@ $accountCount = count($accounts);
           <tr>
             <td>Cuenta <?php echo $acc['c_ICuenta'];?></td>
             <td><?php echo $acc['f_Bloqueo'];?></td>
-            <td><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
+            <td class="icon-cell"><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
           </tr>
           <?php  
               }

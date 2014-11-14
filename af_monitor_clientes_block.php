@@ -15,7 +15,7 @@ if(!isset($_SESSION['USUARIO']))
     exit;
 } 
 
-$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","", "LIMIT 10");
+$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", "LIMIT 10");
 $customerCount = count($customers);
 
 ?>
@@ -93,7 +93,7 @@ $customerCount = count($customers);
           <tr>
             <td>Cliente <?php echo $cus['c_ICliente'];?></td>
             <td><?php echo $cus['f_Bloqueo'];?></td>
-            <td><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-off'></span>"; ?></td>
+            <td class="icon-cell"><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
           </tr>
           <?php  
               }
