@@ -381,7 +381,7 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -400,7 +400,7 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 		$this->q_MinAl_CClass->CurrentValue = $this->q_MinAl_CClass->FormValue;
 		$this->q_MinCu_CClass->CurrentValue = $this->q_MinCu_CClass->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 		if ($this->CurrentAction <> "overwrite")
 			$this->HashValue = $objForm->GetValue("k_hash");
@@ -562,7 +562,7 @@ class caf_umb_cclass_edit extends caf_umb_cclass {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod

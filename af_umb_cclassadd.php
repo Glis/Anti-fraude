@@ -19,7 +19,7 @@ if(!isset($_SESSION['USUARIO']))
 $options_res = select_sql_PO('select_porta_customers');
 $cant = count($options_res);
 $k = 1;
-$html_res_resellers = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
+$html_res_resellers = "<option value='' selected='selected'>Por favor Seleccione</option>";
 
 while ($k <= $cant) {
 	$html_res_resellers .= "<option value='". $options_res[$k]['i_customer']."'>". $options_res[$k]['name']. "</option>"; 
@@ -404,7 +404,7 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -421,7 +421,7 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 		$this->q_MinAl_CClass->CurrentValue = $this->q_MinAl_CClass->FormValue;
 		$this->q_MinCu_CClass->CurrentValue = $this->q_MinCu_CClass->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 	}
 
@@ -609,7 +609,7 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -822,7 +822,7 @@ class caf_umb_cclass_add extends caf_umb_cclass {
 		$this->q_MinCu_CClass->SetDbValueDef($rsnew, $this->q_MinCu_CClass->CurrentValue, 0, FALSE);
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod->SetDbValueDef($rsnew, ew_CurrentDate(), NULL);
+		$this->f_Ult_Mod->SetDbValueDef($rsnew,  gmdate("Y-m-d H:i:s")/*ew_CurrentDate()*/, NULL);
 		$rsnew['f_Ult_Mod'] = &$this->f_Ult_Mod->DbValue;
 
 		// c_Usuario_Ult_Mod
@@ -1013,8 +1013,8 @@ $( document ).ready(function() {
 
 $(document).on('change','#x_c_IReseller',function(){
 
-		if($("#x_c_IReseller").find("option:selected").val() == "vacio"){
-			$('#x_c_ICClass').empty().append("<option value='vacio' selected='selected'>Por favor Seleccione</option>");
+		if($("#x_c_IReseller").find("option:selected").val() == ""){
+			$('#x_c_ICClass').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
 			$( "#x_c_ICClass" ).prop( "disabled", true );
 		}else{
 		var dataString = "pag=customer_class_add&reseller="+$("#x_c_IReseller").find("option:selected").val();

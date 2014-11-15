@@ -404,7 +404,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -429,7 +429,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		$this->x_Titulo->CurrentValue = $this->x_Titulo->FormValue;
 		$this->x_Mensaje->CurrentValue = $this->x_Mensaje->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 		if ($this->CurrentAction <> "overwrite")
 			$this->HashValue = $objForm->GetValue("k_hash");
@@ -713,7 +713,7 @@ class caf_config_reportes_edit extends caf_config_reportes {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -1293,27 +1293,51 @@ $( document ).ready(function() {
 
 $(document).on('change','#x_p_Reseller',function(){
 
-		var dataString = "pag=customer_class_add&reseller="+$("#x_p_Reseller").find("option:selected").val();
-		$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(response) {  
-			  	<?php
-				  	//Buscar el que esta elegido segun el reseller
-				  	$selectedValueCC = select_custom_sql("p_CClass", "af_config_reportes", "c_IConfig=".$_GET["c_IConfig"], "", "");
-					$valCC = $selectedValueCC[1]["p_CClass"];
-			  	?>
-			  	
-				//seleccionar el que esta elegido segun el reseller
-			  	$('.new_select_cclass').empty().append(response);
-				$(".new_select_cclass [value='<?php echo $valCC; ?>']").attr("selected", "selected");
-
-			  	$('#x_p_CClass').empty().append($(".new_select_cclass").html());
-				$( "#x_p_CClass" ).prop( "disabled", false );
-			  }
-			});
 		
+		if($("#x_p_Reseller").find("option:selected").val() == ""){
+			$('#x_p_CClass').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
+			$( "#x_p_CClass" ).prop( "disabled", true );
+		}else{
+			var dataString = "pag=customer_class_add&reseller="+$("#x_p_Reseller").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+				  	<?php
+					  	//Buscar el que esta elegido segun el reseller
+					  	$selectedValueCC = select_custom_sql("p_CClass", "af_config_reportes", "c_IConfig=".$_GET["c_IConfig"], "", "");
+						$valCC = $selectedValueCC[1]["p_CClass"];
+				  	?>
+				  	
+					//seleccionar el que esta elegido segun el reseller
+				  	$('.new_select_cclass').empty().append(response);
+					$(".new_select_cclass [value='<?php echo $valCC; ?>']").attr("selected", "selected");
+
+				  	$('#x_p_CClass').empty().append($(".new_select_cclass").html());
+					$( "#x_p_CClass" ).prop( "disabled", false );
+				  }
+				});
+		}
+});
+
+$(document).on('change','#x_frec_Envio',function(){
+
+		if($("#x_frec_Envio").find("option:selected").val() == ""){
+			$('#x_i_Dia_Envio').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
+			$('#x_i_Dia_Envio').prop('disabled', true); 
+		}else{
+			var dataString = "pag=dia_envio&freq="+$("#x_frec_Envio").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+				  	$('#x_i_Dia_Envio').empty().append(response).html();
+					$( "#x_i_Dia_Envio" ).prop( "disabled", false );
+				  }
+				});
+		}
 });
 
 </script>

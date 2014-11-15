@@ -363,7 +363,7 @@ class caf_usuarios_add extends caf_usuarios {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -380,7 +380,7 @@ class caf_usuarios_add extends caf_usuarios {
 		$this->i_Config->CurrentValue = $this->i_Config->FormValue;
 		$this->x_Obs->CurrentValue = $this->x_Obs->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 	}
 
@@ -581,7 +581,7 @@ class caf_usuarios_add extends caf_usuarios {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -797,7 +797,7 @@ class caf_usuarios_add extends caf_usuarios {
 		$this->x_Obs->SetDbValueDef($rsnew, $this->x_Obs->CurrentValue, NULL, FALSE);
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod->SetDbValueDef($rsnew, ew_CurrentDate(), NULL);
+		$this->f_Ult_Mod->SetDbValueDef($rsnew,  gmdate("Y-m-d H:i:s")/*ew_CurrentDate()*/, NULL);
 		$rsnew['f_Ult_Mod'] = &$this->f_Ult_Mod->DbValue;
 
 		// c_Usuario_Ult_Mod

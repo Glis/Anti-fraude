@@ -797,7 +797,7 @@ class caf_usuarios_add extends caf_usuarios {
 		$this->x_Obs->SetDbValueDef($rsnew, $this->x_Obs->CurrentValue, NULL, FALSE);
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod->SetDbValueDef($rsnew, ew_CurrentDate(), NULL);
+		$this->f_Ult_Mod->SetDbValueDef($rsnew,  gmdate("Y-m-d H:i:s")/*ew_CurrentDate()*/, NULL);
 		$rsnew['f_Ult_Mod'] = &$this->f_Ult_Mod->DbValue;
 
 		// c_Usuario_Ult_Mod

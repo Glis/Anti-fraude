@@ -186,7 +186,7 @@ function update_sql ($nombre, $Params){
 
     switch ($nombre) {
         case 'update_config':
-            $sql = "Update netuno.af_config set q_Min_Chequeo=".$Params[0]. ", q_Min_VentChequeo=" .$Params[1] .
+            $sql = "UPDATE netuno.af_config set q_Min_Chequeo=".$Params[0]. ", q_Min_VentChequeo=" .$Params[1] .
             ", f_Ult_Chequeo='". $Params[2] . "' , x_Usuario_Api ='" .$Params[3]. "' , x_Passw_Api='" .$Params[4]. 
             "', x_Url_Wsdl='" .$Params[5]. "' , f_Ult_Mod='" .$Params[6]. "' , c_Usuario_Ult_Mod='".$Params[7]."'";
             break;
@@ -199,6 +199,31 @@ function update_sql ($nombre, $Params){
         case 'update_username': //tabla - fecha - columna - primary key
             //$sql = "UPDATE netuno.af_usuarios set f_Ult_Mod= '".gmdate('Y-m-d h:m:s')."' where c_Usuario=".$Params[3];
             $sql = "UPDATE netuno." . $Params[0] . " set c_Usuario_Ult_Mod='" . $Params[1] . "' WHERE " . $Params[2] . "=" . $Params[3];
+            break;
+
+        case 'update_uf_acc_clientes': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
+            $sql = "UPDATE netuno.af_acc_clientes set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IReseller=" . $Params[2] . " AND c_ICClass=" . $Params[3]. " AND cl_Accion=" . $Params[4] . " AND t_Accion=" . $Params[5];
+            break;
+
+        case 'update_uf_acc_cclass': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
+            $sql = "UPDATE netuno.af_acc_cclass set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IReseller=" . $Params[2] . " AND c_ICClass=" . $Params[3]. " AND cl_Accion=" . $Params[4] . " AND t_Accion=" . $Params[5];
+            break;
+
+        case 'update_uf_acc_cuentas': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
+            $sql = "UPDATE netuno.af_acc_cclass set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IReseller=" . $Params[2] . " AND c_ICClass=" . $Params[3]. " AND cl_Accion=" . $Params[4] . " AND t_Accion=" . $Params[5];
+            break;
+
+         case 'update_uf_acc_plataforma': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
+            $sql = "UPDATE netuno.af_acc_plataforma set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE cl_Accion=" . $Params[2] . " AND t_Accion=" . $Params[3];
+            break;
+
+        case 'update_uf_acc_reseller': //tabla - fecha - columna - primary key
+            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
+            $sql = "UPDATE netuno.af_acc_resellers set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IReseller=" .$Params[2]. " AND cl_Accion=" . $Params[3] . " AND t_Accion=" . $Params[4];
             break;
 
         default:

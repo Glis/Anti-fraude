@@ -28,6 +28,8 @@ while ($k <= $cant) {
 
 echo('<div class="new_select_reseller" style="display:none;">'); echo $html_res_resellers; echo'</div>';
 
+
+
 //
 // Page class
 //
@@ -405,7 +407,7 @@ class caf_config_reportes_add extends caf_config_reportes {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -427,7 +429,7 @@ class caf_config_reportes_add extends caf_config_reportes {
 		$this->x_Titulo->CurrentValue = $this->x_Titulo->FormValue;
 		$this->x_Mensaje->CurrentValue = $this->x_Mensaje->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 	}
 
@@ -721,7 +723,7 @@ class caf_config_reportes_add extends caf_config_reportes {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -1087,7 +1089,7 @@ class caf_config_reportes_add extends caf_config_reportes {
 		$this->x_Mensaje->SetDbValueDef($rsnew, $this->x_Mensaje->CurrentValue, "", FALSE);
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod->SetDbValueDef($rsnew, ew_CurrentDate(), NULL);
+		$this->f_Ult_Mod->SetDbValueDef($rsnew,  gmdate("Y-m-d H:i:s")/*ew_CurrentDate()*/, NULL);
 		$rsnew['f_Ult_Mod'] = &$this->f_Ult_Mod->DbValue;
 
 		// c_Usuario_Ult_Mod
@@ -1244,21 +1246,45 @@ $( document ).ready(function() {
     $('#x_p_Reseller').append($('.new_select_reseller').html());
 
     $('#x_p_CClass').prop('disabled', true); 
+    $('#x_i_Dia_Envio').prop('disabled', true); 
 });
 
 $(document).on('change','#x_p_Reseller',function(){
 
-		var dataString = "pag=customer_class_add&reseller="+$("#x_p_Reseller").find("option:selected").val();
-		$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(response) {  
-				$('#x_p_CClass').empty().append(response);
-				$( "#x_p_CClass" ).prop( "disabled", false );
-			  }
-			});
-		
+		if($("#x_p_Reseller").find("option:selected").val() == ""){
+			$('#x_p_CClass').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
+			$('#x_p_CClass').prop('disabled', true); 
+		}else{
+			var dataString = "pag=customer_class_add&reseller="+$("#x_p_Reseller").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#x_p_CClass').empty().append(response);
+					$( "#x_p_CClass" ).prop( "disabled", false );
+				  }
+				});
+		}
+});
+
+$(document).on('change','#x_frec_Envio',function(){
+
+		if($("#x_frec_Envio").find("option:selected").val() == ""){
+			$('#x_i_Dia_Envio').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
+			$('#x_i_Dia_Envio').prop('disabled', true); 
+		}else{
+			var dataString = "pag=dia_envio&freq="+$("#x_frec_Envio").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#x_i_Dia_Envio').empty().append(response);
+					$( "#x_i_Dia_Envio" ).prop( "disabled", false );
+				  }
+				});
+		}
 });
 
 </script>
