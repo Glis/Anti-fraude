@@ -67,7 +67,7 @@ class caf_umb_cuentas extends cTable {
 		$this->fields['q_MinCu_Cta'] = &$this->q_MinCu_Cta;
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod = new cField('af_umb_cuentas', 'af_umb_cuentas', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 7, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->f_Ult_Mod = new cField('af_umb_cuentas', 'af_umb_cuentas', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 9, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->f_Ult_Mod->FldDefaultErrMsg = str_replace("%s", "/", $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['f_Ult_Mod'] = &$this->f_Ult_Mod;
 
@@ -733,7 +733,7 @@ class caf_umb_cuentas extends cTable {
 
 		// f_Ult_Mod
 		$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 		$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 		// c_Usuario_Ult_Mod

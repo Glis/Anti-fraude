@@ -1,5 +1,5 @@
 <?php
-
+include ("lib/libreriaBD.php");
 // Global variable for table object
 $af_acc_plataforma = NULL;
 
@@ -60,7 +60,7 @@ class caf_acc_plataforma extends cTable {
 		$this->fields['x_Mensaje'] = &$this->x_Mensaje;
 
 		// f_Ult_Mod
-		$this->f_Ult_Mod = new cField('af_acc_plataforma', 'af_acc_plataforma', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 7, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->f_Ult_Mod = new cField('af_acc_plataforma', 'af_acc_plataforma', 'x_f_Ult_Mod', 'f_Ult_Mod', '`f_Ult_Mod`', 'DATE_FORMAT(`f_Ult_Mod`, \'%d/%m/%Y\')', 135, 9, FALSE, '`f_Ult_Mod`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->f_Ult_Mod->FldDefaultErrMsg = str_replace("%s", "/", $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['f_Ult_Mod'] = &$this->f_Ult_Mod;
 
@@ -620,7 +620,7 @@ class caf_acc_plataforma extends cTable {
 
 		// f_Ult_Mod
 		$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+		$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 		$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 		// c_Usuario_Ult_Mod
@@ -814,7 +814,7 @@ class caf_acc_plataforma extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-
+		//update_sql('update_uf_acc_plataforma', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0], $rsold[1]));
 		//echo "Row Updated";
 	}
 
@@ -829,7 +829,7 @@ class caf_acc_plataforma extends cTable {
 
 	// Row Deleting event
 	function Row_Deleting(&$rs) {
-
+		update_sql('update_uf_acc_plataforma', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rs[0], $rs[1]));
 		// Enter your code here
 		// To cancel, set return value to False
 

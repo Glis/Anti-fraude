@@ -238,8 +238,8 @@ switch ($pagina) {
 		$res = select_sql_PO('select_customer_class_filtro', array($_POST['reseller']));
 		$cant = count($res);
 		$k = 1;
-		$html_res = "<option value='vacio' selected='selected'>Por favor Seleccione</option>";
-		if($_POST['reseller'] != "vacio"){
+		$html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
+		if($_POST['reseller'] != ""){
 			while ($k <= $cant) {
 				$html_res .= "<option value='".$res[$k]['i_customer_class']."''>".$res[$k]['name']."</option>";
 				$k++;
@@ -475,6 +475,21 @@ switch ($pagina) {
 			}
 		}
 
+		break;
+
+	case 'dia_envio':
+
+		$res = select_sql('select_dominio_high', array('DNIO_DIA_ENVIO', $_POST['freq']));
+		$cant = count($res);
+		$k = 1;
+		$html_res = "<option value='' selected='selected'>Por favor Seleccione</option>";
+		if($_POST['freq'] != ""){
+			while ($k <= $cant) {
+				$html_res .= "<option value='".$res[$k]['rv_Low_Value']."''>".$res[$k]['rv_Meaning']."</option>";
+				$k++;
+			}
+		}
+		echo($html_res);
 		break;
 
 	default:

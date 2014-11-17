@@ -393,7 +393,7 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -414,7 +414,7 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 		$this->x_Titulo->CurrentValue = $this->x_Titulo->FormValue;
 		$this->x_Mensaje->CurrentValue = $this->x_Mensaje->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 		if ($this->CurrentAction <> "overwrite")
 			$this->HashValue = $objForm->GetValue("k_hash");
@@ -627,7 +627,7 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -909,7 +909,7 @@ class caf_acc_clientes_edit extends caf_acc_clientes {
 
 			// Save old values
 			$rsold = &$rs->fields;
-			$this->LoadDbValues($rsold);
+			$this->LoadDbValues($rsold); //echo("<pre>". $rsold[0]. " <br> ". $rsold[1] ."</pre>");print_r($rsold);
 			$rsnew = array();
 
 			// cl_Accion

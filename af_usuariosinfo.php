@@ -865,7 +865,7 @@ class caf_usuarios extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d h:m:s"),'c_Usuario' ,"'".$rsold[0]."'"));
+		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d H:i:s"),'c_Usuario' ,"'".$rsold[0]."'"));
 		update_sql('update_username', array('af_usuarios', $_SESSION['USUARIO'],'c_Usuario' ,"'".$rsold[0]."'"));
 		//echo "Row Updated";
 	}
@@ -881,7 +881,7 @@ class caf_usuarios extends cTable {
 
 	// Row Deleting event
 	function Row_Deleting(&$rs) {
-		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d h:m:s"),'c_Usuario' ,"'".$rs[0]."'"));
+		update_sql('update_fecha', array('af_usuarios', gmdate("Y-m-d H:i:s"),'c_Usuario' ,"'".$rs[0]."'"));
 		update_sql('update_username', array('af_usuarios', $_SESSION['USUARIO'],'c_Usuario' ,"'".$rs[0]."'"));
 		// Enter your code here
 		// To cancel, set return value to False
