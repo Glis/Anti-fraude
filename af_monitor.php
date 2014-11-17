@@ -31,6 +31,62 @@ function changeDate($date){
   return $newdate;
 }
 
+//COLOCA UN BULLET ROJO O AMARILLO DEPENDIENDO EL CASO
+function bulletCellContents($type, $ch, $d){
+  if($type == "R"){
+    $rCuarent=select_custom_sql("c_IReseller","af_chequeo_det_resellers","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Cuarentena=1","","");
+    if(count($rCuarent) > 0){
+      return '<span class="glyphicon glyphicon-asterisk bullet-rojo"></span>';
+    }else{
+      $rAlerta=select_custom_sql("c_IReseller","af_chequeo_det_resellers","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Alerta=1","","");
+      if(count($rAlerta) > 0){
+        return '<span class="glyphicon glyphicon-asterisk bullet-amarillo"></span>';
+      }else{
+        return "";
+      }
+    }
+  }else if($type == "CC"){
+    $rCuarent=select_custom_sql("c_ICClass","af_chequeo_Det_CClass","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Cuarentena=1","","");
+    if(count($rCuarent) > 0){
+      return '<span class="glyphicon glyphicon-asterisk bullet-rojo"></span>';
+    }else{
+      $rAlerta=select_custom_sql("c_ICClass","af_chequeo_Det_CClass","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Alerta=1","","");
+      if(count($rAlerta) > 0){
+        return '<span class="glyphicon glyphicon-asterisk bullet-amarillo"></span>';
+      }else{
+        return "";
+      }
+    }
+  }else if($type == "C"){
+    $rCuarent=select_custom_sql("c_ICliente","af_chequeo_Det_Clientes","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Cuarentena=1","","");
+    if(count($rCuarent) > 0){
+      return '<span class="glyphicon glyphicon-asterisk bullet-rojo"></span>';
+    }else{
+      $rAlerta=select_custom_sql("c_ICliente","af_chequeo_Det_Clientes","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Alerta=1","","");
+      if(count($rAlerta) > 0){
+        return '<span class="glyphicon glyphicon-asterisk bullet-amarillo"></span>';
+      }else{
+        return "";
+      }
+    }
+  }else if($type == "A"){
+    $rCuarent=select_custom_sql("c_ICuenta","af_chequeo_Det_Cuentas","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Cuarentena=1","","");
+    if(count($rCuarent) > 0){
+      return '<span class="glyphicon glyphicon-asterisk bullet-rojo"></span>';
+    }else{
+      $rAlerta=select_custom_sql("c_ICuenta","af_chequeo_Det_Cuentas","c_IChequeo='".$ch."' AND c_IDestino='".$d."' AND i_Alerta=1","","");
+      if(count($rAlerta) > 0){
+        return '<span class="glyphicon glyphicon-asterisk bullet-amarillo"></span>';
+      }else{
+        return "";
+      }
+    }
+  }else {
+    return "ERROR";
+  }
+
+}
+
 if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
   $where = "";
 
@@ -157,6 +213,10 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
               <th >ID Destino</th>
               <th class="col-sm-6">Nombre Destino</th>
               <th >Minutos</th>
+              <th class="iconCol">R</th>
+              <th class="iconCol">CC</th>
+              <th class="iconCol">C</th>
+              <th class="iconCol">A</th>
               <th class="col-sm-1">Opciones</th>
             </tr>
             <?php 
@@ -170,11 +230,15 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
               <td><?php echo $dest['c_IDestino']; ?></td>
               <td>Destino <?php echo $dest['c_IDestino']; ?></td> <!-- Traer de PortaOne -->
               <td><?php echo $dest['q_Min_Plataf']; ?></td>
+              <td class="icon-cell"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
               <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
-              <td colspan="4">
+              <td colspan="8">
                 <table class="table table-striped table-condensed table-bordered">
                   <tbody id="tbResellers">
                     <tr>
@@ -225,10 +289,12 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                   <tbody id="tbCustomer">
                                     <tr>
                                       <th class="iconCol"></th>
-                                      <th class="col-sm-6">Nombre Cliente</th>
+                                      <th class="col-sm-4">Nombre Cliente</th>
                                       <th >Minutos</th>
                                       <th >Bloqueado?</th>
-                                      <th >Fecha Ult Desbloqueo</th>
+                                      <th >F. Bloqueo</th>
+                                      <th >F. Desbloqueo</th>
+                                      <th >Usuario Desblq.</th>
                                       <th class="col-sm-1">Opciones</th>
                                     </tr>
                                     <?php 
@@ -242,19 +308,23 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                       <td>Cliente <? echo $cus['c_ICliente']; ?></td> <!-- Traer de PortaOne -->
                                       <td><? echo $cus['q_Min_Cliente']; ?></td>
                                       <td><? if(is_On($cus['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
+                                      <td><? echo $cus['f_Bloqueo']; ?></td>
                                       <td><? echo $cus['f_Desbloqueo']; ?></td>
+                                      <td><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
                                       <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                     </tr>
                                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" class="collapse">
                                       <td></td>
-                                      <td colspan="5">
+                                      <td colspan="7">
                                         <table class="table table-striped table-condensed table-bordered">
                                           <tbody id="tbAccount">
                                             <tr>
-                                              <th class="col-sm-6">Nombre Cuenta</th>
+                                              <th class="col-sm-4">Nombre Cuenta</th>
                                               <th >Minutos</th>
                                               <th >Bloqueado?</th>
-                                              <th >Fecha Ult Desbloqueo</th>
+                                              <th >F. Bloqueo</th>
+                                              <th >F. Desbloqueo</th>
+                                              <th >Usuario Desblq.</th>
                                               <th class="col-sm-1">Opciones</th>
                                             </tr>
                                             <?php 
@@ -265,7 +335,9 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                               <td>Cuenta <? echo $acc['c_ICuenta']; ?></td> <!-- Traer de PortaOne -->
                                               <td><? echo $acc['q_Min_Cuenta']; ?></td>
                                               <td><? if(is_On($acc['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
+                                              <td><? echo $acc['f_Bloqueo']; ?></td>
                                               <td><? echo $acc['f_Desbloqueo']; ?></td>
+                                              <td><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
                                               <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
@@ -273,7 +345,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                               } else {
                                             ?>
                                             <tr>
-                                              <td colspan=6>No se encuentran registros.</td>
+                                              <td colspan=7>No se encuentran registros.</td>
                                             </tr>
                                             <?php
                                               }
@@ -287,7 +359,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                       } else {
                                     ?>
                                     <tr>
-                                      <td colspan=6>No se encuentran registros.</td>
+                                      <td colspan=8>No se encuentran registros.</td>
                                     </tr>
                                     <?php
                                       }
