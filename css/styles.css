@@ -262,8 +262,8 @@ Top menu and general style
 }
 
 .dropdown-menu{
-	width: 80%;
-	margin-left: 10%;
+	width: 90%;
+	margin-left: 5%;
 }
 
 
@@ -404,10 +404,6 @@ Dropdown Submenus
   color: #666 !important;
 }
 
-.warning .glyphicon{
-	color: #666;
-}
-
 .table > thead > tr > td.danger,
 .table > tbody > tr > td.danger,
 .table > tfoot > tr > td.danger,
@@ -431,10 +427,6 @@ Dropdown Submenus
 .table-hover > tbody > tr.danger:hover > th {
   background-color: rgb(255,130,130); !important;
   color: white !important;
-}
-
-.danger .glyphicon{
-	color: white;
 }
 
 

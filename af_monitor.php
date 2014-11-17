@@ -202,7 +202,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
     if ($chequeosCount > 0) {
     foreach ($chequeos as $check) {
       $destinos=select_custom_sql("*","af_chequeo_det","c_IChequeo='".$check['c_IChequeo']."'","","");
-      $destinosCount = count($destinos);  
+      $destinosCount = count($destinos);
   ?>
       <div id="dTree<? echo $check['c_IChequeo'];?>" class="col-sm-12 collapse">
         <h3>Detalles del chequeo <? echo $check['c_IChequeo'];?></h3>
@@ -224,17 +224,20 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                 foreach ($destinos as $dest) {
                   $resellers=select_custom_sql("*","af_chequeo_det_resellers","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."'","","");
                   $resellersCount = count($resellers);
+
+                  $destinoColor = is_On($dest['i_Alerta']) ? 'warning' : "";
+                  $destinoColor = is_On($dest['i_Cuarentena']) ? 'danger' : $destinoColor;
             ?>
-            <tr class="<? if(is_On($dest['i_Alerta'])) echo('warning'); echo ' '; if(is_On($dest['i_Cuarentena'])) echo('danger'); ?>">
+            <tr>
               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" data-toggle="collapse" data-parent="#tbDestinos"><span class="glyphicon glyphicon-plus"></span></a></td>
-              <td><?php echo $dest['c_IDestino']; ?></td>
-              <td>Destino <?php echo $dest['c_IDestino']; ?></td> <!-- Traer de PortaOne -->
-              <td><?php echo $dest['q_Min_Plataf']; ?></td>
-              <td class="icon-cell"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+              <td class="<? echo $destinoColor; ?>"><?php echo $dest['c_IDestino']; ?></td>
+              <td class="<? echo $destinoColor; ?>">Destino <?php echo $dest['c_IDestino']; ?></td> <!-- Traer de PortaOne -->
+              <td class="<? echo $destinoColor; ?>"><?php echo $dest['q_Min_Plataf']; ?></td>
+              <td class="icon-cell white-back"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon-cell white-back"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
@@ -252,11 +255,14 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                         foreach ($resellers as $res) {
                           $cClass=select_custom_sql("*","af_chequeo_det_cclass","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."'","","");
                           $cClassCount = count($cClass);
+
+                          $resColor = is_On($res['i_Alerta']) ? 'warning' : "";
+                          $resColor = is_On($res['i_Cuarentena']) ? 'danger' : $resColor;
                     ?>
-                    <tr class="<? if(is_On($res['i_Alerta'])) echo('warning'); echo ' '; if(is_On($res['i_Cuarentena'])) echo('danger'); ?>">
+                    <tr>
                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" data-toggle="collapse" data-parent="#tbResellers"><span class="glyphicon glyphicon-plus"></span></a></td>
-                      <td>Reseller <? echo $res['c_IReseller']; ?></td> <!-- Traer de PortaOne -->
-                      <td><? echo $res['q_Min_Reseller']; ?></td>
+                      <td class="<? echo $resColor; ?>">Reseller <? echo $res['c_IReseller']; ?></td> <!-- Traer de PortaOne -->
+                      <td class="<? echo $resColor; ?>"><? echo $res['q_Min_Reseller']; ?></td>
                       <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                     </tr>
                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" class="collapse">
@@ -275,11 +281,14 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                 foreach ($cClass as $cc) {
                                   $customers=select_custom_sql("*","af_chequeo_det_clientes","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                   $customersCount = count($customers);
+
+                                  $ccColor = is_On($cc['i_Alerta']) ? 'warning' : "";
+                                  $ccColor = is_On($cc['i_Cuarentena']) ? 'danger' : $ccColor;
                             ?>
-                            <tr class="<? if(is_On($cc['i_Alerta'])) echo('warning'); echo ' '; if(is_On($cc['i_Cuarentena'])) echo('danger'); ?>">
+                            <tr>
                               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" data-toggle="collapse" data-parent="#tbCClass"><span class="glyphicon glyphicon-plus"></span></a></td>
-                              <td>CClass <? echo $cc['c_ICClass']; ?></td> <!-- Traer de PortaOne -->
-                              <td><? echo $cc['q_Min_CClass']; ?></td>
+                              <td class="<? echo $ccColor; ?>">CClass <? echo $cc['c_ICClass']; ?></td> <!-- Traer de PortaOne -->
+                              <td class="<? echo $ccColor; ?>"><? echo $cc['q_Min_CClass']; ?></td>
                               <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                             </tr>
                             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" class="collapse">
@@ -302,15 +311,18 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                         foreach ($customers as $cus) {
                                           $accounts=select_custom_sql("*","af_chequeo_det_cuentas","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND c_ICliente='".$cus['c_ICliente']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                           $accountsCount = count($accounts);
+
+                                          $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
+                                          $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
                                     ?>
-                                    <tr class="<? if(is_On($cus['i_Alerta'])) echo('warning'); echo ' '; if(is_On($cus['i_Cuarentena'])) echo('danger'); ?>">
+                                    <tr>
                                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" data-toggle="collapse" data-parent="#tbCustomer"><span class="glyphicon glyphicon-plus"></span></a></td>
-                                      <td>Cliente <? echo $cus['c_ICliente']; ?></td> <!-- Traer de PortaOne -->
-                                      <td><? echo $cus['q_Min_Cliente']; ?></td>
-                                      <td><? if(is_On($cus['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
-                                      <td><? echo $cus['f_Bloqueo']; ?></td>
-                                      <td><? echo $cus['f_Desbloqueo']; ?></td>
-                                      <td><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
+                                      <td class="<? echo $cusColor; ?>">Cliente <? echo $cus['c_ICliente']; ?></td> <!-- Traer de PortaOne -->
+                                      <td class="<? echo $cusColor; ?>"><? echo $cus['q_Min_Cliente']; ?></td>
+                                      <td class="<? echo $cusColor; ?>"><? if(is_On($cus['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
+                                      <td class="<? echo $cusColor; ?>"><? echo $cus['f_Bloqueo']; ?></td>
+                                      <td class="<? echo $cusColor; ?>"><? echo $cus['f_Desbloqueo']; ?></td>
+                                      <td class="<? echo $cusColor; ?>"><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
                                       <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                     </tr>
                                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" class="collapse">
@@ -330,14 +342,17 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                             <?php 
                                               if ($accountsCount > 0) {
                                                 foreach ($accounts as $acc) {
+
+                                                  $accColor = is_On($acc['i_Alerta']) ? 'warning' : "";
+                                                  $accColor = is_On($acc['i_Cuarentena']) ? 'danger' : $accColor;
                                             ?>
-                                            <tr class="<? if(is_On($acc['i_Alerta'])) echo('warning'); echo ' '; if(is_On($acc['i_Cuarentena'])) echo('danger'); ?>">
-                                              <td>Cuenta <? echo $acc['c_ICuenta']; ?></td> <!-- Traer de PortaOne -->
-                                              <td><? echo $acc['q_Min_Cuenta']; ?></td>
-                                              <td><? if(is_On($acc['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
-                                              <td><? echo $acc['f_Bloqueo']; ?></td>
-                                              <td><? echo $acc['f_Desbloqueo']; ?></td>
-                                              <td><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
+                                            <tr>
+                                              <td class="<? echo $accColor; ?>">Cuenta <? echo $acc['c_ICuenta']; ?></td> <!-- Traer de PortaOne -->
+                                              <td class="<? echo $accColor; ?>"><? echo $acc['q_Min_Cuenta']; ?></td>
+                                              <td class="<? echo $accColor; ?>"><? if(is_On($acc['i_Bloqueo'])) echo "Si"; else echo "No"; ?></td>
+                                              <td class="<? echo $accColor; ?>"><? echo $acc['f_Bloqueo']; ?></td>
+                                              <td class="<? echo $accColor; ?>"><? echo $acc['f_Desbloqueo']; ?></td>
+                                              <td class="<? echo $accColor; ?>"><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
                                               <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
