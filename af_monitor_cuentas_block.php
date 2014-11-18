@@ -20,7 +20,7 @@ function is_On($value){
   return (intval($value) < 2);
 } 
 
-$accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", "LIMIT 10");
+$accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
 $accountCount = count($accounts);
 
 ?>
