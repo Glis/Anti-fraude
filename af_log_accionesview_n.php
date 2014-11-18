@@ -7,14 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_log_accionesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
-<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
-
-if(!isset($_SESSION['USUARIO']))
-{
-    header("Location: login.php");
-    exit;
-}
 
 //
 // Page class
@@ -506,9 +499,6 @@ class caf_log_acciones_view extends caf_log_acciones {
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
 
-			$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-			$this->c_IDestino->ViewValue = $result[1]['destination'];
-
 			// cl_Accion
 			if (strval($this->cl_Accion->CurrentValue) <> "") {
 				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->cl_Accion->CurrentValue, EW_DATATYPE_NUMBER);
@@ -913,42 +903,6 @@ $af_log_acciones_view->ShowMessage();
 <span id="el_af_log_acciones_nv_Accion" class="control-group">
 <span<?php echo $af_log_acciones->nv_Accion->ViewAttributes() ?>>
 <?php echo $af_log_acciones->nv_Accion->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-
-<tr id="r_nv_DetAccion">
-		<td><span id="elh_af_log_acciones_nv_DetAccion">Nivel Acción Detalle</span></td>
-		<td<?php echo $af_log_acciones->nv_Accion->CellAttributes() ?>>
-<span id="el_af_log_acciones_nv_DetAccion" class="control-group">
-<span<?php echo $af_log_acciones->nv_Accion->ViewAttributes() ?>>
-<?php
-	if($af_log_acciones->nv_Accion->CurrentValue == 1)echo "";
-
-	if($af_log_acciones->nv_Accion->CurrentValue == 2){
-		$res = select_sql_PO('select_porta_customers_where', array((int)$af_log_acciones->c_IReseller->CurrentValue));
-		echo $res[1]['name'];
-	}
-	
-	if($af_log_acciones->nv_Accion->CurrentValue == 3){
-		$res = select_sql_PO('select_porta_customers_class_where', array((int)$af_log_acciones->c_ICClass->CurrentValue));
-		echo $res[1]['name'];
-	}
-
-	if($af_log_acciones->nv_Accion->CurrentValue == 4){
-		$res = select_sql_PO('select_porta_customers_where_class', array((int)$af_log_acciones->c_ICliente->CurrentValue));
-		echo $res[1]['name'];
-	}
-
-	if($af_log_acciones->nv_Accion->CurrentValue == 5){
-		$res = select_sql_PO('select_porta_accounts_where', array((int)$af_log_acciones->c_ICuenta->CurrentValue, (int)$af_log_acciones->c_ICliente->CurrentValue));
-		echo $res[1]['id'];
-	}
-
-
-
-
-?></span>
 </span>
 </td>
 	</tr>

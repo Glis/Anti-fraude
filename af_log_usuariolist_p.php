@@ -5,10 +5,9 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_log_accionesinfo.php" ?>
+<?php include_once "af_log_usuarioinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
-<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -21,9 +20,9 @@ if(!isset($_SESSION['USUARIO']))
 // Page class
 //
 
-$af_log_acciones_list = NULL; // Initialize page object first
+$af_log_usuario_list = NULL; // Initialize page object first
 
-class caf_log_acciones_list extends caf_log_acciones {
+class caf_log_usuario_list extends caf_log_usuario {
 
 	// Page ID
 	var $PageID = 'list';
@@ -32,13 +31,13 @@ class caf_log_acciones_list extends caf_log_acciones {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_log_acciones';
+	var $TableName = 'af_log_usuario';
 
 	// Page object name
-	var $PageObjName = 'af_log_acciones_list';
+	var $PageObjName = 'af_log_usuario_list';
 
 	// Grid form hidden field names
-	var $FormName = 'faf_log_accioneslist';
+	var $FormName = 'faf_log_usuariolist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -209,10 +208,10 @@ class caf_log_acciones_list extends caf_log_acciones {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_log_acciones)
-		if (!isset($GLOBALS["af_log_acciones"]) || get_class($GLOBALS["af_log_acciones"]) == "caf_log_acciones") {
-			$GLOBALS["af_log_acciones"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_log_acciones"];
+		// Table object (af_log_usuario)
+		if (!isset($GLOBALS["af_log_usuario"]) || get_class($GLOBALS["af_log_usuario"]) == "caf_log_usuario") {
+			$GLOBALS["af_log_usuario"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_log_usuario"];
 		}
 
 		// Initialize URLs
@@ -223,12 +222,12 @@ class caf_log_acciones_list extends caf_log_acciones {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "af_log_accionesadd.php";
+		$this->AddUrl = "af_log_usuarioadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "af_log_accionesdelete.php";
-		$this->MultiUpdateUrl = "af_log_accionesupdate.php";
+		$this->MultiDeleteUrl = "af_log_usuariodelete.php";
+		$this->MultiUpdateUrl = "af_log_usuarioupdate.php";
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -236,7 +235,7 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_log_acciones', TRUE);
+			define("EW_TABLE_NAME", 'af_log_usuario', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -294,7 +293,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->c_ITransaccion->Visible = !$this->IsAdd() && !$this->IsCopy() && !$this->IsGridAdd();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -503,11 +501,10 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$this->CurrentOrderType = @$_GET["ordertype"];
 			$this->UpdateSort($this->c_ITransaccion, $bCtrl); // c_ITransaccion
 			$this->UpdateSort($this->f_Transaccion, $bCtrl); // f_Transaccion
-			$this->UpdateSort($this->c_IDestino, $bCtrl); // c_IDestino
-			$this->UpdateSort($this->cl_Accion, $bCtrl); // cl_Accion
-			$this->UpdateSort($this->t_Accion, $bCtrl); // t_Accion
-			$this->UpdateSort($this->nv_Accion, $bCtrl); // nv_Accion
-			$this->UpdateSort($this->st_Accion, $bCtrl); // st_Accion
+			$this->UpdateSort($this->t_Cambio, $bCtrl); // t_Cambio
+			$this->UpdateSort($this->t_Tabla, $bCtrl); // t_Tabla
+			$this->UpdateSort($this->t_Campo, $bCtrl); // t_Campo
+			$this->UpdateSort($this->x_IdRegistro, $bCtrl); // x_IdRegistro
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -539,11 +536,10 @@ class caf_log_acciones_list extends caf_log_acciones {
 				$this->setSessionOrderBy($sOrderBy);
 				$this->c_ITransaccion->setSort("");
 				$this->f_Transaccion->setSort("");
-				$this->c_IDestino->setSort("");
-				$this->cl_Accion->setSort("");
-				$this->t_Accion->setSort("");
-				$this->nv_Accion->setSort("");
-				$this->st_Accion->setSort("");
+				$this->t_Cambio->setSort("");
+				$this->t_Tabla->setSort("");
+				$this->t_Campo->setSort("");
+				$this->x_IdRegistro->setSort("");
 			}
 
 			// Reset start position
@@ -638,7 +634,7 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 				// Add custom action
 				$item = &$option->Add("custom_" . $action);
-				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_log_accioneslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
+				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_log_usuariolist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
 			}
 
 			// Hide grid edit, multi-delete and multi-update
@@ -789,18 +785,13 @@ class caf_log_acciones_list extends caf_log_acciones {
 		$this->Row_Selected($row);
 		$this->c_ITransaccion->setDbValue($rs->fields('c_ITransaccion'));
 		$this->f_Transaccion->setDbValue($rs->fields('f_Transaccion'));
-		$this->c_IDestino->setDbValue($rs->fields('c_IDestino'));
-		$this->cl_Accion->setDbValue($rs->fields('cl_Accion'));
-		$this->t_Accion->setDbValue($rs->fields('t_Accion'));
-		$this->nv_Accion->setDbValue($rs->fields('nv_Accion'));
-		$this->q_Min_Destino->setDbValue($rs->fields('q_Min_Destino'));
-		$this->c_IChequeo->setDbValue($rs->fields('c_IChequeo'));
-		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
-		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
-		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
-		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
-		$this->st_Accion->setDbValue($rs->fields('st_Accion'));
-		$this->x_Obs->setDbValue($rs->fields('x_Obs'));
+		$this->t_Cambio->setDbValue($rs->fields('t_Cambio'));
+		$this->t_Tabla->setDbValue($rs->fields('t_Tabla'));
+		$this->t_Campo->setDbValue($rs->fields('t_Campo'));
+		$this->x_IdRegistro->setDbValue($rs->fields('x_IdRegistro'));
+		$this->x_Valor_Ant->setDbValue($rs->fields('x_Valor_Ant'));
+		$this->x_Valor_Actual->setDbValue($rs->fields('x_Valor_Actual'));
+		$this->c_Usuario->setDbValue($rs->fields('c_Usuario'));
 	}
 
 	// Load DbValue from recordset
@@ -809,18 +800,13 @@ class caf_log_acciones_list extends caf_log_acciones {
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->c_ITransaccion->DbValue = $row['c_ITransaccion'];
 		$this->f_Transaccion->DbValue = $row['f_Transaccion'];
-		$this->c_IDestino->DbValue = $row['c_IDestino'];
-		$this->cl_Accion->DbValue = $row['cl_Accion'];
-		$this->t_Accion->DbValue = $row['t_Accion'];
-		$this->nv_Accion->DbValue = $row['nv_Accion'];
-		$this->q_Min_Destino->DbValue = $row['q_Min_Destino'];
-		$this->c_IChequeo->DbValue = $row['c_IChequeo'];
-		$this->c_IReseller->DbValue = $row['c_IReseller'];
-		$this->c_ICClass->DbValue = $row['c_ICClass'];
-		$this->c_ICliente->DbValue = $row['c_ICliente'];
-		$this->c_ICuenta->DbValue = $row['c_ICuenta'];
-		$this->st_Accion->DbValue = $row['st_Accion'];
-		$this->x_Obs->DbValue = $row['x_Obs'];
+		$this->t_Cambio->DbValue = $row['t_Cambio'];
+		$this->t_Tabla->DbValue = $row['t_Tabla'];
+		$this->t_Campo->DbValue = $row['t_Campo'];
+		$this->x_IdRegistro->DbValue = $row['x_IdRegistro'];
+		$this->x_Valor_Ant->DbValue = $row['x_Valor_Ant'];
+		$this->x_Valor_Actual->DbValue = $row['x_Valor_Actual'];
+		$this->c_Usuario->DbValue = $row['c_Usuario'];
 	}
 
 	// Load old record
@@ -864,27 +850,13 @@ class caf_log_acciones_list extends caf_log_acciones {
 		// Common render codes for all row types
 		// c_ITransaccion
 		// f_Transaccion
-		// c_IDestino
-		// cl_Accion
-		// t_Accion
-		// nv_Accion
-		// q_Min_Destino
-		// c_IChequeo
-		// c_IReseller
-
-		$this->c_IReseller->CellCssStyle = "white-space: nowrap;";
-
-		// c_ICClass
-		$this->c_ICClass->CellCssStyle = "white-space: nowrap;";
-
-		// c_ICliente
-		$this->c_ICliente->CellCssStyle = "white-space: nowrap;";
-
-		// c_ICuenta
-		$this->c_ICuenta->CellCssStyle = "white-space: nowrap;";
-
-		// st_Accion
-		// x_Obs
+		// t_Cambio
+		// t_Tabla
+		// t_Campo
+		// x_IdRegistro
+		// x_Valor_Ant
+		// x_Valor_Actual
+		// c_Usuario
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -894,19 +866,15 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 			// f_Transaccion
 			$this->f_Transaccion->ViewValue = $this->f_Transaccion->CurrentValue;
-			$this->f_Transaccion->ViewValue = ew_FormatDateTime($this->f_Transaccion->ViewValue, 11);
+			$this->f_Transaccion->ViewValue = ew_FormatDateTime($this->f_Transaccion->ViewValue, 10);
 			$this->f_Transaccion->ViewCustomAttributes = "";
 
-			// c_IDestino
-			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
-			$this->c_IDestino->ViewCustomAttributes = "";
-
-			// cl_Accion
-			if (strval($this->cl_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->cl_Accion->CurrentValue, EW_DATATYPE_NUMBER);
+			// t_Cambio
+			if (strval($this->t_Cambio->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Cambio->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_CLASE_ACCION'";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_CAMBIO'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			}
@@ -915,26 +883,26 @@ class caf_log_acciones_list extends caf_log_acciones {
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->cl_Accion, $sWhereWrk);
+			$this->Lookup_Selecting($this->t_Cambio, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->cl_Accion->ViewValue = $rswrk->fields('DispFld');
+					$this->t_Cambio->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
 				} else {
-					$this->cl_Accion->ViewValue = $this->cl_Accion->CurrentValue;
+					$this->t_Cambio->ViewValue = $this->t_Cambio->CurrentValue;
 				}
 			} else {
-				$this->cl_Accion->ViewValue = NULL;
+				$this->t_Cambio->ViewValue = NULL;
 			}
-			$this->cl_Accion->ViewCustomAttributes = "";
+			$this->t_Cambio->ViewCustomAttributes = "";
 
-			// t_Accion
-			if (strval($this->t_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Accion->CurrentValue, EW_DATATYPE_NUMBER);
+			// t_Tabla
+			if (strval($this->t_Tabla->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Tabla->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_TABLA'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			}
@@ -943,26 +911,26 @@ class caf_log_acciones_list extends caf_log_acciones {
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->t_Accion, $sWhereWrk);
+			$this->Lookup_Selecting($this->t_Tabla, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->t_Accion->ViewValue = $rswrk->fields('DispFld');
+					$this->t_Tabla->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
 				} else {
-					$this->t_Accion->ViewValue = $this->t_Accion->CurrentValue;
+					$this->t_Tabla->ViewValue = $this->t_Tabla->CurrentValue;
 				}
 			} else {
-				$this->t_Accion->ViewValue = NULL;
+				$this->t_Tabla->ViewValue = NULL;
 			}
-			$this->t_Accion->ViewCustomAttributes = "";
+			$this->t_Tabla->ViewCustomAttributes = "";
 
-			// nv_Accion
-			if (strval($this->nv_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->nv_Accion->CurrentValue, EW_DATATYPE_NUMBER);
+			// t_Campo
+			if (strval($this->t_Campo->CurrentValue) <> "") {
+				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Campo->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_NIVEL_ACCION'";
+			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_CAMPO'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			}
@@ -971,75 +939,35 @@ class caf_log_acciones_list extends caf_log_acciones {
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->nv_Accion, $sWhereWrk);
+			$this->Lookup_Selecting($this->t_Campo, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->nv_Accion->ViewValue = $rswrk->fields('DispFld');
+					$this->t_Campo->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
 				} else {
-					$this->nv_Accion->ViewValue = $this->nv_Accion->CurrentValue;
+					$this->t_Campo->ViewValue = $this->t_Campo->CurrentValue;
 				}
 			} else {
-				$this->nv_Accion->ViewValue = NULL;
+				$this->t_Campo->ViewValue = NULL;
 			}
-			$this->nv_Accion->ViewCustomAttributes = "";
+			$this->t_Campo->ViewCustomAttributes = "";
 
-			// q_Min_Destino
-			$this->q_Min_Destino->ViewValue = $this->q_Min_Destino->CurrentValue;
-			$this->q_Min_Destino->ViewCustomAttributes = "";
+			// x_IdRegistro
+			$this->x_IdRegistro->ViewValue = $this->x_IdRegistro->CurrentValue;
+			$this->x_IdRegistro->ViewCustomAttributes = "";
 
-			// c_IChequeo
-			$this->c_IChequeo->ViewValue = $this->c_IChequeo->CurrentValue;
-			$this->c_IChequeo->ViewCustomAttributes = "";
+			// x_Valor_Ant
+			$this->x_Valor_Ant->ViewValue = $this->x_Valor_Ant->CurrentValue;
+			$this->x_Valor_Ant->ViewCustomAttributes = "";
 
-			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-			$this->c_IReseller->ViewCustomAttributes = "";
+			// x_Valor_Actual
+			$this->x_Valor_Actual->ViewValue = $this->x_Valor_Actual->CurrentValue;
+			$this->x_Valor_Actual->ViewCustomAttributes = "";
 
-			// c_ICClass
-			$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
-			$this->c_ICClass->ViewCustomAttributes = "";
-
-			// c_ICliente
-			$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
-			$this->c_ICliente->ViewCustomAttributes = "";
-
-			// c_ICuenta
-			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
-			$this->c_ICuenta->ViewCustomAttributes = "";
-
-			// st_Accion
-			if (strval($this->st_Accion->CurrentValue) <> "") {
-				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->st_Accion->CurrentValue, EW_DATATYPE_NUMBER);
-			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
-			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_ST_ACCION'";
-			if (strval($lookuptblfilter) <> "") {
-				ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			}
-			if ($sFilterWrk <> "") {
-				ew_AddFilter($sWhereWrk, $sFilterWrk);
-			}
-
-			// Call Lookup selecting
-			$this->Lookup_Selecting($this->st_Accion, $sWhereWrk);
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = $conn->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->st_Accion->ViewValue = $rswrk->fields('DispFld');
-					$rswrk->Close();
-				} else {
-					$this->st_Accion->ViewValue = $this->st_Accion->CurrentValue;
-				}
-			} else {
-				$this->st_Accion->ViewValue = NULL;
-			}
-			$this->st_Accion->ViewCustomAttributes = "";
-
-			// x_Obs
-			$this->x_Obs->ViewValue = $this->x_Obs->CurrentValue;
-			$this->x_Obs->ViewCustomAttributes = "";
+			// c_Usuario
+			$this->c_Usuario->ViewValue = $this->c_Usuario->CurrentValue;
+			$this->c_Usuario->ViewCustomAttributes = "";
 
 			// c_ITransaccion
 			$this->c_ITransaccion->LinkCustomAttributes = "";
@@ -1051,30 +979,25 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$this->f_Transaccion->HrefValue = "";
 			$this->f_Transaccion->TooltipValue = "";
 
-			// c_IDestino
-			$this->c_IDestino->LinkCustomAttributes = "";
-			$this->c_IDestino->HrefValue = "";
-			$this->c_IDestino->TooltipValue = "";
+			// t_Cambio
+			$this->t_Cambio->LinkCustomAttributes = "";
+			$this->t_Cambio->HrefValue = "";
+			$this->t_Cambio->TooltipValue = "";
 
-			// cl_Accion
-			$this->cl_Accion->LinkCustomAttributes = "";
-			$this->cl_Accion->HrefValue = "";
-			$this->cl_Accion->TooltipValue = "";
+			// t_Tabla
+			$this->t_Tabla->LinkCustomAttributes = "";
+			$this->t_Tabla->HrefValue = "";
+			$this->t_Tabla->TooltipValue = "";
 
-			// t_Accion
-			$this->t_Accion->LinkCustomAttributes = "";
-			$this->t_Accion->HrefValue = "";
-			$this->t_Accion->TooltipValue = "";
+			// t_Campo
+			$this->t_Campo->LinkCustomAttributes = "";
+			$this->t_Campo->HrefValue = "";
+			$this->t_Campo->TooltipValue = "";
 
-			// nv_Accion
-			$this->nv_Accion->LinkCustomAttributes = "";
-			$this->nv_Accion->HrefValue = "";
-			$this->nv_Accion->TooltipValue = "";
-
-			// st_Accion
-			$this->st_Accion->LinkCustomAttributes = "";
-			$this->st_Accion->HrefValue = "";
-			$this->st_Accion->TooltipValue = "";
+			// x_IdRegistro
+			$this->x_IdRegistro->LinkCustomAttributes = "";
+			$this->x_IdRegistro->HrefValue = "";
+			$this->x_IdRegistro->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1123,7 +1046,7 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
-		$item->Body = "<a id=\"emf_af_log_acciones\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_log_acciones',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_log_accioneslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a id=\"emf_af_log_usuario\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_log_usuario',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_log_usuariolist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1292,39 +1215,15 @@ class caf_log_acciones_list extends caf_log_acciones {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
-		$opt = &$this->ListOptions->Add("nv_AccionDet");
-		$opt->Header = "Nivel Acción Detalle";
-		$opt->OnLeft = FALSE; // Link on left
-		$opt->MoveTo(0); // Move to first column
 
 	}
 
 	// ListOptions Rendered event
 	function ListOptions_Rendered() {
-		echo "<pre>".$this->nv_Accion->CurrentValue."</pre>";
+
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
-		if((int)$this->nv_Accion->CurrentValue == 1)$this->ListOptions->Items["nv_AccionDet"]->Body = "";
 
-		if((int)$this->nv_Accion->CurrentValue == 2){
-			$res = select_sql_PO('select_porta_customers_where', array((int)$this->c_IReseller->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
-		}
-		
-		if((int)$this->nv_Accion->CurrentValue == 3){
-			$res = select_sql_PO('select_porta_customers_class_where', array((int)$this->c_ICClass->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name']; echo "<pre>".$this->c_ICClass->CurrentValue."</pre>";
-		}
-
-		if((int)$this->nv_Accion->CurrentValue == 4){
-			$res = select_sql_PO('select_porta_customers_where_class', array((int)$this->c_ICliente->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
-		}
-
-		if((int)$this->nv_Accion->CurrentValue == 5){
-			$res = select_sql_PO('select_porta_accounts_where', array((int)$this->c_ICuenta->CurrentValue, (int)$this->c_ICliente->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['id'];
-		}
 	}
 
 	// Row Custom Action event
@@ -1339,35 +1238,35 @@ class caf_log_acciones_list extends caf_log_acciones {
 <?php
 
 // Create page object
-if (!isset($af_log_acciones_list)) $af_log_acciones_list = new caf_log_acciones_list();
+if (!isset($af_log_usuario_list)) $af_log_usuario_list = new caf_log_usuario_list();
 
 // Page init
-$af_log_acciones_list->Page_Init();
+$af_log_usuario_list->Page_Init();
 
 // Page main
-$af_log_acciones_list->Page_Main();
+$af_log_usuario_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_log_acciones_list->Page_Render();
+$af_log_usuario_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($af_log_acciones->Export == "") { ?>
+<?php if ($af_log_usuario->Export == "") { ?>
 <script type="text/javascript">
 
 // Page object
-var af_log_acciones_list = new ew_Page("af_log_acciones_list");
-af_log_acciones_list.PageID = "list"; // Page ID
-var EW_PAGE_ID = af_log_acciones_list.PageID; // For backward compatibility
+var af_log_usuario_list = new ew_Page("af_log_usuario_list");
+af_log_usuario_list.PageID = "list"; // Page ID
+var EW_PAGE_ID = af_log_usuario_list.PageID; // For backward compatibility
 
 // Form object
-var faf_log_accioneslist = new ew_Form("faf_log_accioneslist");
-faf_log_accioneslist.FormKeyCountName = '<?php echo $af_log_acciones_list->FormKeyCountName ?>';
+var faf_log_usuariolist = new ew_Form("faf_log_usuariolist");
+faf_log_usuariolist.FormKeyCountName = '<?php echo $af_log_usuario_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-faf_log_accioneslist.Form_CustomValidate = 
+faf_log_usuariolist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1376,16 +1275,15 @@ faf_log_accioneslist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_log_accioneslist.ValidateRequired = true;
+faf_log_usuariolist.ValidateRequired = true;
 <?php } else { ?>
-faf_log_accioneslist.ValidateRequired = false; 
+faf_log_usuariolist.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_log_accioneslist.Lists["x_cl_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_log_accioneslist.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_log_accioneslist.Lists["x_nv_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_log_accioneslist.Lists["x_st_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_log_usuariolist.Lists["x_t_Cambio"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_log_usuariolist.Lists["x_t_Tabla"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_log_usuariolist.Lists["x_t_Campo"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -1394,40 +1292,38 @@ faf_log_accioneslist.Lists["x_st_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax"
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($af_log_acciones->Export == "") { ?>
+<?php if ($af_log_usuario->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($af_log_acciones_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
+<?php if ($af_log_usuario_list->ExportOptions->Visible()) { ?>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
 	if ($bSelectLimit) {
-		$af_log_acciones_list->TotalRecs = $af_log_acciones->SelectRecordCount();
+		$af_log_usuario_list->TotalRecs = $af_log_usuario->SelectRecordCount();
 	} else {
-		if ($af_log_acciones_list->Recordset = $af_log_acciones_list->LoadRecordset())
-			$af_log_acciones_list->TotalRecs = $af_log_acciones_list->Recordset->RecordCount();
+		if ($af_log_usuario_list->Recordset = $af_log_usuario_list->LoadRecordset())
+			$af_log_usuario_list->TotalRecs = $af_log_usuario_list->Recordset->RecordCount();
 	}
-	$af_log_acciones_list->StartRec = 1;
-	if ($af_log_acciones_list->DisplayRecs <= 0 || ($af_log_acciones->Export <> "" && $af_log_acciones->ExportAll)) // Display all records
-		$af_log_acciones_list->DisplayRecs = $af_log_acciones_list->TotalRecs;
-	if (!($af_log_acciones->Export <> "" && $af_log_acciones->ExportAll))
-		$af_log_acciones_list->SetUpStartRec(); // Set up start record position
+	$af_log_usuario_list->StartRec = 1;
+	if ($af_log_usuario_list->DisplayRecs <= 0 || ($af_log_usuario->Export <> "" && $af_log_usuario->ExportAll)) // Display all records
+		$af_log_usuario_list->DisplayRecs = $af_log_usuario_list->TotalRecs;
+	if (!($af_log_usuario->Export <> "" && $af_log_usuario->ExportAll))
+		$af_log_usuario_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$af_log_acciones_list->Recordset = $af_log_acciones_list->LoadRecordset($af_log_acciones_list->StartRec-1, $af_log_acciones_list->DisplayRecs);
-$af_log_acciones_list->RenderOtherOptions();
+		$af_log_usuario_list->Recordset = $af_log_usuario_list->LoadRecordset($af_log_usuario_list->StartRec-1, $af_log_usuario_list->DisplayRecs);
+$af_log_usuario_list->RenderOtherOptions();
 ?>
-<?php $af_log_acciones_list->ShowPageHeader(); ?>
+<?php $af_log_usuario_list->ShowPageHeader(); ?>
 <?php
-$af_log_acciones_list->ShowMessage();
+$af_log_usuario_list->ShowMessage();
 ?>
-
-<?/******************************************************
+					<?/******************************************************
 					************************FILTROS**************************
 					*********************************************************/?>
 
 <div class="filterContainer">
-	
 	<script type="text/javascript">
 
 		function changeDate (date){
@@ -1443,11 +1339,12 @@ $af_log_acciones_list->ShowMessage();
 
 			var desde = $('#initialDateFil').val();
 			var hasta = $('#endDateFil').val();
-			var destino = $('#dest').val();
-			var clase = $('#select_clase').find("option:selected").val();
-			var nivel = $('#select_nivel').find("option:selected").val();
-
-			var dataString = "pag=log_acciones&filtro=x";
+			var tabla = $('#select_tabla').find("option:selected").val();
+			var campo = $('#select_campo').find("option:selected").val();
+			var cambio = $('#select_tipocambio').find("option:selected").val();
+			var usuario = $("#user").val();
+			
+			var dataString = "pag=log_usuarios&filtro=x";
 			if (desde == ""){
 				dataString = dataString + "&desde=vacio";
 			}else{
@@ -1460,22 +1357,28 @@ $af_log_acciones_list->ShowMessage();
 				dataString = dataString + "&hasta=" + changeDate(hasta);
 			}
 
-			if (destino == ""){
-				dataString = dataString + "&destino=vacio";
+			if (tabla == ""){
+				dataString = dataString + "&tabla=vacio";
 			}else{
-				dataString = dataString + "&destino=" + destino;
+				dataString = dataString + "&tabla=" + tabla;
 			}
 
-			if (clase == "vacio"){
-				dataString = dataString + "&clase=vacio";
+			if (campo == "vacio"){
+				dataString = dataString + "&campo=vacio";
 			}else{
-				dataString = dataString + "&clase=" + clase;
+				dataString = dataString + "&campo=" + campo;
 			}
 
-			if (nivel == "vacio"){
-				dataString = dataString + "&nivel=vacio";
+			if (cambio == "vacio"){
+				dataString = dataString + "&cambio=vacio";
 			}else{
-				dataString = dataString + "&nivel=" + nivel;
+				dataString = dataString + "&cambio=" + cambio;
+			}
+
+			if (usuario == ""){
+				dataString = dataString + "&usuario=vacio";
+			}else{
+				dataString = dataString + "&usuario=" + usuario;
 			}
 
 			alert(dataString);
@@ -1484,22 +1387,87 @@ $af_log_acciones_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				alert("html");location.reload();
+				location.reload();
 			  }
 			});
 
 		});
 
+
+		$(document).on('change','#select_tabla',function(){
+
+			if($("#select_tabla").find("option:selected").val() == "vacio"){
+				$( "#select_campo" ).prop( "disabled", true );
+			}else{
+				var dataString = "pag=tipo_campo_filtro&tabla="+$("#select_tabla").find("option:selected").val();
+				$.ajax({  
+					  type: "POST",  
+					  url: "lib/functions.php",  
+					  data: dataString,  
+					  success: function(response) {  
+						$('#select_campo').empty().append(response);
+						$( "#select_campo" ).prop( "disabled", false );
+					  }
+					});
+			}
+		});
+
+
+
 	</script>
-	
+
 	<div class="row">
 		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Tabla Afectada</label>
+				<select id= "select_tabla" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_TABLA');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
+
+				?>
+				</select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Campo Afectado</label>
+				<select id= "select_campo" disabled class= "form-control">
+					<option value = 'vacio'>Todo</option>
+				</select>
+			</div>
+		</div>	
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label class= "filtro_label">Tipo de Cambio</label>
+				<select id= "select_tipocambio" class= "form-control">
+				<option value = 'vacio'>Todo</option>
+				<? $dom_accion = select_sql('select_dominio', 'DNIO_TIPO_CAMBIO');
+					$count = count($dom_accion);
+					$k = 1;
+					while ($k <= $count){
+						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
+						$k++;
+					}
+
+				?>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-sm-3">
 			<div class="form-group">
 				<label for="initialDateFil">Desde</label>
 				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
 			</div>
 		</div>
-		<div class="col-sm-4">
+		<div class="col-sm-3">
 			<div class="form-group">
 				<label for="endDateFil">Hasta</label>
 				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
@@ -1507,53 +1475,17 @@ $af_log_acciones_list->ShowMessage();
 		</div>
 		<div class="col-sm-4">
 			<div class="form-group">
-				<label class= "filtro_label">Filtro Destino</label>
-				<input type="text" name="dest" id="dest" class="form-control">
+				<label class= "filtro_label">Usuario</label>
+				<input type="text" name="user" id="user" class="form-control">
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-4">
-			<div class="form-group">
-				<label class= "filtro_label">Filtro Clase Acción</label>
-				<select id= "select_clase" class= "form-control">
-				<option value = 'vacio'>Todo</option>
-				<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-					$count = count($dom_accion);
-					$k = 1;
-					while ($k <= $count){
-						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-						$k++;
-					}
-
-				?>
-				</select>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="form-group">
-				<label class= "filtro_label">Filtro Nivel Acción</label>
-				<select id= "select_nivel" class= "form-control">
-				<option value = 'vacio'>Todo</option>
-				<? $dom_accion = select_sql('select_dominio', 'DNIO_NIVEL_ACCION');
-					$count = count($dom_accion);
-					$k = 1;
-					while ($k <= $count){
-						echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-						$k++;
-					}
-
-				?>
-				</select>
-			</div>
-		</div>
-		<div class="col-sm-4">
+		<div class="col-sm-2">
   			<button type="submit" id ="submit_filtros" class="btn btn-primary">Buscar</button>
 		</div>
 	</div>
 
-<?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; 
-  $_SESSION['filtros_log']['clase']=""; $_SESSION['filtros_log']['destino']=""; $_SESSION['filtros_log']['nivel']="";
+<?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; $_SESSION['filtros_log']['tabla']="";
+  $_SESSION['filtros_log']['campo']=""; $_SESSION['filtros_log']['cambio']="";$_SESSION['filtros_log']['usuario']="";
 ?>
 
 </div>
@@ -1562,208 +1494,194 @@ $af_log_acciones_list->ShowMessage();
 					************************ENDFILTROS**************************
 					*********************************************************/?>
 
+
 <table class="ewGrid"><tr><td class="ewGridContent">
-<form name="faf_log_accioneslist" id="faf_log_accioneslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_log_acciones">
-<div id="gmp_af_log_acciones" class="ewGridMiddlePanel">
-<?php if ($af_log_acciones_list->TotalRecs > 0) { ?>
-<table id="tbl_af_log_accioneslist" class="ewTable ewTableSeparate">
-<?php echo $af_log_acciones->TableCustomInnerHtml ?>
+<form name="faf_log_usuariolist" id="faf_log_usuariolist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_log_usuario">
+<div id="gmp_af_log_usuario" class="ewGridMiddlePanel">
+<?php if ($af_log_usuario_list->TotalRecs > 0) { ?>
+<table id="tbl_af_log_usuariolist" class="ewTable ewTableSeparate">
+<?php echo $af_log_usuario->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Render list options
-$af_log_acciones_list->RenderListOptions();
+$af_log_usuario_list->RenderListOptions();
 
 // Render list options (header, left)
-$af_log_acciones_list->ListOptions->Render("header", "left");
+$af_log_usuario_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($af_log_acciones->c_ITransaccion->Visible) { // c_ITransaccion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->c_ITransaccion) == "") { ?>
-		<td><div id="elh_af_log_acciones_c_ITransaccion" class="af_log_acciones_c_ITransaccion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->c_ITransaccion->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->c_ITransaccion->Visible) { // c_ITransaccion ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->c_ITransaccion) == "") { ?>
+		<td><div id="elh_af_log_usuario_c_ITransaccion" class="af_log_usuario_c_ITransaccion"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->c_ITransaccion->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->c_ITransaccion) ?>',2);"><div id="elh_af_log_acciones_c_ITransaccion" class="af_log_acciones_c_ITransaccion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->c_ITransaccion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->c_ITransaccion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->c_ITransaccion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->c_ITransaccion) ?>',2);"><div id="elh_af_log_usuario_c_ITransaccion" class="af_log_usuario_c_ITransaccion">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->c_ITransaccion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->c_ITransaccion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->c_ITransaccion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_log_acciones->f_Transaccion->Visible) { // f_Transaccion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->f_Transaccion) == "") { ?>
-		<td><div id="elh_af_log_acciones_f_Transaccion" class="af_log_acciones_f_Transaccion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->f_Transaccion->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->f_Transaccion->Visible) { // f_Transaccion ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->f_Transaccion) == "") { ?>
+		<td><div id="elh_af_log_usuario_f_Transaccion" class="af_log_usuario_f_Transaccion"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->f_Transaccion->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->f_Transaccion) ?>',2);"><div id="elh_af_log_acciones_f_Transaccion" class="af_log_acciones_f_Transaccion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->f_Transaccion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->f_Transaccion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->f_Transaccion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->f_Transaccion) ?>',2);"><div id="elh_af_log_usuario_f_Transaccion" class="af_log_usuario_f_Transaccion">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->f_Transaccion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->f_Transaccion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->f_Transaccion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_log_acciones->c_IDestino->Visible) { // c_IDestino ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->c_IDestino) == "") { ?>
-		<td><div id="elh_af_log_acciones_c_IDestino" class="af_log_acciones_c_IDestino"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->c_IDestino->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->t_Cambio->Visible) { // t_Cambio ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->t_Cambio) == "") { ?>
+		<td><div id="elh_af_log_usuario_t_Cambio" class="af_log_usuario_t_Cambio"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Cambio->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->c_IDestino) ?>',2);"><div id="elh_af_log_acciones_c_IDestino" class="af_log_acciones_c_IDestino">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->c_IDestino->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->c_IDestino->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->c_IDestino->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->t_Cambio) ?>',2);"><div id="elh_af_log_usuario_t_Cambio" class="af_log_usuario_t_Cambio">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Cambio->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->t_Cambio->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->t_Cambio->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_log_acciones->cl_Accion->Visible) { // cl_Accion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->cl_Accion) == "") { ?>
-		<td><div id="elh_af_log_acciones_cl_Accion" class="af_log_acciones_cl_Accion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->cl_Accion->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->t_Tabla->Visible) { // t_Tabla ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->t_Tabla) == "") { ?>
+		<td><div id="elh_af_log_usuario_t_Tabla" class="af_log_usuario_t_Tabla"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Tabla->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->cl_Accion) ?>',2);"><div id="elh_af_log_acciones_cl_Accion" class="af_log_acciones_cl_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->cl_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->cl_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->cl_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->t_Tabla) ?>',2);"><div id="elh_af_log_usuario_t_Tabla" class="af_log_usuario_t_Tabla">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Tabla->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->t_Tabla->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->t_Tabla->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_log_acciones->t_Accion->Visible) { // t_Accion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->t_Accion) == "") { ?>
-		<td><div id="elh_af_log_acciones_t_Accion" class="af_log_acciones_t_Accion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->t_Accion->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->t_Campo->Visible) { // t_Campo ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->t_Campo) == "") { ?>
+		<td><div id="elh_af_log_usuario_t_Campo" class="af_log_usuario_t_Campo"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Campo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->t_Accion) ?>',2);"><div id="elh_af_log_acciones_t_Accion" class="af_log_acciones_t_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->t_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->t_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->t_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->t_Campo) ?>',2);"><div id="elh_af_log_usuario_t_Campo" class="af_log_usuario_t_Campo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->t_Campo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->t_Campo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->t_Campo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_log_acciones->nv_Accion->Visible) { // nv_Accion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->nv_Accion) == "") { ?>
-		<td><div id="elh_af_log_acciones_nv_Accion" class="af_log_acciones_nv_Accion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->nv_Accion->FldCaption() ?></div></div></td>
+<?php if ($af_log_usuario->x_IdRegistro->Visible) { // x_IdRegistro ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->x_IdRegistro) == "") { ?>
+		<td><div id="elh_af_log_usuario_x_IdRegistro" class="af_log_usuario_x_IdRegistro"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->x_IdRegistro->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->nv_Accion) ?>',2);"><div id="elh_af_log_acciones_nv_Accion" class="af_log_acciones_nv_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->nv_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->nv_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->nv_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_log_acciones->st_Accion->Visible) { // st_Accion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->st_Accion) == "") { ?>
-		<td><div id="elh_af_log_acciones_st_Accion" class="af_log_acciones_st_Accion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->st_Accion->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->st_Accion) ?>',2);"><div id="elh_af_log_acciones_st_Accion" class="af_log_acciones_st_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->st_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->st_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->st_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->x_IdRegistro) ?>',2);"><div id="elh_af_log_usuario_x_IdRegistro" class="af_log_usuario_x_IdRegistro">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->x_IdRegistro->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->x_IdRegistro->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->x_IdRegistro->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$af_log_acciones_list->ListOptions->Render("header", "right");
+$af_log_usuario_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($af_log_acciones->ExportAll && $af_log_acciones->Export <> "") {
-	$af_log_acciones_list->StopRec = $af_log_acciones_list->TotalRecs;
+if ($af_log_usuario->ExportAll && $af_log_usuario->Export <> "") {
+	$af_log_usuario_list->StopRec = $af_log_usuario_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($af_log_acciones_list->TotalRecs > $af_log_acciones_list->StartRec + $af_log_acciones_list->DisplayRecs - 1)
-		$af_log_acciones_list->StopRec = $af_log_acciones_list->StartRec + $af_log_acciones_list->DisplayRecs - 1;
+	if ($af_log_usuario_list->TotalRecs > $af_log_usuario_list->StartRec + $af_log_usuario_list->DisplayRecs - 1)
+		$af_log_usuario_list->StopRec = $af_log_usuario_list->StartRec + $af_log_usuario_list->DisplayRecs - 1;
 	else
-		$af_log_acciones_list->StopRec = $af_log_acciones_list->TotalRecs;
+		$af_log_usuario_list->StopRec = $af_log_usuario_list->TotalRecs;
 }
-$af_log_acciones_list->RecCnt = $af_log_acciones_list->StartRec - 1;
-if ($af_log_acciones_list->Recordset && !$af_log_acciones_list->Recordset->EOF) {
-	$af_log_acciones_list->Recordset->MoveFirst();
-	if (!$bSelectLimit && $af_log_acciones_list->StartRec > 1)
-		$af_log_acciones_list->Recordset->Move($af_log_acciones_list->StartRec - 1);
-} elseif (!$af_log_acciones->AllowAddDeleteRow && $af_log_acciones_list->StopRec == 0) {
-	$af_log_acciones_list->StopRec = $af_log_acciones->GridAddRowCount;
+$af_log_usuario_list->RecCnt = $af_log_usuario_list->StartRec - 1;
+if ($af_log_usuario_list->Recordset && !$af_log_usuario_list->Recordset->EOF) {
+	$af_log_usuario_list->Recordset->MoveFirst();
+	if (!$bSelectLimit && $af_log_usuario_list->StartRec > 1)
+		$af_log_usuario_list->Recordset->Move($af_log_usuario_list->StartRec - 1);
+} elseif (!$af_log_usuario->AllowAddDeleteRow && $af_log_usuario_list->StopRec == 0) {
+	$af_log_usuario_list->StopRec = $af_log_usuario->GridAddRowCount;
 }
 
 // Initialize aggregate
-$af_log_acciones->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$af_log_acciones->ResetAttrs();
-$af_log_acciones_list->RenderRow();
-while ($af_log_acciones_list->RecCnt < $af_log_acciones_list->StopRec) {
-	$af_log_acciones_list->RecCnt++;
-	if (intval($af_log_acciones_list->RecCnt) >= intval($af_log_acciones_list->StartRec)) {
-		$af_log_acciones_list->RowCnt++;
+$af_log_usuario->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$af_log_usuario->ResetAttrs();
+$af_log_usuario_list->RenderRow();
+while ($af_log_usuario_list->RecCnt < $af_log_usuario_list->StopRec) {
+	$af_log_usuario_list->RecCnt++;
+	if (intval($af_log_usuario_list->RecCnt) >= intval($af_log_usuario_list->StartRec)) {
+		$af_log_usuario_list->RowCnt++;
 
 		// Set up key count
-		$af_log_acciones_list->KeyCount = $af_log_acciones_list->RowIndex;
+		$af_log_usuario_list->KeyCount = $af_log_usuario_list->RowIndex;
 
 		// Init row class and style
-		$af_log_acciones->ResetAttrs();
-		$af_log_acciones->CssClass = "";
-		if ($af_log_acciones->CurrentAction == "gridadd") {
+		$af_log_usuario->ResetAttrs();
+		$af_log_usuario->CssClass = "";
+		if ($af_log_usuario->CurrentAction == "gridadd") {
 		} else {
-			$af_log_acciones_list->LoadRowValues($af_log_acciones_list->Recordset); // Load row values
+			$af_log_usuario_list->LoadRowValues($af_log_usuario_list->Recordset); // Load row values
 		}
-		$af_log_acciones->RowType = EW_ROWTYPE_VIEW; // Render view
+		$af_log_usuario->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$af_log_acciones->RowAttrs = array_merge($af_log_acciones->RowAttrs, array('data-rowindex'=>$af_log_acciones_list->RowCnt, 'id'=>'r' . $af_log_acciones_list->RowCnt . '_af_log_acciones', 'data-rowtype'=>$af_log_acciones->RowType));
+		$af_log_usuario->RowAttrs = array_merge($af_log_usuario->RowAttrs, array('data-rowindex'=>$af_log_usuario_list->RowCnt, 'id'=>'r' . $af_log_usuario_list->RowCnt . '_af_log_usuario', 'data-rowtype'=>$af_log_usuario->RowType));
 
 		// Render row
-		$af_log_acciones_list->RenderRow();
+		$af_log_usuario_list->RenderRow();
 
 		// Render list options
-		$af_log_acciones_list->RenderListOptions();
+		$af_log_usuario_list->RenderListOptions();
 ?>
-	<tr<?php echo $af_log_acciones->RowAttributes() ?>>
+	<tr<?php echo $af_log_usuario->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$af_log_acciones_list->ListOptions->Render("body", "left", $af_log_acciones_list->RowCnt);
+$af_log_usuario_list->ListOptions->Render("body", "left", $af_log_usuario_list->RowCnt);
 ?>
-	<?php if ($af_log_acciones->c_ITransaccion->Visible) { // c_ITransaccion ?>
-		<td<?php echo $af_log_acciones->c_ITransaccion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->c_ITransaccion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->c_ITransaccion->ListViewValue() ?></span>
-<a id="<?php echo $af_log_acciones_list->PageObjName . "_row_" . $af_log_acciones_list->RowCnt ?>"></a></td>
+	<?php if ($af_log_usuario->c_ITransaccion->Visible) { // c_ITransaccion ?>
+		<td<?php echo $af_log_usuario->c_ITransaccion->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->c_ITransaccion->ViewAttributes() ?>>
+<?php echo $af_log_usuario->c_ITransaccion->ListViewValue() ?></span>
+<a id="<?php echo $af_log_usuario_list->PageObjName . "_row_" . $af_log_usuario_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($af_log_acciones->f_Transaccion->Visible) { // f_Transaccion ?>
-		<td<?php echo $af_log_acciones->f_Transaccion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->f_Transaccion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->f_Transaccion->ListViewValue() ?></span>
+	<?php if ($af_log_usuario->f_Transaccion->Visible) { // f_Transaccion ?>
+		<td<?php echo $af_log_usuario->f_Transaccion->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->f_Transaccion->ViewAttributes() ?>>
+<?php echo $af_log_usuario->f_Transaccion->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_log_acciones->c_IDestino->Visible) { // c_IDestino ?>
-		<td<?php echo $af_log_acciones->c_IDestino->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->c_IDestino->ViewAttributes() ?>>
-<?php echo $af_log_acciones->c_IDestino->ListViewValue() ?></span>
+	<?php if ($af_log_usuario->t_Cambio->Visible) { // t_Cambio ?>
+		<td<?php echo $af_log_usuario->t_Cambio->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->t_Cambio->ViewAttributes() ?>>
+<?php echo $af_log_usuario->t_Cambio->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_log_acciones->cl_Accion->Visible) { // cl_Accion ?>
-		<td<?php echo $af_log_acciones->cl_Accion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->cl_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->cl_Accion->ListViewValue() ?></span>
+	<?php if ($af_log_usuario->t_Tabla->Visible) { // t_Tabla ?>
+		<td<?php echo $af_log_usuario->t_Tabla->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->t_Tabla->ViewAttributes() ?>>
+<?php echo $af_log_usuario->t_Tabla->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_log_acciones->t_Accion->Visible) { // t_Accion ?>
-		<td<?php echo $af_log_acciones->t_Accion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->t_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->t_Accion->ListViewValue() ?></span>
+	<?php if ($af_log_usuario->t_Campo->Visible) { // t_Campo ?>
+		<td<?php echo $af_log_usuario->t_Campo->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->t_Campo->ViewAttributes() ?>>
+<?php echo $af_log_usuario->t_Campo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_log_acciones->nv_Accion->Visible) { // nv_Accion ?>
-		<td<?php echo $af_log_acciones->nv_Accion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->nv_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->nv_Accion->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_log_acciones->st_Accion->Visible) { // st_Accion ?>
-		<td<?php echo $af_log_acciones->st_Accion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->st_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->st_Accion->ListViewValue() ?></span>
+	<?php if ($af_log_usuario->x_IdRegistro->Visible) { // x_IdRegistro ?>
+		<td<?php echo $af_log_usuario->x_IdRegistro->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->x_IdRegistro->ViewAttributes() ?>>
+<?php echo $af_log_usuario->x_IdRegistro->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$af_log_acciones_list->ListOptions->Render("body", "right", $af_log_acciones_list->RowCnt);
+$af_log_usuario_list->ListOptions->Render("body", "right", $af_log_usuario_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($af_log_acciones->CurrentAction <> "gridadd")
-		$af_log_acciones_list->Recordset->MoveNext();
+	if ($af_log_usuario->CurrentAction <> "gridadd")
+		$af_log_usuario_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($af_log_acciones->CurrentAction == "") { ?>
+<?php if ($af_log_usuario->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -1771,43 +1689,43 @@ $af_log_acciones_list->ListOptions->Render("body", "right", $af_log_acciones_lis
 <?php
 
 // Close recordset
-if ($af_log_acciones_list->Recordset)
-	$af_log_acciones_list->Recordset->Close();
+if ($af_log_usuario_list->Recordset)
+	$af_log_usuario_list->Recordset->Close();
 ?>
-<?php if ($af_log_acciones->Export == "") { ?>
+<?php if ($af_log_usuario->Export == "") { ?>
 <div class="ewGridLowerPanel">
-<?php if ($af_log_acciones->CurrentAction <> "gridadd" && $af_log_acciones->CurrentAction <> "gridedit") { ?>
+<?php if ($af_log_usuario->CurrentAction <> "gridadd" && $af_log_usuario->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
 <table class="ewPager">
 <tr><td>
-<?php if (!isset($af_log_acciones_list->Pager)) $af_log_acciones_list->Pager = new cNumericPager($af_log_acciones_list->StartRec, $af_log_acciones_list->DisplayRecs, $af_log_acciones_list->TotalRecs, $af_log_acciones_list->RecRange) ?>
-<?php if ($af_log_acciones_list->Pager->RecordCount > 0) { ?>
+<?php if (!isset($af_log_usuario_list->Pager)) $af_log_usuario_list->Pager = new cNumericPager($af_log_usuario_list->StartRec, $af_log_usuario_list->DisplayRecs, $af_log_usuario_list->TotalRecs, $af_log_usuario_list->RecRange) ?>
+<?php if ($af_log_usuario_list->Pager->RecordCount > 0) { ?>
 <table class="ewStdTable"><tbody><tr><td>
 <div class="pagination"><ul>
-	<?php if ($af_log_acciones_list->Pager->FirstButton->Enabled) { ?>
-	<li><a href="<?php echo $af_log_acciones_list->PageUrl() ?>start=<?php echo $af_log_acciones_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php if ($af_log_usuario_list->Pager->FirstButton->Enabled) { ?>
+	<li><a href="<?php echo $af_log_usuario_list->PageUrl() ?>start=<?php echo $af_log_usuario_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
 	<?php } ?>
-	<?php if ($af_log_acciones_list->Pager->PrevButton->Enabled) { ?>
-	<li><a href="<?php echo $af_log_acciones_list->PageUrl() ?>start=<?php echo $af_log_acciones_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php if ($af_log_usuario_list->Pager->PrevButton->Enabled) { ?>
+	<li><a href="<?php echo $af_log_usuario_list->PageUrl() ?>start=<?php echo $af_log_usuario_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
 	<?php } ?>
-	<?php foreach ($af_log_acciones_list->Pager->Items as $PagerItem) { ?>
-		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_log_acciones_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
+	<?php foreach ($af_log_usuario_list->Pager->Items as $PagerItem) { ?>
+		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_log_usuario_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
 	<?php } ?>
-	<?php if ($af_log_acciones_list->Pager->NextButton->Enabled) { ?>
-	<li><a href="<?php echo $af_log_acciones_list->PageUrl() ?>start=<?php echo $af_log_acciones_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php if ($af_log_usuario_list->Pager->NextButton->Enabled) { ?>
+	<li><a href="<?php echo $af_log_usuario_list->PageUrl() ?>start=<?php echo $af_log_usuario_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
 	<?php } ?>
-	<?php if ($af_log_acciones_list->Pager->LastButton->Enabled) { ?>
-	<li><a href="<?php echo $af_log_acciones_list->PageUrl() ?>start=<?php echo $af_log_acciones_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php if ($af_log_usuario_list->Pager->LastButton->Enabled) { ?>
+	<li><a href="<?php echo $af_log_usuario_list->PageUrl() ?>start=<?php echo $af_log_usuario_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
 	<?php } ?>
 </ul></div>
 </td>
 <td>
-	<?php if ($af_log_acciones_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
-	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_log_acciones_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_log_acciones_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_log_acciones_list->Pager->RecordCount ?>
+	<?php if ($af_log_usuario_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
+	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_log_usuario_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_log_usuario_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_log_usuario_list->Pager->RecordCount ?>
 </td>
 </tr></tbody></table>
 <?php } else { ?>
-	<?php if ($af_log_acciones_list->SearchWhere == "0=101") { ?>
+	<?php if ($af_log_usuario_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
 	<p><?php echo $Language->Phrase("NoRecord") ?></p>
@@ -1819,27 +1737,27 @@ if ($af_log_acciones_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($af_log_acciones_list->OtherOptions as &$option)
+	foreach ($af_log_usuario_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
 </div>
 <?php } ?>
 </td></tr></table>
-<?php if ($af_log_acciones->Export == "") { ?>
+<?php if ($af_log_usuario->Export == "") { ?>
 <script type="text/javascript">
-faf_log_accioneslist.Init();
+faf_log_usuariolist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php } ?>
 <?php
-$af_log_acciones_list->ShowPageFooter();
+$af_log_usuario_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($af_log_acciones->Export == "") { ?>
+<?php if ($af_log_usuario->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1849,5 +1767,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$af_log_acciones_list->Page_Terminate();
+$af_log_usuario_list->Page_Terminate();
 ?>

@@ -505,6 +505,7 @@ class caf_log_usuario_list extends caf_log_usuario {
 			$this->UpdateSort($this->t_Tabla, $bCtrl); // t_Tabla
 			$this->UpdateSort($this->t_Campo, $bCtrl); // t_Campo
 			$this->UpdateSort($this->x_IdRegistro, $bCtrl); // x_IdRegistro
+			$this->UpdateSort($this->c_Usuario, $bCtrl); // c_Usuario
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -540,6 +541,7 @@ class caf_log_usuario_list extends caf_log_usuario {
 				$this->t_Tabla->setSort("");
 				$this->t_Campo->setSort("");
 				$this->x_IdRegistro->setSort("");
+				$this->c_Usuario->setSort("");
 			}
 
 			// Reset start position
@@ -998,6 +1000,11 @@ class caf_log_usuario_list extends caf_log_usuario {
 			$this->x_IdRegistro->LinkCustomAttributes = "";
 			$this->x_IdRegistro->HrefValue = "";
 			$this->x_IdRegistro->TooltipValue = "";
+
+			// c_Usuario
+			$this->c_Usuario->LinkCustomAttributes = "";
+			$this->c_Usuario->HrefValue = "";
+			$this->c_Usuario->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1296,7 +1303,7 @@ faf_log_usuariolist.Lists["x_t_Campo"] = {"LinkField":"x_rv_Low_Value","Ajax":nu
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_usuario_list->ExportOptions->Visible()) { ?>
-<div id="page_title" class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
+<div class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1319,6 +1326,7 @@ $af_log_usuario_list->RenderOtherOptions();
 <?php
 $af_log_usuario_list->ShowMessage();
 ?>
+
 					<?/******************************************************
 					************************FILTROS**************************
 					*********************************************************/?>
@@ -1493,8 +1501,6 @@ $af_log_usuario_list->ShowMessage();
 					<?/******************************************************
 					************************ENDFILTROS**************************
 					*********************************************************/?>
-
-
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_log_usuariolist" id="faf_log_usuariolist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_log_usuario">
@@ -1563,6 +1569,15 @@ $af_log_usuario_list->ListOptions->Render("header", "left");
 	<?php } else { ?>
 		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->x_IdRegistro) ?>',2);"><div id="elh_af_log_usuario_x_IdRegistro" class="af_log_usuario_x_IdRegistro">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->x_IdRegistro->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->x_IdRegistro->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->x_IdRegistro->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></td>
+	<?php } ?>
+<?php } ?>		
+<?php if ($af_log_usuario->c_Usuario->Visible) { // c_Usuario ?>
+	<?php if ($af_log_usuario->SortUrl($af_log_usuario->c_Usuario) == "") { ?>
+		<td><div id="elh_af_log_usuario_c_Usuario" class="af_log_usuario_c_Usuario"><div class="ewTableHeaderCaption"><?php echo $af_log_usuario->c_Usuario->FldCaption() ?></div></div></td>
+	<?php } else { ?>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_usuario->SortUrl($af_log_usuario->c_Usuario) ?>',2);"><div id="elh_af_log_usuario_c_Usuario" class="af_log_usuario_c_Usuario">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_usuario->c_Usuario->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_usuario->c_Usuario->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_usuario->c_Usuario->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
@@ -1664,6 +1679,12 @@ $af_log_usuario_list->ListOptions->Render("body", "left", $af_log_usuario_list->
 		<td<?php echo $af_log_usuario->x_IdRegistro->CellAttributes() ?>>
 <span<?php echo $af_log_usuario->x_IdRegistro->ViewAttributes() ?>>
 <?php echo $af_log_usuario->x_IdRegistro->ListViewValue() ?></span>
+</td>
+	<?php } ?>
+	<?php if ($af_log_usuario->c_Usuario->Visible) { // c_Usuario ?>
+		<td<?php echo $af_log_usuario->c_Usuario->CellAttributes() ?>>
+<span<?php echo $af_log_usuario->c_Usuario->ViewAttributes() ?>>
+<?php echo $af_log_usuario->c_Usuario->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php

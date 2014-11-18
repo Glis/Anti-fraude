@@ -507,7 +507,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$this->UpdateSort($this->cl_Accion, $bCtrl); // cl_Accion
 			$this->UpdateSort($this->t_Accion, $bCtrl); // t_Accion
 			$this->UpdateSort($this->nv_Accion, $bCtrl); // nv_Accion
-			$this->UpdateSort($this->st_Accion, $bCtrl); // st_Accion
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -543,7 +542,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 				$this->cl_Accion->setSort("");
 				$this->t_Accion->setSort("");
 				$this->nv_Accion->setSort("");
-				$this->st_Accion->setSort("");
 			}
 
 			// Reset start position
@@ -934,7 +932,14 @@ class caf_log_acciones_list extends caf_log_acciones {
 				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Accion->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
+			
+			if($this->nv_Accion->CurrentValue == 1)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
+			if($this->nv_Accion->CurrentValue == 2)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_RES'";
+			if($this->nv_Accion->CurrentValue == 3)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CCLASS'";
+			if($this->nv_Accion->CurrentValue == 4)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CLI'";
+			if($this->nv_Accion->CurrentValue == 5)$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_CTA'";
+
+			//$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			}
@@ -1070,11 +1075,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$this->nv_Accion->LinkCustomAttributes = "";
 			$this->nv_Accion->HrefValue = "";
 			$this->nv_Accion->TooltipValue = "";
-
-			// st_Accion
-			$this->st_Accion->LinkCustomAttributes = "";
-			$this->st_Accion->HrefValue = "";
-			$this->st_Accion->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1287,11 +1287,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 	// ListOptions Load event
 	function ListOptions_Load() {
 
-		// Example:
-		//$opt = &$this->ListOptions->Add("new");
-		//$opt->Header = "xxx";
-		//$opt->OnLeft = TRUE; // Link on left
-		//$opt->MoveTo(0); // Move to first column
 		$opt = &$this->ListOptions->Add("nv_AccionDet");
 		$opt->Header = "Nivel Acción Detalle";
 		$opt->OnLeft = FALSE; // Link on left
@@ -1301,30 +1296,31 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 	// ListOptions Rendered event
 	function ListOptions_Rendered() {
-		echo "<pre>".$this->nv_Accion->CurrentValue."</pre>";
+
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
-		if((int)$this->nv_Accion->CurrentValue == 1)$this->ListOptions->Items["nv_AccionDet"]->Body = "";
+		if($this->nv_Accion->CurrentValue == 1)$this->ListOptions->Items["nv_AccionDet"]->Body = "";
 
-		if((int)$this->nv_Accion->CurrentValue == 2){
+		if($this->nv_Accion->CurrentValue == 2){
 			$res = select_sql_PO('select_porta_customers_where', array((int)$this->c_IReseller->CurrentValue));
 			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
 		}
 		
-		if((int)$this->nv_Accion->CurrentValue == 3){
+		if($this->nv_Accion->CurrentValue == 3){
 			$res = select_sql_PO('select_porta_customers_class_where', array((int)$this->c_ICClass->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name']; echo "<pre>".$this->c_ICClass->CurrentValue."</pre>";
+			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
 		}
 
-		if((int)$this->nv_Accion->CurrentValue == 4){
+		if($this->nv_Accion->CurrentValue == 4){
 			$res = select_sql_PO('select_porta_customers_where_class', array((int)$this->c_ICliente->CurrentValue));
 			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
 		}
 
-		if((int)$this->nv_Accion->CurrentValue == 5){
+		if($this->nv_Accion->CurrentValue == 5){
 			$res = select_sql_PO('select_porta_accounts_where', array((int)$this->c_ICuenta->CurrentValue, (int)$this->c_ICliente->CurrentValue));
 			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['id'];
 		}
+
 	}
 
 	// Row Custom Action event
@@ -1385,7 +1381,6 @@ faf_log_accioneslist.ValidateRequired = false;
 faf_log_accioneslist.Lists["x_cl_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_log_accioneslist.Lists["x_t_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 faf_log_accioneslist.Lists["x_nv_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_log_accioneslist.Lists["x_st_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax":null,"AutoFill":false,"DisplayFields":["x_rv_Meaning","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -1561,7 +1556,6 @@ $af_log_acciones_list->ShowMessage();
 					<?/******************************************************
 					************************ENDFILTROS**************************
 					*********************************************************/?>
-
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_log_accioneslist" id="faf_log_accioneslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_log_acciones">
@@ -1632,16 +1626,10 @@ $af_log_acciones_list->ListOptions->Render("header", "left");
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->nv_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->nv_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->nv_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
-<?php } ?>		
-<?php if ($af_log_acciones->st_Accion->Visible) { // st_Accion ?>
-	<?php if ($af_log_acciones->SortUrl($af_log_acciones->st_Accion) == "") { ?>
-		<td><div id="elh_af_log_acciones_st_Accion" class="af_log_acciones_st_Accion"><div class="ewTableHeaderCaption"><?php echo $af_log_acciones->st_Accion->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_log_acciones->SortUrl($af_log_acciones->st_Accion) ?>',2);"><div id="elh_af_log_acciones_st_Accion" class="af_log_acciones_st_Accion">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_log_acciones->st_Accion->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_log_acciones->st_Accion->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_log_acciones->st_Accion->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
+<?php } ?>	
+
+
+
 <?php
 
 // Render list options (header, right)
@@ -1740,12 +1728,6 @@ $af_log_acciones_list->ListOptions->Render("body", "left", $af_log_acciones_list
 		<td<?php echo $af_log_acciones->nv_Accion->CellAttributes() ?>>
 <span<?php echo $af_log_acciones->nv_Accion->ViewAttributes() ?>>
 <?php echo $af_log_acciones->nv_Accion->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_log_acciones->st_Accion->Visible) { // st_Accion ?>
-		<td<?php echo $af_log_acciones->st_Accion->CellAttributes() ?>>
-<span<?php echo $af_log_acciones->st_Accion->ViewAttributes() ?>>
-<?php echo $af_log_acciones->st_Accion->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php

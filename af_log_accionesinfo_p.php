@@ -146,10 +146,71 @@ class caf_log_acciones extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		$where = "";
+		if($_SESSION['filtros_log']['desde'] == "" && $_SESSION['filtros_log']['hasta'] == "" && $_SESSION['filtros_log']['destino'] == "" &&
+			$_SESSION['filtros_log']['clase'] == "" && $_SESSION['filtros_log']['nivel'] == ""){
+
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}else{
+
+			if(($_SESSION['filtros_log']['desde'] != "") && ($_SESSION['filtros_log']['hasta'] != "")){
+				$where = $this->SqlFrom() . ".`f_Transaccion` BETWEEN '" . $_SESSION['filtros_log']['desde'] . "' AND '" . $_SESSION['filtros_log']['hasta'] . "' ";
+			}else{
+				if ($_SESSION['filtros_log']['desde'] != ""){
+					$where = $this->SqlFrom() . ".`f_Transaccion`='" . $_SESSION['filtros_log']['desde'] . "'";
+				}else{
+					if ($_SESSION['filtros_log']['hasta'] != "") {
+						$where = $this->SqlFrom() . ".`f_Transaccion`='" . $_SESSION['filtros_log']['desde'] . "'";
+					}
+				}
+			}
+
+			if($_SESSION['filtros_log']['clase'] != ""){
+				if($where != ""){
+					$where .= " AND " . $this->SqlFrom() . ".`cl_Accion`=" . $_SESSION['filtros_log']['clase'];					
+				}else{
+					$where = $this->SqlFrom() . ".`cl_Accion`=" . $_SESSION['filtros_log']['clase'];
+				}
+			}
+
+			if($_SESSION['filtros_log']['nivel'] != ""){
+				if($where != ""){
+					$where .= " AND " . $this->SqlFrom() . ".`nv_Accion`=" . $_SESSION['filtros_log']['nivel'];					
+				}else{
+					$where = $this->SqlFrom() . ".`nv_Accion`=" . $_SESSION['filtros_log']['nivel'];
+				}
+			}
+
+			if($_SESSION['filtros_log']['destino'] != ""){
+				if($where != ""){
+					$cant = count($_SESSION['filtros_log']['destino']);
+					$k = 1;
+					$where = " AND " . $this->SqlFrom().".`c_IDestino` IN (";
+					while($k <= $cant - 1){
+						$where .=  $_SESSION['filtros_log']['destino'][$k]['i_dest']. ", ";
+						$k++;
+					}
+
+					$where .= $_SESSION['filtros_log']['destino'][$k]['i_dest'] . ")";
+				}else{
+					$cant = count($_SESSION['filtros_log']['destino']);
+					$k = 1;
+					$where = $this->SqlFrom().".`c_IDestino` IN (";
+					while($k <= $cant - 1){
+						$where .= $_SESSION['filtros_log']['destino'][$k]['i_dest']. ", ";
+						$k++;
+					}
+
+					$where .= $_SESSION['filtros_log']['destino'][$k]['i_dest'] . ")";
+				}
+
+			}
+			print_r($where);
+			return $where;
+		}
 	}
 
 	function SqlGroupBy() { // Group By
