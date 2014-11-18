@@ -118,5 +118,38 @@ function select_sql_PO($nombre, $ArrParams = NULL){
     cerrarConexion_PO();
 }
 
+function select_PO_manual($nombre, $ArrParams = NULL){
+        switch($nombre) {
+
+            default:
+                break;
+        }
+
+    $ejecutar_sql = mysql_query($sql);
+    if (!$ejecutar_sql) {
+        $object[1]['error'] = 'error'.mysql_error();
+        return $object;
+    } else {
+        $num_rows = @mysql_num_fields($ejecutar_sql);
+        $j=0;
+        $x=1;
+        while($row=@mysql_fetch_array($ejecutar_sql)){
+            for($j=0;$j<$num_rows;$j++){
+                $name = @mysql_field_name($ejecutar_sql,$j);
+                $object[$x][$name]=$row[$name];
+            }
+            $x++;
+        }
+            
+        if ($x>1 && $num_rows>0) {
+            return $object;
+        }
+            
+        @mysql_free_result($ejecutar_sql);
+    }
+
+
+}
+
 
 ?>
