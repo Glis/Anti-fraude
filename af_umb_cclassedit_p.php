@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_umb_clientesinfo.php" ?>
+<?php include_once "af_umb_cclassinfo.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
@@ -15,15 +15,13 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
-
-
 //
 // Page class
 //
 
-$af_umb_clientes_edit = NULL; // Initialize page object first
+$af_umb_cclass_edit = NULL; // Initialize page object first
 
-class caf_umb_clientes_edit extends caf_umb_clientes {
+class caf_umb_cclass_edit extends caf_umb_cclass {
 
 	// Page ID
 	var $PageID = 'edit';
@@ -32,10 +30,10 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_umb_clientes';
+	var $TableName = 'af_umb_cclass';
 
 	// Page object name
-	var $PageObjName = 'af_umb_clientes_edit';
+	var $PageObjName = 'af_umb_cclass_edit';
 
 	// Page name
 	function PageName() {
@@ -175,10 +173,10 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_umb_clientes)
-		if (!isset($GLOBALS["af_umb_clientes"]) || get_class($GLOBALS["af_umb_clientes"]) == "caf_umb_clientes") {
-			$GLOBALS["af_umb_clientes"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_umb_clientes"];
+		// Table object (af_umb_cclass)
+		if (!isset($GLOBALS["af_umb_cclass"]) || get_class($GLOBALS["af_umb_cclass"]) == "caf_umb_cclass") {
+			$GLOBALS["af_umb_cclass"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_umb_cclass"];
 		}
 
 		// Page ID
@@ -187,7 +185,7 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_umb_clientes', TRUE);
+			define("EW_TABLE_NAME", 'af_umb_cclass', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -254,8 +252,8 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		if (@$_GET["c_IReseller"] <> "") {
 			$this->c_IReseller->setQueryStringValue($_GET["c_IReseller"]);
 		}
-		if (@$_GET["c_ICliente"] <> "") {
-			$this->c_ICliente->setQueryStringValue($_GET["c_ICliente"]);
+		if (@$_GET["c_ICClass"] <> "") {
+			$this->c_ICClass->setQueryStringValue($_GET["c_ICClass"]);
 		}
 
 		// Set up Breadcrumb
@@ -277,11 +275,11 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 
 		// Check if valid key
 		if ($this->c_IDestino->CurrentValue == "")
-			$this->Page_Terminate("af_umb_clienteslist.php"); // Invalid key, return to list
+			$this->Page_Terminate("af_umb_cclasslist.php"); // Invalid key, return to list
 		if ($this->c_IReseller->CurrentValue == "")
-			$this->Page_Terminate("af_umb_clienteslist.php"); // Invalid key, return to list
-		if ($this->c_ICliente->CurrentValue == "")
-			$this->Page_Terminate("af_umb_clienteslist.php"); // Invalid key, return to list
+			$this->Page_Terminate("af_umb_cclasslist.php"); // Invalid key, return to list
+		if ($this->c_ICClass->CurrentValue == "")
+			$this->Page_Terminate("af_umb_cclasslist.php"); // Invalid key, return to list
 
 		// Validate form if post back
 		if (@$_POST["a_edit"] <> "") {
@@ -296,7 +294,7 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 			case "I": // Get a record to display
 				if (!$this->LoadRow()) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("af_umb_clienteslist.php"); // No matching record, return to list
+					$this->Page_Terminate("af_umb_cclasslist.php"); // No matching record, return to list
 				}
 				break;
 			Case "U": // Update
@@ -372,18 +370,18 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		if (!$this->c_IReseller->FldIsDetailKey) {
 			$this->c_IReseller->setFormValue($objForm->GetValue("x_c_IReseller"));
 		}
-		if (!$this->c_ICliente->FldIsDetailKey) {
-			$this->c_ICliente->setFormValue($objForm->GetValue("x_c_ICliente"));
+		if (!$this->c_ICClass->FldIsDetailKey) {
+			$this->c_ICClass->setFormValue($objForm->GetValue("x_c_ICClass"));
 		}
-		if (!$this->q_MinAl_Cli->FldIsDetailKey) {
-			$this->q_MinAl_Cli->setFormValue($objForm->GetValue("x_q_MinAl_Cli"));
+		if (!$this->q_MinAl_CClass->FldIsDetailKey) {
+			$this->q_MinAl_CClass->setFormValue($objForm->GetValue("x_q_MinAl_CClass"));
 		}
-		if (!$this->q_MinCu_Cli->FldIsDetailKey) {
-			$this->q_MinCu_Cli->setFormValue($objForm->GetValue("x_q_MinCu_Cli"));
+		if (!$this->q_MinCu_CClass->FldIsDetailKey) {
+			$this->q_MinCu_CClass->setFormValue($objForm->GetValue("x_q_MinCu_CClass"));
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -398,11 +396,11 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		$this->LoadRow();
 		$this->c_IDestino->CurrentValue = $this->c_IDestino->FormValue;
 		$this->c_IReseller->CurrentValue = $this->c_IReseller->FormValue;
-		$this->c_ICliente->CurrentValue = $this->c_ICliente->FormValue;
-		$this->q_MinAl_Cli->CurrentValue = $this->q_MinAl_Cli->FormValue;
-		$this->q_MinCu_Cli->CurrentValue = $this->q_MinCu_Cli->FormValue;
+		$this->c_ICClass->CurrentValue = $this->c_ICClass->FormValue;
+		$this->q_MinAl_CClass->CurrentValue = $this->q_MinAl_CClass->FormValue;
+		$this->q_MinCu_CClass->CurrentValue = $this->q_MinCu_CClass->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 		if ($this->CurrentAction <> "overwrite")
 			$this->HashValue = $objForm->GetValue("k_hash");
@@ -441,9 +439,9 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		$this->Row_Selected($row);
 		$this->c_IDestino->setDbValue($rs->fields('c_IDestino'));
 		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
-		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
-		$this->q_MinAl_Cli->setDbValue($rs->fields('q_MinAl_Cli'));
-		$this->q_MinCu_Cli->setDbValue($rs->fields('q_MinCu_Cli'));
+		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
+		$this->q_MinAl_CClass->setDbValue($rs->fields('q_MinAl_CClass'));
+		$this->q_MinCu_CClass->setDbValue($rs->fields('q_MinCu_CClass'));
 		$this->f_Ult_Mod->setDbValue($rs->fields('f_Ult_Mod'));
 		$this->c_Usuario_Ult_Mod->setDbValue($rs->fields('c_Usuario_Ult_Mod'));
 	}
@@ -454,9 +452,9 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->c_IDestino->DbValue = $row['c_IDestino'];
 		$this->c_IReseller->DbValue = $row['c_IReseller'];
-		$this->c_ICliente->DbValue = $row['c_ICliente'];
-		$this->q_MinAl_Cli->DbValue = $row['q_MinAl_Cli'];
-		$this->q_MinCu_Cli->DbValue = $row['q_MinCu_Cli'];
+		$this->c_ICClass->DbValue = $row['c_ICClass'];
+		$this->q_MinAl_CClass->DbValue = $row['q_MinAl_CClass'];
+		$this->q_MinCu_CClass->DbValue = $row['q_MinCu_CClass'];
 		$this->f_Ult_Mod->DbValue = $row['f_Ult_Mod'];
 		$this->c_Usuario_Ult_Mod->DbValue = $row['c_Usuario_Ult_Mod'];
 	}
@@ -474,9 +472,9 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		// Common render codes for all row types
 		// c_IDestino
 		// c_IReseller
-		// c_ICliente
-		// q_MinAl_Cli
-		// q_MinCu_Cli
+		// c_ICClass
+		// q_MinAl_CClass
+		// q_MinCu_CClass
 		// f_Ult_Mod
 		// c_Usuario_Ult_Mod
 
@@ -498,12 +496,8 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->ViewValue = NULL;
@@ -526,21 +520,17 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
-					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->ViewValue = NULL;
 			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
-			// c_ICliente
-			if (strval($this->c_ICliente->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICliente->CurrentValue, EW_DATATYPE_STRING);
+			// c_ICClass
+			if (strval($this->c_ICClass->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICClass->CurrentValue, EW_DATATYPE_STRING);
 			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
@@ -548,35 +538,31 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_ICliente, $sWhereWrk);
+			$this->Lookup_Selecting($this->c_ICClass, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_ICliente->ViewValue = $rswrk->fields('DispFld');
+					$this->c_ICClass->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
-					$this->c_ICliente->EditValue = $result[1]['name'];
 				} else {
-					$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
-					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
-					$this->c_ICliente->EditValue = $result[1]['name'];
+					$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
 				}
 			} else {
-				$this->c_ICliente->ViewValue = NULL;
+				$this->c_ICClass->ViewValue = NULL;
 			}
-			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICClass->ViewCustomAttributes = "";
 
-			// q_MinAl_Cli
-			$this->q_MinAl_Cli->ViewValue = $this->q_MinAl_Cli->CurrentValue;
-			$this->q_MinAl_Cli->ViewCustomAttributes = "";
+			// q_MinAl_CClass
+			$this->q_MinAl_CClass->ViewValue = $this->q_MinAl_CClass->CurrentValue;
+			$this->q_MinAl_CClass->ViewCustomAttributes = "";
 
-			// q_MinCu_Cli
-			$this->q_MinCu_Cli->ViewValue = $this->q_MinCu_Cli->CurrentValue;
-			$this->q_MinCu_Cli->ViewCustomAttributes = "";
+			// q_MinCu_CClass
+			$this->q_MinCu_CClass->ViewValue = $this->q_MinCu_CClass->CurrentValue;
+			$this->q_MinCu_CClass->ViewCustomAttributes = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -593,20 +579,20 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 			$this->c_IReseller->HrefValue = "";
 			$this->c_IReseller->TooltipValue = "";
 
-			// c_ICliente
-			$this->c_ICliente->LinkCustomAttributes = "";
-			$this->c_ICliente->HrefValue = "";
-			$this->c_ICliente->TooltipValue = "";
+			// c_ICClass
+			$this->c_ICClass->LinkCustomAttributes = "";
+			$this->c_ICClass->HrefValue = "";
+			$this->c_ICClass->TooltipValue = "";
 
-			// q_MinAl_Cli
-			$this->q_MinAl_Cli->LinkCustomAttributes = "";
-			$this->q_MinAl_Cli->HrefValue = "";
-			$this->q_MinAl_Cli->TooltipValue = "";
+			// q_MinAl_CClass
+			$this->q_MinAl_CClass->LinkCustomAttributes = "";
+			$this->q_MinAl_CClass->HrefValue = "";
+			$this->q_MinAl_CClass->TooltipValue = "";
 
-			// q_MinCu_Cli
-			$this->q_MinCu_Cli->LinkCustomAttributes = "";
-			$this->q_MinCu_Cli->HrefValue = "";
-			$this->q_MinCu_Cli->TooltipValue = "";
+			// q_MinCu_CClass
+			$this->q_MinCu_CClass->LinkCustomAttributes = "";
+			$this->q_MinCu_CClass->HrefValue = "";
+			$this->q_MinCu_CClass->TooltipValue = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->LinkCustomAttributes = "";
@@ -636,8 +622,12 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->EditValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->EditValue = NULL;
@@ -661,18 +651,22 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IReseller->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				} else {
 					$this->c_IReseller->EditValue = $this->c_IReseller->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where", array($this->c_IReseller->CurrentValue));
+					$this->c_IReseller->EditValue = $result[1]['name'];
 				}
 			} else {
 				$this->c_IReseller->EditValue = NULL;
 			}
 			$this->c_IReseller->ViewCustomAttributes = "";
 
-			// c_ICliente
-			$this->c_ICliente->EditCustomAttributes = "";
-			if (strval($this->c_ICliente->CurrentValue) <> "") {
-				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICliente->CurrentValue, EW_DATATYPE_STRING);
+			// c_ICClass
+			$this->c_ICClass->EditCustomAttributes = "";
+			if (strval($this->c_ICClass->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICClass->CurrentValue, EW_DATATYPE_STRING);
 			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
 			$sWhereWrk = "";
 			if ($sFilterWrk <> "") {
@@ -680,29 +674,33 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 			}
 
 			// Call Lookup selecting
-			$this->Lookup_Selecting($this->c_ICliente, $sWhereWrk);
+			$this->Lookup_Selecting($this->c_ICClass, $sWhereWrk);
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 				$rswrk = $conn->Execute($sSqlWrk);
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$this->c_ICliente->EditValue = $rswrk->fields('DispFld');
+					$this->c_ICClass->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				} else {
-					$this->c_ICliente->EditValue = $this->c_ICliente->CurrentValue;
+					$this->c_ICClass->EditValue = $this->c_ICClass->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_class_where", array($this->c_ICClass->CurrentValue));
+					$this->c_ICClass->EditValue = $result[1]['name'];
 				}
 			} else {
-				$this->c_ICliente->EditValue = NULL;
+				$this->c_ICClass->EditValue = NULL;
 			}
-			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICClass->ViewCustomAttributes = "";
 
-			// q_MinAl_Cli
-			$this->q_MinAl_Cli->EditCustomAttributes = "";
-			$this->q_MinAl_Cli->EditValue = ew_HtmlEncode($this->q_MinAl_Cli->CurrentValue);
-			$this->q_MinAl_Cli->PlaceHolder = ew_RemoveHtml($this->q_MinAl_Cli->FldCaption());
+			// q_MinAl_CClass
+			$this->q_MinAl_CClass->EditCustomAttributes = "";
+			$this->q_MinAl_CClass->EditValue = ew_HtmlEncode($this->q_MinAl_CClass->CurrentValue);
+			$this->q_MinAl_CClass->PlaceHolder = ew_RemoveHtml($this->q_MinAl_CClass->FldCaption());
 
-			// q_MinCu_Cli
-			$this->q_MinCu_Cli->EditCustomAttributes = "";
-			$this->q_MinCu_Cli->EditValue = ew_HtmlEncode($this->q_MinCu_Cli->CurrentValue);
-			$this->q_MinCu_Cli->PlaceHolder = ew_RemoveHtml($this->q_MinCu_Cli->FldCaption());
+			// q_MinCu_CClass
+			$this->q_MinCu_CClass->EditCustomAttributes = "";
+			$this->q_MinCu_CClass->EditValue = ew_HtmlEncode($this->q_MinCu_CClass->CurrentValue);
+			$this->q_MinCu_CClass->PlaceHolder = ew_RemoveHtml($this->q_MinCu_CClass->FldCaption());
 
 			// f_Ult_Mod
 			// c_Usuario_Ult_Mod
@@ -714,14 +712,14 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 			// c_IReseller
 			$this->c_IReseller->HrefValue = "";
 
-			// c_ICliente
-			$this->c_ICliente->HrefValue = "";
+			// c_ICClass
+			$this->c_ICClass->HrefValue = "";
 
-			// q_MinAl_Cli
-			$this->q_MinAl_Cli->HrefValue = "";
+			// q_MinAl_CClass
+			$this->q_MinAl_CClass->HrefValue = "";
 
-			// q_MinCu_Cli
-			$this->q_MinCu_Cli->HrefValue = "";
+			// q_MinCu_CClass
+			$this->q_MinCu_CClass->HrefValue = "";
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->HrefValue = "";
@@ -756,20 +754,20 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		if (!$this->c_IReseller->FldIsDetailKey && !is_null($this->c_IReseller->FormValue) && $this->c_IReseller->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_IReseller->FldCaption());
 		}
-		if (!$this->c_ICliente->FldIsDetailKey && !is_null($this->c_ICliente->FormValue) && $this->c_ICliente->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_ICliente->FldCaption());
+		if (!$this->c_ICClass->FldIsDetailKey && !is_null($this->c_ICClass->FormValue) && $this->c_ICClass->FormValue == "") {
+			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->c_ICClass->FldCaption());
 		}
-		if (!$this->q_MinAl_Cli->FldIsDetailKey && !is_null($this->q_MinAl_Cli->FormValue) && $this->q_MinAl_Cli->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->q_MinAl_Cli->FldCaption());
+		if (!$this->q_MinAl_CClass->FldIsDetailKey && !is_null($this->q_MinAl_CClass->FormValue) && $this->q_MinAl_CClass->FormValue == "") {
+			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->q_MinAl_CClass->FldCaption());
 		}
-		if (!ew_CheckInteger($this->q_MinAl_Cli->FormValue)) {
-			ew_AddMessage($gsFormError, $this->q_MinAl_Cli->FldErrMsg());
+		if (!ew_CheckInteger($this->q_MinAl_CClass->FormValue)) {
+			ew_AddMessage($gsFormError, $this->q_MinAl_CClass->FldErrMsg());
 		}
-		if (!$this->q_MinCu_Cli->FldIsDetailKey && !is_null($this->q_MinCu_Cli->FormValue) && $this->q_MinCu_Cli->FormValue == "") {
-			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->q_MinCu_Cli->FldCaption());
+		if (!$this->q_MinCu_CClass->FldIsDetailKey && !is_null($this->q_MinCu_CClass->FormValue) && $this->q_MinCu_CClass->FormValue == "") {
+			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->q_MinCu_CClass->FldCaption());
 		}
-		if (!ew_CheckInteger($this->q_MinCu_Cli->FormValue)) {
-			ew_AddMessage($gsFormError, $this->q_MinCu_Cli->FldErrMsg());
+		if (!ew_CheckInteger($this->q_MinCu_CClass->FormValue)) {
+			ew_AddMessage($gsFormError, $this->q_MinCu_CClass->FldErrMsg());
 		}
 
 		// Return validate result
@@ -806,13 +804,13 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 
 			// c_IDestino
 			// c_IReseller
-			// c_ICliente
-			// q_MinAl_Cli
+			// c_ICClass
+			// q_MinAl_CClass
 
-			$this->q_MinAl_Cli->SetDbValueDef($rsnew, $this->q_MinAl_Cli->CurrentValue, 0, $this->q_MinAl_Cli->ReadOnly);
+			$this->q_MinAl_CClass->SetDbValueDef($rsnew, $this->q_MinAl_CClass->CurrentValue, 0, $this->q_MinAl_CClass->ReadOnly);
 
-			// q_MinCu_Cli
-			$this->q_MinCu_Cli->SetDbValueDef($rsnew, $this->q_MinCu_Cli->CurrentValue, 0, $this->q_MinCu_Cli->ReadOnly);
+			// q_MinCu_CClass
+			$this->q_MinCu_CClass->SetDbValueDef($rsnew, $this->q_MinCu_CClass->CurrentValue, 0, $this->q_MinCu_CClass->ReadOnly);
 
 			// Check hash value
 			$bRowHasConflict = ($this->GetRowHash($rs) <> $this->HashValue);
@@ -879,9 +877,9 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 		$sHash = "";
 		$sHash .= ew_GetFldHash($rs->fields('c_IDestino')); // c_IDestino
 		$sHash .= ew_GetFldHash($rs->fields('c_IReseller')); // c_IReseller
-		$sHash .= ew_GetFldHash($rs->fields('c_ICliente')); // c_ICliente
-		$sHash .= ew_GetFldHash($rs->fields('q_MinAl_Cli')); // q_MinAl_Cli
-		$sHash .= ew_GetFldHash($rs->fields('q_MinCu_Cli')); // q_MinCu_Cli
+		$sHash .= ew_GetFldHash($rs->fields('c_ICClass')); // c_ICClass
+		$sHash .= ew_GetFldHash($rs->fields('q_MinAl_CClass')); // q_MinAl_CClass
+		$sHash .= ew_GetFldHash($rs->fields('q_MinCu_CClass')); // q_MinCu_CClass
 		return md5($sHash);
 	}
 
@@ -889,7 +887,7 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
-		$Breadcrumb->Add("list", $this->TableVar, "af_umb_clienteslist.php", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, "af_umb_cclasslist.php", $this->TableVar, TRUE);
 		$PageId = "edit";
 		$Breadcrumb->Add("edit", $PageId, ew_CurrentUrl());
 	}
@@ -966,33 +964,44 @@ class caf_umb_clientes_edit extends caf_umb_clientes {
 <?php
 
 // Create page object
-if (!isset($af_umb_clientes_edit)) $af_umb_clientes_edit = new caf_umb_clientes_edit();
+if (!isset($af_umb_cclass_edit)) $af_umb_cclass_edit = new caf_umb_cclass_edit();
 
 // Page init
-$af_umb_clientes_edit->Page_Init();
+$af_umb_cclass_edit->Page_Init();
 
 // Page main
-$af_umb_clientes_edit->Page_Main();
+$af_umb_cclass_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_umb_clientes_edit->Page_Render();
+$af_umb_cclass_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+<?          /**********************SI NO ES USUARIO CONFIG**********************/
+
+if($_SESSION['USUARIO_TYPE']['config']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
+
 <script type="text/javascript">
 
 // Page object
-var af_umb_clientes_edit = new ew_Page("af_umb_clientes_edit");
-af_umb_clientes_edit.PageID = "edit"; // Page ID
-var EW_PAGE_ID = af_umb_clientes_edit.PageID; // For backward compatibility
+var af_umb_cclass_edit = new ew_Page("af_umb_cclass_edit");
+af_umb_cclass_edit.PageID = "edit"; // Page ID
+var EW_PAGE_ID = af_umb_cclass_edit.PageID; // For backward compatibility
 
 // Form object
-var faf_umb_clientesedit = new ew_Form("faf_umb_clientesedit");
+var faf_umb_cclassedit = new ew_Form("faf_umb_cclassedit");
 
 // Validate form
-faf_umb_clientesedit.Validate = function() {
+faf_umb_cclassedit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -1009,25 +1018,25 @@ faf_umb_clientesedit.Validate = function() {
 		$fobj.data("rowindex", infix);
 			elm = this.GetElements("x" + infix + "_c_IDestino");
 			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_clientes->c_IDestino->FldCaption()) ?>");
+				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_cclass->c_IDestino->FldCaption()) ?>");
 			elm = this.GetElements("x" + infix + "_c_IReseller");
 			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_clientes->c_IReseller->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_c_ICliente");
+				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_cclass->c_IReseller->FldCaption()) ?>");
+			elm = this.GetElements("x" + infix + "_c_ICClass");
 			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_clientes->c_ICliente->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_q_MinAl_Cli");
+				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_cclass->c_ICClass->FldCaption()) ?>");
+			elm = this.GetElements("x" + infix + "_q_MinAl_CClass");
 			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_clientes->q_MinAl_Cli->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_q_MinAl_Cli");
+				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_cclass->q_MinAl_CClass->FldCaption()) ?>");
+			elm = this.GetElements("x" + infix + "_q_MinAl_CClass");
 			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($af_umb_clientes->q_MinAl_Cli->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_q_MinCu_Cli");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($af_umb_cclass->q_MinAl_CClass->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_q_MinCu_CClass");
 			if (elm && !ew_HasValue(elm))
-				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_clientes->q_MinCu_Cli->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_q_MinCu_Cli");
+				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_umb_cclass->q_MinCu_CClass->FldCaption()) ?>");
+			elm = this.GetElements("x" + infix + "_q_MinCu_CClass");
 			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($af_umb_clientes->q_MinCu_Cli->FldErrMsg()) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($af_umb_cclass->q_MinCu_CClass->FldErrMsg()) ?>");
 
 			// Set up row object
 			ew_ElementsToRow(fobj);
@@ -1049,7 +1058,7 @@ faf_umb_clientesedit.Validate = function() {
 }
 
 // Form_CustomValidate event
-faf_umb_clientesedit.Form_CustomValidate = 
+faf_umb_cclassedit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1058,15 +1067,15 @@ faf_umb_clientesedit.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_umb_clientesedit.ValidateRequired = true;
+faf_umb_cclassedit.ValidateRequired = true;
 <?php } else { ?>
-faf_umb_clientesedit.ValidateRequired = false; 
+faf_umb_cclassedit.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
-faf_umb_clientesedit.Lists["x_c_IDestino"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_umb_clientesedit.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
-faf_umb_clientesedit.Lists["x_c_ICliente"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_umb_cclassedit.Lists["x_c_IDestino"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_umb_cclassedit.Lists["x_c_IReseller"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
+faf_umb_cclassedit.Lists["x_c_ICClass"] = {"LinkField":"x_c_Usuario","Ajax":null,"AutoFill":false,"DisplayFields":["x_c_Usuario","","",""],"ParentFields":[],"FilterFields":[],"Options":[]};
 
 // Form object for search
 </script>
@@ -1075,89 +1084,90 @@ faf_umb_clientesedit.Lists["x_c_ICliente"] = {"LinkField":"x_c_Usuario","Ajax":n
 // Write your client script here, no need to add script tags.
 </script>
 <?php $Breadcrumb->Render(); ?>
-<?php $af_umb_clientes_edit->ShowPageHeader(); ?>
+<?php $af_umb_cclass_edit->ShowPageHeader(); ?>
 <?php
-$af_umb_clientes_edit->ShowMessage();
+$af_umb_cclass_edit->ShowMessage();
 ?>
-<form name="faf_umb_clientesedit" id="faf_umb_clientesedit" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_umb_clientes">
+<form name="faf_umb_cclassedit" id="faf_umb_cclassedit" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_umb_cclass">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
-<input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_umb_clientes_edit->HashValue ?>">
+<input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_umb_cclass_edit->HashValue ?>">
+<div id="page_title"> - Editar</div>
 <table class="ewGrid"><tr><td>
-<table id="tbl_af_umb_clientesedit" class="table table-bordered table-striped">
-<?php if ($af_umb_clientes->c_IDestino->Visible) { // c_IDestino ?>
+<table id="tbl_af_umb_cclassedit" class="table table-bordered table-striped">
+<?php if ($af_umb_cclass->c_IDestino->Visible) { // c_IDestino ?>
 	<tr id="r_c_IDestino">
-		<td><span id="elh_af_umb_clientes_c_IDestino"><?php echo $af_umb_clientes->c_IDestino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_umb_clientes->c_IDestino->CellAttributes() ?>>
-<span id="el_af_umb_clientes_c_IDestino" class="control-group">
-<span<?php echo $af_umb_clientes->c_IDestino->ViewAttributes() ?>>
-<?php echo $af_umb_clientes->c_IDestino->EditValue ?></span>
+		<td><span id="elh_af_umb_cclass_c_IDestino"><?php echo $af_umb_cclass->c_IDestino->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td<?php echo $af_umb_cclass->c_IDestino->CellAttributes() ?>>
+<span id="el_af_umb_cclass_c_IDestino" class="control-group">
+<span<?php echo $af_umb_cclass->c_IDestino->ViewAttributes() ?>>
+<?php echo $af_umb_cclass->c_IDestino->EditValue ?></span>
 </span>
-<input type="hidden" data-field="x_c_IDestino" name="x_c_IDestino" id="x_c_IDestino" value="<?php echo ew_HtmlEncode($af_umb_clientes->c_IDestino->CurrentValue) ?>">
-<?php echo $af_umb_clientes->c_IDestino->CustomMsg ?></td>
+<input type="hidden" data-field="x_c_IDestino" name="x_c_IDestino" id="x_c_IDestino" value="<?php echo ew_HtmlEncode($af_umb_cclass->c_IDestino->CurrentValue) ?>">
+<?php echo $af_umb_cclass->c_IDestino->CustomMsg ?></td>
 	</tr>
 <?php } ?>
-<?php if ($af_umb_clientes->c_IReseller->Visible) { // c_IReseller ?>
+<?php if ($af_umb_cclass->c_IReseller->Visible) { // c_IReseller ?>
 	<tr id="r_c_IReseller">
-		<td><span id="elh_af_umb_clientes_c_IReseller"><?php echo $af_umb_clientes->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_umb_clientes->c_IReseller->CellAttributes() ?>>
-<span id="el_af_umb_clientes_c_IReseller" class="control-group">
-<span<?php echo $af_umb_clientes->c_IReseller->ViewAttributes() ?>>
-<?php echo $af_umb_clientes->c_IReseller->EditValue ?></span>
+		<td><span id="elh_af_umb_cclass_c_IReseller"><?php echo $af_umb_cclass->c_IReseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td<?php echo $af_umb_cclass->c_IReseller->CellAttributes() ?>>
+<span id="el_af_umb_cclass_c_IReseller" class="control-group">
+<span<?php echo $af_umb_cclass->c_IReseller->ViewAttributes() ?>>
+<?php echo $af_umb_cclass->c_IReseller->EditValue ?></span>
 </span>
-<input type="hidden" data-field="x_c_IReseller" name="x_c_IReseller" id="x_c_IReseller" value="<?php echo ew_HtmlEncode($af_umb_clientes->c_IReseller->CurrentValue) ?>">
-<?php echo $af_umb_clientes->c_IReseller->CustomMsg ?></td>
+<input type="hidden" data-field="x_c_IReseller" name="x_c_IReseller" id="x_c_IReseller" value="<?php echo ew_HtmlEncode($af_umb_cclass->c_IReseller->CurrentValue) ?>">
+<?php echo $af_umb_cclass->c_IReseller->CustomMsg ?></td>
 	</tr>
 <?php } ?>
-<?php if ($af_umb_clientes->c_ICliente->Visible) { // c_ICliente ?>
-	<tr id="r_c_ICliente">
-		<td><span id="elh_af_umb_clientes_c_ICliente"><?php echo $af_umb_clientes->c_ICliente->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_umb_clientes->c_ICliente->CellAttributes() ?>>
-<span id="el_af_umb_clientes_c_ICliente" class="control-group">
-<span<?php echo $af_umb_clientes->c_ICliente->ViewAttributes() ?>>
-<?php echo $af_umb_clientes->c_ICliente->EditValue ?></span>
+<?php if ($af_umb_cclass->c_ICClass->Visible) { // c_ICClass ?>
+	<tr id="r_c_ICClass">
+		<td><span id="elh_af_umb_cclass_c_ICClass"><?php echo $af_umb_cclass->c_ICClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td<?php echo $af_umb_cclass->c_ICClass->CellAttributes() ?>>
+<span id="el_af_umb_cclass_c_ICClass" class="control-group">
+<span<?php echo $af_umb_cclass->c_ICClass->ViewAttributes() ?>>
+<?php echo $af_umb_cclass->c_ICClass->EditValue ?></span>
 </span>
-<input type="hidden" data-field="x_c_ICliente" name="x_c_ICliente" id="x_c_ICliente" value="<?php echo ew_HtmlEncode($af_umb_clientes->c_ICliente->CurrentValue) ?>">
-<?php echo $af_umb_clientes->c_ICliente->CustomMsg ?></td>
+<input type="hidden" data-field="x_c_ICClass" name="x_c_ICClass" id="x_c_ICClass" value="<?php echo ew_HtmlEncode($af_umb_cclass->c_ICClass->CurrentValue) ?>">
+<?php echo $af_umb_cclass->c_ICClass->CustomMsg ?></td>
 	</tr>
 <?php } ?>
-<?php if ($af_umb_clientes->q_MinAl_Cli->Visible) { // q_MinAl_Cli ?>
-	<tr id="r_q_MinAl_Cli">
-		<td><span id="elh_af_umb_clientes_q_MinAl_Cli"><?php echo $af_umb_clientes->q_MinAl_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_umb_clientes->q_MinAl_Cli->CellAttributes() ?>>
-<span id="el_af_umb_clientes_q_MinAl_Cli" class="control-group">
-<input class="form-control" type="number" min="0" data-field="x_q_MinAl_Cli" name="x_q_MinAl_Cli" id="x_q_MinAl_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinAl_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinAl_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinAl_Cli->EditAttributes() ?>>
+<?php if ($af_umb_cclass->q_MinAl_CClass->Visible) { // q_MinAl_CClass ?>
+	<tr id="r_q_MinAl_CClass">
+		<td><span id="elh_af_umb_cclass_q_MinAl_CClass"><?php echo $af_umb_cclass->q_MinAl_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td<?php echo $af_umb_cclass->q_MinAl_CClass->CellAttributes() ?>>
+<span id="el_af_umb_cclass_q_MinAl_CClass" class="control-group">
+<input class="form-control" type="number" min="0" data-field="x_q_MinAl_CClass" name="x_q_MinAl_CClass" id="x_q_MinAl_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinAl_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinAl_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinAl_CClass->EditAttributes() ?>>
 </span>
-<?php echo $af_umb_clientes->q_MinAl_Cli->CustomMsg ?></td>
+<?php echo $af_umb_cclass->q_MinAl_CClass->CustomMsg ?></td>
 	</tr>
 <?php } ?>
-<?php if ($af_umb_clientes->q_MinCu_Cli->Visible) { // q_MinCu_Cli ?>
-	<tr id="r_q_MinCu_Cli">
-		<td><span id="elh_af_umb_clientes_q_MinCu_Cli"><?php echo $af_umb_clientes->q_MinCu_Cli->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
-		<td<?php echo $af_umb_clientes->q_MinCu_Cli->CellAttributes() ?>>
-<span id="el_af_umb_clientes_q_MinCu_Cli" class="control-group">
-<input class="form-control" type="number" min="0" data-field="x_q_MinCu_Cli" name="x_q_MinCu_Cli" id="x_q_MinCu_Cli" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_clientes->q_MinCu_Cli->PlaceHolder) ?>" value="<?php echo $af_umb_clientes->q_MinCu_Cli->EditValue ?>"<?php echo $af_umb_clientes->q_MinCu_Cli->EditAttributes() ?>>
+<?php if ($af_umb_cclass->q_MinCu_CClass->Visible) { // q_MinCu_CClass ?>
+	<tr id="r_q_MinCu_CClass">
+		<td><span id="elh_af_umb_cclass_q_MinCu_CClass"><?php echo $af_umb_cclass->q_MinCu_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td<?php echo $af_umb_cclass->q_MinCu_CClass->CellAttributes() ?>>
+<span id="el_af_umb_cclass_q_MinCu_CClass" class="control-group">
+<input class="form-control" type="number" min="0" data-field="x_q_MinCu_CClass" name="x_q_MinCu_CClass" id="x_q_MinCu_CClass" size="30" placeholder="<?php echo ew_HtmlEncode($af_umb_cclass->q_MinCu_CClass->PlaceHolder) ?>" value="<?php echo $af_umb_cclass->q_MinCu_CClass->EditValue ?>"<?php echo $af_umb_cclass->q_MinCu_CClass->EditAttributes() ?>>
 </span>
-<?php echo $af_umb_clientes->q_MinCu_Cli->CustomMsg ?></td>
+<?php echo $af_umb_cclass->q_MinCu_CClass->CustomMsg ?></td>
 	</tr>
 <?php } ?>
 </table>
 </td></tr></table>
-<?php if ($af_umb_clientes->UpdateConflict == "U") { // Record already updated by other user ?>
+<?php if ($af_umb_cclass->UpdateConflict == "U") { // Record already updated by other user ?>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit" onclick="this.form.a_edit.value='overwrite';"><?php echo $Language->Phrase("OverwriteBtn") ?></button>
-<button class="btn ewButton" name="btnReload" id="btnReload" type="submit" onclick="this.form.a_edit.value='I';"><?php echo $Language->Phrase("ReloadBtn") ?></button>
+<button class="btn btn-primary ewButton" name="btnReload" id="btnReload" type="submit" onclick="this.form.a_edit.value='I';"><?php echo $Language->Phrase("ReloadBtn") ?></button>
 <?php } else { ?>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("EditBtn") ?></button>
 <?php } ?>
 </form>
 <script type="text/javascript">
-faf_umb_clientesedit.Init();
+faf_umb_cclassedit.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php
-$af_umb_clientes_edit->ShowPageFooter();
+$af_umb_cclass_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1169,5 +1179,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$af_umb_clientes_edit->Page_Terminate();
+$af_umb_cclass_edit->Page_Terminate();
 ?>

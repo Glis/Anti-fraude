@@ -814,7 +814,7 @@ class caf_acc_plataforma extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-		//update_sql('update_uf_acc_plataforma', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0], $rsold[1]));
+		update_sql('update_uf_acc_plataforma', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0], $rsold[1]));
 		//echo "Row Updated";
 	}
 

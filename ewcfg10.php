@@ -17,7 +17,7 @@ define("EW_IS_PHP5", (phpversion() >= "5.2.0"), TRUE); // Is PHP 5.2 or later
 if (!EW_IS_PHP5) die("This script requires PHP 5.2 or later. You are running " . phpversion() . ".");
 define("EW_PATH_DELIMITER", ((EW_IS_WINDOWS) ? "\\" : "/"), TRUE); // Physical path delimiter
 define("EW_ROOT_RELATIVE_PATH", ".", TRUE); // Relative path of app root
-define("EW_DEFAULT_DATE_FORMAT", "dd/mm/yyyy", TRUE); // Default date format
+define("EW_DEFAULT_DATE_FORMAT", "dd/mm/yyyy hh:mm:ss", TRUE); // Default date format
 define("EW_DEFAULT_DATE_FORMAT_ID", "7", TRUE); // Default date format
 define("EW_DATE_SEPARATOR", "/", TRUE); // Date separator
 define("EW_UNFORMAT_YEAR", 50, TRUE); // Unformat year

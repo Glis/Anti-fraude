@@ -1254,7 +1254,7 @@ $af_acc_cclass_edit->ShowMessage();
 		<td><span id="elh_af_acc_cclass_x_DirCorreo"><?php echo $af_acc_cclass->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_DirCorreo" class="control-group">
-<input type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
+<input class="form-control" type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_cclass->x_DirCorreo->CustomMsg ?></td>
 	</tr>
@@ -1264,7 +1264,7 @@ $af_acc_cclass_edit->ShowMessage();
 		<td><span id="elh_af_acc_cclass_x_Titulo"><?php echo $af_acc_cclass->x_Titulo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_Titulo->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_Titulo" class="control-group">
-<input type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_Titulo->EditValue ?>"<?php echo $af_acc_cclass->x_Titulo->EditAttributes() ?>>
+<input class="form-control" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_Titulo->EditValue ?>"<?php echo $af_acc_cclass->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_cclass->x_Titulo->CustomMsg ?></td>
 	</tr>
@@ -1274,7 +1274,7 @@ $af_acc_cclass_edit->ShowMessage();
 		<td><span id="elh_af_acc_cclass_x_Mensaje"><?php echo $af_acc_cclass->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_Mensaje" class="control-group">
-<textarea data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_cclass->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_cclass->x_Mensaje->EditValue ?></textarea>
+<textarea class="form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_cclass->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_cclass->x_Mensaje->EditValue ?></textarea>
 </span>
 <?php echo $af_acc_cclass->x_Mensaje->CustomMsg ?></td>
 	</tr>

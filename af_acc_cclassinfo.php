@@ -1004,7 +1004,7 @@ class caf_acc_cclass extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-		//update_sql('update_uf_acc_cclass', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0], $rsold[1], $rsold[2], $rsold[3]));
+		update_sql('update_uf_acc_cclass', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0], $rsold[1], $rsold[2], $rsold[3]));
 		//update_sql('update_username', array('af_usuarios', $_SESSION['USUARIO'],'c_Usuario' ,"'".$rsold[0]."'"));
 		//echo "Row Updated";
 	}
