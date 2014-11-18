@@ -88,7 +88,8 @@ function select_sql_PO($nombre, $ArrParams = NULL){
                 //Filtro Cliente
                 $sql = 'SELECT name, i_customer FROM Customers WHERE i_env=1 AND i_customer_type=1 AND name LIKE "%'.$ArrParams[0].'%"';
                 break;
-
+            default:
+                break;
                 
         }
     
@@ -118,9 +119,68 @@ function select_sql_PO($nombre, $ArrParams = NULL){
     cerrarConexion_PO();
 }
 
-function select_PO_manual($nombre, $ArrParams = NULL){
+function select_sql_PO_manual($nombre, $ArrParams = NULL){
         switch($nombre) {
+            case 'select_porta_customers' :
+                //Select Resellers
+                $sql = "SELECT * FROM Customers WHERE i_customer_type=2 AND i_env=1 ORDER BY name";
+                break;
 
+            case 'select_porta_customers_where' :
+                $sql = "SELECT name FROM Customers WHERE i_customer_type=2 AND i_env=1 AND i_customer=".$ArrParams[0];
+                break;
+             
+            case 'select_destinos_all':
+                $sql = "SELECT * FROM Destinations WHERE i_env=1 ORDER BY destination";
+                break;            
+
+            case 'select_clientes_all':
+                //Select Clientes
+                $sql = "SELECT * FROM Customers WHERE i_customer_type=1 AND i_env=1 ORDER BY name";
+                break;
+
+            case 'select_accounts_all':
+                //Select Clientes
+                $sql = "SELECT * FROM Accounts WHERE i_env=1 AND i_customer=".$ArrParams[0]." ORDER BY id";
+                break;
+
+            case 'select_destino_where' :
+                $sql = "SELECT description, destination, i_dest FROM Destinations WHERE i_env=1 AND i_dest=".$ArrParams[0];
+                break;
+
+            case 'select_i_destino_where' :
+                $sql = 'SELECT i_dest FROM Destinations WHERE i_env=1 AND description LIKE "%'.$ArrParams[0].'%"';
+                break;
+
+            case 'select_porta_customers_class_where' :
+                //Customer Class
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer_class =" .$ArrParams[0];
+                break; 
+
+            case 'select_porta_customers_where_class' :
+                //Clientes
+                $sql = "SELECT name, i_customer_class FROM Customers WHERE i_customer_type=1 AND i_env=1 AND i_customer=".$ArrParams[0];
+                break;
+
+            case 'select_porta_accounts_where' :
+                //Cuentas
+                $sql = "SELECT id FROM Accounts WHERE i_env=1 AND i_account=" . $ArrParams[0] . " AND i_customer=" . $ArrParams[1];
+                break; 
+
+            case 'select_customer_class_filtro':
+                //Populate select Umb_CClass
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=1 AND i_customer=" .$ArrParams[0];
+                break;
+
+            case 'select_customer_name_filtro':
+                //Populate select Umb_CName
+                $sql = "SELECT name, i_customer FROM Customers WHERE i_customer_type=1 AND i_env=1 AND i_parent=" .$ArrParams[0];
+                break;
+
+            case 'select_i_client_where' :
+                //Filtro Cliente
+                $sql = 'SELECT name, i_customer FROM Customers WHERE i_env=1 AND i_customer_type=1 AND name LIKE "%'.$ArrParams[0].'%"';
+                break;
             default:
                 break;
         }

@@ -7,6 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "userfn10.php" ?>
 <?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
 <?php
 
 if(!isset($_SESSION['USUARIO']))
@@ -15,7 +16,11 @@ if(!isset($_SESSION['USUARIO']))
     exit;
 } 
 
-$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", "LIMIT 10");
+function is_On($value){
+  return (intval($value) < 2);
+}
+
+$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
 $customerCount = count($customers);
 
 ?>
@@ -48,25 +53,21 @@ $customerCount = count($customers);
         <div class="form-group">
           <label for="resellerName">Resellers</label>
           <select id= "resellerName" class= "form-control">
-            <option value = 100>Seleccione un Reseller</option>
-            <option value = 'All'>Todos</option>
-          <!-- 
-          <? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
-            $count = count($dom_accion);
-            $k = 1;
-            while ($k <= $count){
-              echo "<option value= ".$dom_accion[$k]['rv_Low_Value']. ">". $dom_accion[$k]['rv_Meaning'] ."</option>";
-              $k++;
-            }
-          ?>
-           -->
+            <option value="vacio">Todo</option>
+            <?
+              $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+              $_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
+              $res = select_sql_PO('select_porta_customers');
+              $cant = count($res);
+              $k = 1;
+
+              while ($k <= $cant) {
+                echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+                $k++;
+              }
+
+            ?>
           </select>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="cusName">Nombre del cliente</label>
-          <input type="text" class="form-control" id="cusName" placeholder="Nombre de Cliente">
         </div>
       </div>
       <div class="col-sm-2">
@@ -84,15 +85,26 @@ $customerCount = count($customers);
           <tr>
             <th class="col-sm-6">Nombre Cliente</th>
             <th >Fecha Bloqueo</th>
+            <th >Fecha Bloqueo</th>
+            <th >Fecha Bloqueo</th>
             <th class="col-sm-1">Opciones</th>
           </tr>
           <?php 
             if ($customerCount > 0) {
               foreach ($customers as $cus) {
+
+                $cus_porta = select_sql_PO('select_porta_customers_where_class', array($cus['c_ICliente']));
+                $dest_porta = select_sql_PO('select_destino_where', array($cus['c_IDestino']));
+                $cusName = $cus_porta[1]['name'];
+                $destName = $dest_porta[1]['destination'];                
+                $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
+                $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
           ?>
           <tr>
-            <td>Cliente <?php echo $cus['c_ICliente'];?></td>
-            <td><?php echo $cus['f_Bloqueo'];?></td>
+            <td class="<? echo $cusColor; ?>"><?php echo $cusName; ?></td>
+            <td class="<? echo $cusColor; ?>"><?php echo $destName; ?></td>
+            <td class="<? echo $cusColor; ?>"><?php echo $cus['c_IChequeo'];?></td>
+            <td class="<? echo $cusColor; ?>"><?php echo $cus['f_Bloqueo'];?></td>
             <td class="icon-cell"><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
           </tr>
           <?php  
@@ -100,7 +112,7 @@ $customerCount = count($customers);
             } else {
           ?>
               <tr>
-                <td colspan=3>No se encontraron clientes.</td>
+                <td colspan=5>No se encontraron clientes.</td>
               </tr>
           <?php
             }
