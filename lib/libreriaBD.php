@@ -238,11 +238,6 @@ function update_sql ($nombre, $Params){
 
         case 'update_uf_umb_cclass': //tabla - fecha - columna - primary key
             //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
-            $sql = "UPDATE netuno.af_resellers_usuario set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_Usuario=" .$Params[2] . " AND c_IReseller=" . $Params[3];
-            break;
-
-        case 'update_uf_umb_cclass': //tabla - fecha - columna - primary key
-            //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
             $sql = "UPDATE netuno.af_umb_cclass set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IDestino=" . $Params[2] . " AND c_IReseller=" . $Params[3]. " AND c_ICClass=" . $Params[4];
             break;
 
@@ -253,7 +248,7 @@ function update_sql ($nombre, $Params){
 
          case 'update_uf_umb_cuentas': //tabla - fecha - columna - primary key
             //$sql = "UPDATE netuno.af_acc_clientes SET f_Ult_Mod='2013-12-12 12:12:12' WHERE c_IReseller=9 AND c_ICClass= 5";
-            $sql = "UPDATE netuno.af_umb_cuentas set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IDestino=" . $Params[2] . " AND c_IReseller=" . $Params[3]. " AND c_ICliente=" . $Params[4]. " AND c_ICuentas=" . $Params[5];
+            $sql = "UPDATE netuno.af_umb_cuentas set f_Ult_Mod='" . $Params[0] . "', c_Usuario_Ult_Mod='". $Params[1]."' WHERE c_IDestino=" . $Params[2] . " AND c_IReseller=" . $Params[3]. " AND c_ICliente=" . $Params[4]. " AND c_ICuenta=" . $Params[5];
             break;
 
         case 'update_uf_umb_destinos': //tabla - fecha - columna - primary key
