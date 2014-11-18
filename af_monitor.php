@@ -353,7 +353,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                               if ($accountsCount > 0) {
                                                 foreach ($accounts as $acc) {
 
-                                                  $acc_porta = select_sql_PO('select_porta_accounts_where', array($acc['c_ICuenta'],$cus['c_ICliente']));
+                                                  $acc_porta = select_sql_PO('select_porta_accounts_where', array($acc['c_ICuenta'],$acc['c_ICliente']));
                                                   $accName = $acc_porta[1]['id'];
                                                   $accColor = is_On($acc['i_Alerta']) ? 'warning' : "";
                                                   $accColor = is_On($acc['i_Cuarentena']) ? 'danger' : $accColor;
