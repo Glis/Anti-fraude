@@ -15,8 +15,6 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
-
-
 //
 // Page class
 //
@@ -391,7 +389,7 @@ class caf_umb_destinos_edit extends caf_umb_destinos {
 		}
 		if (!$this->f_Ult_Mod->FldIsDetailKey) {
 			$this->f_Ult_Mod->setFormValue($objForm->GetValue("x_f_Ult_Mod"));
-			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+			$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		}
 		if (!$this->c_Usuario_Ult_Mod->FldIsDetailKey) {
 			$this->c_Usuario_Ult_Mod->setFormValue($objForm->GetValue("x_c_Usuario_Ult_Mod"));
@@ -416,7 +414,7 @@ class caf_umb_destinos_edit extends caf_umb_destinos {
 		$this->q_MinAl_Cta->CurrentValue = $this->q_MinAl_Cta->FormValue;
 		$this->q_MinCu_Cta->CurrentValue = $this->q_MinCu_Cta->FormValue;
 		$this->f_Ult_Mod->CurrentValue = $this->f_Ult_Mod->FormValue;
-		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 7);
+		$this->f_Ult_Mod->CurrentValue = ew_UnFormatDateTime($this->f_Ult_Mod->CurrentValue, 9);
 		$this->c_Usuario_Ult_Mod->CurrentValue = $this->c_Usuario_Ult_Mod->FormValue;
 		if ($this->CurrentAction <> "overwrite")
 			$this->HashValue = $objForm->GetValue("k_hash");
@@ -530,12 +528,8 @@ class caf_umb_destinos_edit extends caf_umb_destinos {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->ViewValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
-					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->ViewValue = NULL;
@@ -584,7 +578,7 @@ class caf_umb_destinos_edit extends caf_umb_destinos {
 
 			// f_Ult_Mod
 			$this->f_Ult_Mod->ViewValue = $this->f_Ult_Mod->CurrentValue;
-			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 7);
+			$this->f_Ult_Mod->ViewValue = ew_FormatDateTime($this->f_Ult_Mod->ViewValue, 9);
 			$this->f_Ult_Mod->ViewCustomAttributes = "";
 
 			// c_Usuario_Ult_Mod
@@ -674,8 +668,12 @@ class caf_umb_destinos_edit extends caf_umb_destinos {
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$this->c_IDestino->EditValue = $rswrk->fields('DispFld');
 					$rswrk->Close();
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				} else {
 					$this->c_IDestino->EditValue = $this->c_IDestino->CurrentValue;
+					$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+					$this->c_IDestino->EditValue = $result[1]['destination'];
 				}
 			} else {
 				$this->c_IDestino->EditValue = NULL;
@@ -1097,6 +1095,17 @@ Page_Rendering();
 $af_umb_destinos_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
+
+<?          /**********************SI NO ES USUARIO CONFIG**********************/
+
+if($_SESSION['USUARIO_TYPE']['config']==0){
+	echo ("<div class='jumbotron' style='background-color:#fff'>
+	<h1>Contenido no disponible...</h1>
+	<h3>Disculpe ". $_SESSION['USUARIO'].", no posee los permisos necesarios para ver esta página</h3>	
+	</div>"); exit;
+}?>
+
+
 <script type="text/javascript">
 
 // Page object
@@ -1239,6 +1248,7 @@ $af_umb_destinos_edit->ShowMessage();
 <input type="hidden" name="t" value="af_umb_destinos">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="k_hash" id="k_hash" value="<?php echo $af_umb_destinos_edit->HashValue ?>">
+<div id="page_title"> - Editar</div>
 <table class="ewGrid"><tr><td>
 <table id="tbl_af_umb_destinosedit" class="table table-bordered table-striped">
 <?php if ($af_umb_destinos->c_IDestino->Visible) { // c_IDestino ?>
@@ -1357,7 +1367,7 @@ $af_umb_destinos_edit->ShowMessage();
 </td></tr></table>
 <?php if ($af_umb_destinos->UpdateConflict == "U") { // Record already updated by other user ?>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit" onclick="this.form.a_edit.value='overwrite';"><?php echo $Language->Phrase("OverwriteBtn") ?></button>
-<button class="btn ewButton" name="btnReload" id="btnReload" type="submit" onclick="this.form.a_edit.value='I';"><?php echo $Language->Phrase("ReloadBtn") ?></button>
+<button class="btn btn-primary ewButton" name="btnReload" id="btnReload" type="submit" onclick="this.form.a_edit.value='I';"><?php echo $Language->Phrase("ReloadBtn") ?></button>
 <?php } else { ?>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("EditBtn") ?></button>
 <?php } ?>

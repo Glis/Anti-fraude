@@ -1230,6 +1230,11 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 		$opt->OnLeft = TRUE; // Link on left
 		$opt->MoveTo(2); // Move to first column
 
+		$opt = &$this->ListOptions->Add("id_Destino");
+		$opt->Header = "ID";
+		$opt->OnLeft = TRUE; // Link on left
+		$opt->MoveTo(2); // Move to first column
+
 	}
 
 	// ListOptions Rendered event
@@ -1240,6 +1245,7 @@ class caf_umb_destinos_list extends caf_umb_destinos {
 		$res = select_sql_PO('select_destino_where', array((int)$this->c_IDestino->CurrentValue));
 		$this->ListOptions->Items["nb_Destino"]->Body = $res[1]['description'];
 
+		$this->ListOptions->Items["id_Destino"]->Body = $this->c_IDestino->CurrentValue;
 	}
 
 	// Row Custom Action event

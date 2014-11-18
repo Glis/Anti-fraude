@@ -2763,7 +2763,7 @@ class cAdvancedSecurity {
 		}
 
 		// Init User ID
-		$this->CurrentUserID = $this->SessionUserID();
+		$this->CurrentUserID = $_SESSION['USUARIO'];//$this->SessionUserID();
 		$this->CurrentParentUserID = $this->SessionParentUserID();
 
 		// Load user level
@@ -2777,7 +2777,7 @@ class cAdvancedSecurity {
 
 	function setSessionUserID($v) {
 		$_SESSION[EW_SESSION_USER_ID] = trim(strval($v));
-		$this->CurrentUserID = trim(strval($v));
+		$this->CurrentUserID = $_SESSION['USUARIO'];//trim(strval($v));
 	}
 
 	// Session Parent User ID
@@ -2828,7 +2828,7 @@ class cAdvancedSecurity {
 
 	// Current User ID
 	function CurrentUserID() {
-		return $this->CurrentUserID;
+		return $_SESSION['USUARIO'];//$this->CurrentUserID;
 	}
 
 	// Current Parent User ID
@@ -3823,7 +3823,7 @@ function ew_WriteAuditTrail($pfx, $dt, $script, $usr, $action, $table, $field, $
 }
 
 // Unformat date time based on format type
-function ew_UnFormatDateTime($dt, $namedformat) { return gmdate("Y-m-d H:i:s");/* 
+function ew_UnFormatDateTime($dt, $namedformat) {
 	if (preg_match('/^([0-9]{4})-([0][1-9]|[1][0-2])-([0][1-9]|[1|2][0-9]|[3][0|1])( (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]))?$/', $dt))
 		return $dt;
 	$dt = trim($dt);
@@ -3902,7 +3902,7 @@ function ew_UnFormatDateTime($dt, $namedformat) { return gmdate("Y-m-d H:i:s");/
 			((count($arDateTime) > 1) ? " " . $arDateTime[1] : "");
 	} else {
 		return $dt;
-	}*/
+	}
 }
 
 // Format a timestamp, datetime, date or time field from MySQL
@@ -3925,7 +3925,7 @@ function ew_UnFormatDateTime($dt, $namedformat) { return gmdate("Y-m-d H:i:s");/
 // 15 - Short Date - 2 digit year (yy/mm/dd) + Short Time (hh:mm:ss)
 // 16 - Short Date (mm/dd/yyyy) + Short Time (hh:mm:ss)
 // 17 - Short Date (dd/mm/yyyy) + Short Time (hh:mm:ss)
-function ew_FormatDateTime($ts, $namedformat) { return gmdate("Y-m-d H:i:s");/*
+function ew_FormatDateTime($ts, $namedformat) { 
 	if (is_numeric($ts)) // Timestamp
 	{
 		switch (strlen($ts)) {
@@ -4133,7 +4133,7 @@ function ew_FormatDateTime($ts, $namedformat) { return gmdate("Y-m-d H:i:s");/*
 				return strftime("%d" . EW_DATE_SEPARATOR . "%m" . EW_DATE_SEPARATOR . "%y %H:%M:%S", $uts);
 				break;
 		}
-	}*/
+	}
 }
 
 // Format currency
@@ -5498,7 +5498,7 @@ function CurrentUserName() {
 // Get current user ID
 function CurrentUserID() {
 	global $Security;
-	return (isset($Security)) ? $Security->CurrentUserID() : strval(@$_SESSION[EW_SESSION_USER_ID]);
+	return (isset($Security)) ? $Security->CurrentUserID() : strval(@$_SESSION[USUARIO]);//strval(@$_SESSION[EW_SESSION_USER_ID]);
 }
 
 // Get current parent user ID

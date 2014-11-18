@@ -1,5 +1,5 @@
 <?php
-
+include ("lib/libreriaBD.php");
 // Global variable for table object
 $af_config_reportes = NULL;
 
@@ -1001,7 +1001,8 @@ class caf_config_reportes extends cTable {
 
 	// Row Updated event
 	function Row_Updated($rsold, &$rsnew) {
-
+		update_sql('update_uf_config_reportes', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rsold[0]));
+		
 		//echo "Row Updated";
 	}
 
@@ -1016,7 +1017,7 @@ class caf_config_reportes extends cTable {
 
 	// Row Deleting event
 	function Row_Deleting(&$rs) {
-
+		update_sql('update_uf_config_reportes', array(gmdate("Y-m-d H:i:s"), $_SESSION['USUARIO'], $rs[0]));
 		// Enter your code here
 		// To cancel, set return value to False
 
