@@ -24,8 +24,34 @@ function abrirConexion_PO(){
     }
 }
 
+function abrirConexion_PO_2(&$conexion){
+    //session_start();
+    $server="192.168.10.13:3306";
+    $database="porta-billing";
+    $dbpassword="panama_178$";
+    $dbuser="dbread";
+    
+   
+    $conexion = mysql_connect($server,$dbuser,$dbpassword);
+    mysql_query("SET NAMES 'utf8'");
+    if(mysql_errno()){
+        die("Disculpe! Un error ha ocurrido. Intente mas tarde.1." . mysql_error());
+    }else{
+        if(!$conexion){
+            die("Disculpe! Un error ha ocurrido. Intente mas tarde.2." . mysql_error());
+        }else{
+            mysql_select_db($database);                
+        }
+    }
+}
+
 function cerrarConexion_PO (){
     global $conexion;
+    mysql_close($conexion);
+}
+
+function cerrarConexion_PO_2 (&$conexion){
+   
     mysql_close($conexion);
 }
 
@@ -56,6 +82,11 @@ function select_sql_PO($nombre, $ArrParams = NULL){
             case 'select_accounts_all':
                 //Select Clientes
                 $sql = "SELECT * FROM Accounts WHERE i_env=" . $ID_ENV2 . " AND i_customer=".$ArrParams[0]." ORDER BY id";
+                break;
+
+            case 'select_cclass_all':
+                //Populate select Umb_CClass
+                $sql = "SELECT name, i_customer_class FROM Customer_Classes WHERE i_env=" . $ID_ENV2;
                 break;
 
             case 'select_destino_where' :
@@ -127,6 +158,7 @@ function select_sql_PO($nombre, $ArrParams = NULL){
 }
 
 function select_sql_PO_manual($nombre, $ArrParams = NULL){
+        global $ID_ENV2;
         switch($nombre) {
             case 'select_porta_customers' :
                 //Select Resellers

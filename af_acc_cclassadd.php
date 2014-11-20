@@ -1361,7 +1361,7 @@ faf_acc_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_acc_cc
 		<td><span id="elh_af_acc_cclass_x_DirCorreo"><?php echo $af_acc_cclass->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_DirCorreo" class="control-group">
-<input class="form-control" type="email" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
+<input class="form-control" type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_cclass->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_DirCorreo->EditValue ?>"<?php echo $af_acc_cclass->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_cclass->x_DirCorreo->CustomMsg ?></td>
 	</tr>

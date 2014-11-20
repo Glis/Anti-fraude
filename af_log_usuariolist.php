@@ -1340,7 +1340,7 @@ $af_log_usuario_list->ShowMessage();
 			parts = date.split("-");
 			newdate = parts[2] + "-" + parts[1] + "-" + parts [0];
 			
-			return newdate;
+			return date;
 		}
 
 		$(document).on('click','#submit_filtros',function(){
@@ -1356,13 +1356,13 @@ $af_log_usuario_list->ShowMessage();
 			if (desde == ""){
 				dataString = dataString + "&desde=vacio";
 			}else{
-				dataString = dataString + "&desde=" + changeDate(desde);
+				dataString = dataString + "&desde=" + desde;
 			}
 
 			if (hasta == ""){
 				dataString = dataString + "&hasta=vacio";
 			}else{
-				dataString = dataString + "&hasta=" + changeDate(hasta);
+				dataString = dataString + "&hasta=" + hasta;
 			}
 
 			if (tabla == ""){

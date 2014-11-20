@@ -1291,13 +1291,13 @@ $af_log_envio_rep_list->ShowMessage();
 			if (desde == ""){
 				dataString = dataString + "&desde=vacio";
 			}else{
-				dataString = dataString + "&desde=" + changeDate(desde);
+				dataString = dataString + "&desde=" + desde;
 			}
 
 			if (hasta == ""){
 				dataString = dataString + "&hasta=vacio";
 			}else{
-				dataString = dataString + "&hasta=" + changeDate(hasta);
+				dataString = dataString + "&hasta=" + hasta;
 			}
 
 			if (reporte == "vacio"){

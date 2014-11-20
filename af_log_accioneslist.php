@@ -901,6 +901,9 @@ class caf_log_acciones_list extends caf_log_acciones {
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
 
+			$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
+			$this->c_IDestino->ViewValue = $result[1]['description'];
+
 			// cl_Accion
 			if (strval($this->cl_Accion->CurrentValue) <> "") {
 				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->cl_Accion->CurrentValue, EW_DATATYPE_NUMBER);
@@ -1301,7 +1304,6 @@ class caf_log_acciones_list extends caf_log_acciones {
 
 	// ListOptions Rendered event
 	function ListOptions_Rendered() {
-		echo "<pre>".$this->nv_Accion->CurrentValue."</pre>";
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
 		if((int)$this->nv_Accion->CurrentValue == 1)$this->ListOptions->Items["nv_AccionDet"]->Body = "";
@@ -1313,7 +1315,7 @@ class caf_log_acciones_list extends caf_log_acciones {
 		
 		if((int)$this->nv_Accion->CurrentValue == 3){
 			$res = select_sql_PO('select_porta_customers_class_where', array((int)$this->c_ICClass->CurrentValue));
-			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name']; echo "<pre>".$this->c_ICClass->CurrentValue."</pre>";
+			$this->ListOptions->Items["nv_AccionDet"]->Body = $res[1]['name'];
 		}
 
 		if((int)$this->nv_Accion->CurrentValue == 4){
@@ -1451,13 +1453,13 @@ $af_log_acciones_list->ShowMessage();
 			if (desde == ""){
 				dataString = dataString + "&desde=vacio";
 			}else{
-				dataString = dataString + "&desde=" + changeDate(desde);
+				dataString = dataString + "&desde=" + desde;
 			}
 
 			if (hasta == ""){
 				dataString = dataString + "&hasta=vacio";
 			}else{
-				dataString = dataString + "&hasta=" + changeDate(hasta);
+				dataString = dataString + "&hasta=" + hasta;
 			}
 
 			if (destino == ""){

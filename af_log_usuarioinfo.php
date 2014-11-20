@@ -191,7 +191,7 @@ class caf_log_usuario extends cTable {
 				}
 
 			}
-
+			echo $where;
 			return $where;
 		}
 		

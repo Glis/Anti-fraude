@@ -500,7 +500,7 @@ class caf_log_acciones_view extends caf_log_acciones {
 			$this->c_IDestino->ViewCustomAttributes = "";
 
 			$result = select_sql_PO("select_destino_where", array($this->c_IDestino->CurrentValue));
-			$this->c_IDestino->ViewValue = $result[1]['destination'];
+			$this->c_IDestino->ViewValue = $result[1]['description'];
 
 			// cl_Accion
 			if (strval($this->cl_Accion->CurrentValue) <> "") {

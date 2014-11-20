@@ -378,25 +378,31 @@ switch ($pagina) {
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 
-		if($_POST['destino'] == 'vacio'){
-			$_SESSION['filtros_log']['destino']="";
+		if($_POST['tabla'] == 'vacio'){
+			$_SESSION['filtros_log']['tabla']="";
 		}else{		
-			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
-			$_SESSION['filtros_log']['destino'] = $res;
+			$_SESSION['filtros_log']['tabla'] = $_POST['tabla'];
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 
-		if($_POST['clase'] == 'vacio'){
-			$_SESSION['filtros_log']['clase']="";
+		if($_POST['campo'] == 'vacio'){
+			$_SESSION['filtros_log']['campo']="";
 		}else{		
-			$_SESSION['filtros_log']['clase'] = $_POST['clase'];
+			$_SESSION['filtros_log']['campo'] = $_POST['campo'];
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 
-		if($_POST['nivel'] == 'vacio'){
-			$_SESSION['filtros_log']['nivel']="";
+		if($_POST['cambio'] == 'vacio'){
+			$_SESSION['filtros_log']['cambio']="";
 		}else{		
-			$_SESSION['filtros_log']['nivel'] = $_POST['nivel'];
+			$_SESSION['filtros_log']['cambio'] = $_POST['cambio'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['usuario'] == 'vacio'){
+			$_SESSION['filtros_log']['usuario']="";
+		}else{		
+			$_SESSION['filtros_log']['usuario'] = $_POST['usuario'];
 			$_SESSION['tipofiltro'] = $_POST['filtro'];
 		}
 

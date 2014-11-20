@@ -1380,7 +1380,9 @@ $af_config_list->ShowMessage();
 if(isset($_POST['submit'])){
 	date_default_timezone_set('America/Caracas');
 	$res= update_sql('update_config', array($_POST['freq_chq_min'], $_POST['ventana_chq_min'], $_POST['fecha_ult_chq'], $_POST['user_api'], $_POST['pw_api'], $_POST['url_api'], date("Y/m/d"), $_SESSION['USUARIO']));
-	echo "<script>parent.window.location.reload();</script>";
+	Header('Location: '.$_SERVER['PHP_SELF']);
+	Exit(); //optional
+	
 }	
 ?>
 
