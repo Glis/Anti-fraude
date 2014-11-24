@@ -340,7 +340,7 @@ class caf_chequeo_list extends caf_chequeo {
 	var $ListOptions; // List options
 	var $ExportOptions; // Export options
 	var $OtherOptions = array(); // Other options
-	var $DisplayRecs = 15;
+	var $DisplayRecs = 10;
 	var $StartRec;
 	var $StopRec;
 	var $TotalRecs = 0;
@@ -421,7 +421,7 @@ class caf_chequeo_list extends caf_chequeo {
 		if ($this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 15; // Load default
+			$this->DisplayRecs = 10; // Load default
 		}
 
 		// Load Sorting Order
@@ -1319,7 +1319,7 @@ $af_chequeo_list->ListOptions->Render("body", "left", $af_chequeo_list->RowCnt);
 ?>
 	<?php if ($af_chequeo->c_IChequeo->Visible) { // c_IChequeo ?>
 		<td<?php echo $af_chequeo->c_IChequeo->CellAttributes() ?>>
-<span<?php echo $af_chequeo->c_IChequeo->ViewAttributes() ?>> <a href="link">
+<span<?php echo $af_chequeo->c_IChequeo->ViewAttributes() ?>><a href="link">
 <?php echo $af_chequeo->c_IChequeo->ListViewValue() ?></a></span>
 <a id="<?php echo $af_chequeo_list->PageObjName . "_row_" . $af_chequeo_list->RowCnt ?>"></a></td>
 	<?php } ?>
