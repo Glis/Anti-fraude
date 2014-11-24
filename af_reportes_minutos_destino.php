@@ -18,7 +18,6 @@ if(!isset($_SESSION['USUARIO']))
 <?php include_once "header.php" ?>
 
 
-
 <table class="ewStdTable">
   <tbody>
     <tr>
@@ -28,7 +27,7 @@ if(!isset($_SESSION['USUARIO']))
             <a href="login.php">Home</a>
           </li>
           <li class="active">
-            <span id="ewPageCaption">Reportes de Calidad por Destino</span>
+            <span id="ewPageCaption">Reportes de Minutos por Destino</span>
           </li>
         </ul>
       </td>
@@ -105,7 +104,7 @@ if(!isset($_SESSION['USUARIO']))
 
 $(document).on('click','#gen_rep',function(){
                                               
-  $(location).attr('href','download.php?type=calidad_destino&desde=' + $('#initialDateFil').val() 
+  $(location).attr('href','download.php?type=minutos_destino&desde=' + $('#initialDateFil').val() 
                                               + '&hasta=' + $('#endDateFil').val() 
                                               + '&destino=' + $('#destinoFil').val() 
                                               + '&reseller=' + $('#resellerFil').find("option:selected").val()

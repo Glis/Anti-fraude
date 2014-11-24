@@ -17,8 +17,6 @@ if(!isset($_SESSION['USUARIO']))
 } ?>
 <?php include_once "header.php" ?>
 
-
-
 <table class="ewStdTable">
   <tbody>
     <tr>
@@ -28,7 +26,7 @@ if(!isset($_SESSION['USUARIO']))
             <a href="login.php">Home</a>
           </li>
           <li class="active">
-            <span id="ewPageCaption">Reportes de Calidad por Destino</span>
+            <span id="ewPageCaption">Reportes de Cuentas Bloqueadas</span>
           </li>
         </ul>
       </td>
@@ -104,8 +102,8 @@ if(!isset($_SESSION['USUARIO']))
 <script>
 
 $(document).on('click','#gen_rep',function(){
-                                              
-  $(location).attr('href','download.php?type=calidad_destino&desde=' + $('#initialDateFil').val() 
+
+  $(location).attr('href','download.php?type=cuentas_bloq&desde=' + $('#initialDateFil').val() 
                                               + '&hasta=' + $('#endDateFil').val() 
                                               + '&destino=' + $('#destinoFil').val() 
                                               + '&reseller=' + $('#resellerFil').find("option:selected").val()
@@ -114,24 +112,6 @@ $(document).on('click','#gen_rep',function(){
                                               
 
 });
-
-$(document).on('change','#resellerFil',function(){
-
-    if($("#resellerFil").find("option:selected").val() == ""){
-      $( "#cclassFil" ).prop( "disabled", true );
-    }else{
-      var dataString = "pag=customer_name_filtro&reseller="+$("#resellerFil").find("option:selected").val();
-      $.ajax({  
-          type: "POST",  
-          url: "lib/functions.php",  
-          data: dataString,  
-          success: function(response) {  
-          $('#cclassFil').empty().append(response);
-          $( "#cclassFil" ).prop( "disabled", false );
-          }
-        });
-    }
-  });
 
 </script>
 

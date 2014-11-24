@@ -168,7 +168,7 @@ function select_PO_sql($nombre, $ArrParams){
              "        `porta-billing`.Customers cc,                                    " . 
              "        `porta-billing`.Destinations d,                                  " . 
              "        `porta-billing`.Countries co                                     " . 
-             "  WHERE date(a.bill_time) BETWEEN " . $ArrParams['f_Inicio'] . " AND " . $ArrParams['f_Fin'] . 
+             "  WHERE date(a.bill_time) BETWEEN '" . $ArrParams['f_Inicio'] . "' AND '" . $ArrParams['f_Fin'] . "'". 
              "    AND a.i_env              = " . $ArrParams['i_Env']                   .
              "    AND a.i_customer         = c.i_customer                              " .
              "    AND c.i_customer_type    = 1                                         " .
@@ -189,6 +189,7 @@ function select_PO_sql($nombre, $ArrParams){
              "        a.i_customer, c.name, a.account_id, co.name,   " .
              "        d.i_dest, d.description, a.disconnect_cause    ";
       break;
+
       
     case 'select_repMinDestino':
       $sql = " SELECT r.i_customer c_reseller, r.name reseller,                        " . 
@@ -201,7 +202,7 @@ function select_PO_sql($nombre, $ArrParams){
              "        `porta-billing`.Customers cc,                                    " . 
              "        `porta-billing`.Destinations d,                                  " . 
              "        `porta-billing`.Countries co                                     " . 
-             "  WHERE date(a.bill_time) BETWEEN " . $ArrParams['f_Inicio'] . " AND " . $ArrParams['f_Fin'] . 
+             "  WHERE date(a.bill_time) BETWEEN '" . $ArrParams['f_Inicio'] . "' AND '" . $ArrParams['f_Fin'] . "'".
              "    AND a.i_env              = " . $ArrParams['i_Env']                   .
              "    AND a.i_customer         = c.i_customer                              " .
              "    AND c.i_customer_type    = 1                                         " .
@@ -227,7 +228,7 @@ function select_PO_sql($nombre, $ArrParams){
     $ejecutar_sql = mysql_query($sql);
         
     if (!$ejecutar_sql) {
-        $object[1]['error'] = 'error';
+        $object[1]['error'] = mysql_errno($conexion);
         return $object;
     } else {
         $num_rows = @mysql_num_fields($ejecutar_sql);
