@@ -23,6 +23,28 @@ function is_On($value){
 $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
 $customerCount = count($customers);
 
+/*
+* SELECTS DE PORTAWAN
+*/
+abrirConexion_PO();
+
+//DESTINOS
+$destinosPorta = select_sql_PO_manual('select_destinos_all');
+$destinosList = array();
+
+foreach ($destinosPorta as $key => $dest) {
+  $destinosList[$dest['i_dest']] = array( "destination" => $dest["destination"], "description" => $dest["description"]);
+}
+
+//CLIENTES
+$customersPorta = select_sql_PO_manual('select_clientes_all');
+$customersList = array();
+foreach ($customersPorta as $key => $cus) {
+  $customersList[$cus['i_customer']] = array( "name" => $cus["name"]);
+}
+
+cerrarConexion_PO();
+
 ?>
 
 <?php include_once "header.php" ?>
@@ -93,10 +115,8 @@ $customerCount = count($customers);
             if ($customerCount > 0) {
               foreach ($customers as $cus) {
 
-                $cus_porta = select_sql_PO('select_porta_customers_where_class', array($cus['c_ICliente']));
-                $dest_porta = select_sql_PO('select_destino_where', array($cus['c_IDestino']));
-                $cusName = $cus_porta[1]['name'];
-                $destName = $dest_porta[1]['destination'];                
+                $cusName = $customersList[$cus['c_ICliente']]['name'];
+                $destName = $destinosList[$cus['c_IDestino']]['destination'];                
                 $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
                 $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
           ?>

@@ -9,7 +9,7 @@
         <li><a href="af_monitor_clientes_block.php">Clientes Bloqueados</a></li>
         <li><a href="af_monitor_cuentas_block.php">Cuentas Bloqueadas</a></li>
         <li class="divider"></li>
-        <li><a href="af_monitor.php">Monitor</a></li>
+        <li><a href="af_chequeolist.php">Monitor</a></li>
       </ul>
     </li>
     <li class="dropdown col-sm-3">
@@ -29,10 +29,10 @@
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Reportes</a>
           <ul class="dropdown-menu">
-            <li><a href="">Calidad por Destino</a></li>
-            <li><a href="">Minutos por Destino</a></li>
-            <li><a href="">Clientes Bloqueados</a></li>
-            <li><a href="">Cuentas Bloqueadas</a></li>
+            <li><a href="af_reportes_calidad_destino.php">Calidad por Destino</a></li>
+            <li><a href="af_reportes_minutos_destino.php">Minutos por Destino</a></li>
+            <li><a href="af_reportes_clientes_bloq.php">Clientes Bloqueados</a></li>
+            <li><a href="af_reportes_cuentas_bloq.php">Cuentas Bloqueadas</a></li>
           </ul>
         </li>
       </ul>

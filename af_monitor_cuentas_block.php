@@ -23,6 +23,35 @@ function is_On($value){
 $accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
 $accountCount = count($accounts);
 
+/*
+* SELECTS DE PORTAWAN
+*/
+abrirConexion_PO();
+
+//DESTINOS
+$destinosPorta = select_sql_PO_manual('select_destinos_all');
+$destinosList = array();
+
+foreach ($destinosPorta as $key => $dest) {
+  $destinosList[$dest['i_dest']] = array( "destination" => $dest["destination"], "description" => $dest["description"]);
+}
+
+//CLIENTES
+$customersPorta = select_sql_PO_manual('select_clientes_all');
+$customersList = array();
+foreach ($customersPorta as $key => $cus) {
+  $customersList[$cus['i_customer']] = array( "name" => $cus["name"]);
+}
+
+//CUENTAS 
+$accountsPorta = select_sql_PO_manual('select_accounts_really_all');
+$accountsList = array();
+foreach ($accountsPorta as $key => $acc) {
+  $accountsList[$acc['i_account']] = array( "id" => $acc["id"]);
+}
+
+cerrarConexion_PO();
+
 ?>
 
 <?php include_once "header.php" ?>
@@ -93,12 +122,10 @@ $accountCount = count($accounts);
           <?php 
             if ($accountCount > 0) {
               foreach ($accounts as $acc) {
-                $cus_porta = select_sql_PO('select_porta_customers_where_class', array($acc['c_ICliente']));
-                $acc_porta = select_sql_PO('select_porta_accounts_where', array($acc['c_ICuenta'],$acc['c_ICliente']));
-                $dest_porta = select_sql_PO('select_destino_where', array($acc['c_IDestino']));
-                $accName = $acc_porta[1]['id'];
-                $cusName = $cus_porta[1]['name'];
-                $destName = $dest_porta[1]['destination'];                
+                
+                $accName = $accountsList[$acc['c_ICuenta']]['id'];            
+                $cusName = $customersList[$acc['c_ICliente']]['name'];
+                $destName = $destinosList[$acc['c_IDestino']]['destination'];
                 $accColor = is_On($acc['i_Alerta']) ? 'warning' : "";
                 $accColor = is_On($acc['i_Cuarentena']) ? 'danger' : $accColor;
           ?>

@@ -183,6 +183,16 @@ function select_sql_PO_manual($nombre, $ArrParams = NULL){
                 $sql = "SELECT * FROM Accounts WHERE i_env=" . $ID_ENV2 . "  AND i_customer=".$ArrParams[0]." ORDER BY id";
                 break;
 
+            case 'select_accounts_really_all':
+                //Select Clientes
+                $sql = "SELECT i_account, id FROM Accounts WHERE i_env=" . $ID_ENV2 . " ORDER BY id";
+                break;
+
+            case 'select_customer_class_all':
+                //Select Clientes
+                $sql = "SELECT * FROM Customer_Classes WHERE i_env=" . $ID_ENV2 . " ORDER BY name";
+                break;
+
             case 'select_destino_where' :
                 $sql = "SELECT description, destination, i_dest FROM Destinations WHERE i_env=" . $ID_ENV2 . "  AND i_dest=".$ArrParams[0];
                 break;

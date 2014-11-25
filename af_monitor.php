@@ -20,10 +20,6 @@ function is_On($value){
   return (intval($value) < 2);
 }
 
-//INICIALIZACIÓN DEL QUERY
-$chequeos=select_custom_sql("*","af_chequeo","","", "LIMIT 10");
-$chequeosCount = count($chequeos);
-
 function changeDate($date){
   $newdate = "";
   // YYYY-MM-DD
@@ -88,8 +84,10 @@ function bulletCellContents($type, $ch, $d){
 
 }
 
+//INICIALIZACIÓN DEL QUERY
+$where = "";
 if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
-  $where = "";
+  
 
   if(isset($_POST['initialDateFil'])){
     $where .= "STR_TO_DATE(f_Inicio,'%d/%m/%Y') >= STR_TO_DATE('".changeDate($_POST['initialDateFil'])."','%d/%m/%Y')"; 
@@ -100,10 +98,53 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
   
   /*echo "<h2>POST: initialDateFil:".$_POST['initialDateFil']." endDateFil:".$_POST['endDateFil']."</h2>";
   echo "<h2>".print_custom_sql("*","af_chequeo",$where,"", "")."</h2>";*/
-
-  $chequeos=select_custom_sql("*","af_chequeo",$where,"", "LIMIT 10");
-  $chequeosCount = count($chequeos);
 }
+
+$chequeos=select_custom_sql("*","af_chequeo",$where,"", "LIMIT 10");
+$chequeosCount = count($chequeos);
+
+/*
+* SELECTS DE PORTAWAN
+*/
+abrirConexion_PO();
+
+//DESTINOS
+$destinosPorta = select_sql_PO_manual('select_destinos_all');
+$destinosList = array();
+
+foreach ($destinosPorta as $key => $dest) {
+  $destinosList[$dest['i_dest']] = array( "destination" => $dest["destination"], "description" => $dest["description"]);
+}
+
+//RESELLERS
+$resellersPorta = select_sql_PO_manual('select_porta_customers');
+$resellersList = array();
+foreach ($resellersPorta as $key => $res) {
+  $resellersList[$res['i_customer']] = array( "name" => $res["name"]);
+}
+
+//CUSTOMER CLASS
+$ccPorta = select_sql_PO_manual('select_customer_class_all');
+$ccList = array();
+foreach ($ccPorta as $key => $cclass) {
+  $ccList[$cclass['i_customer_class']] = array( "name" => $cclass["name"]);
+}
+
+//CLIENTES
+$customersPorta = select_sql_PO_manual('select_clientes_all');
+$customersList = array();
+foreach ($customersPorta as $key => $cus) {
+  $customersList[$cus['i_customer']] = array( "name" => $cus["name"]);
+}
+
+//CUENTAS 
+$accountsPorta = select_sql_PO_manual('select_accounts_really_all');
+$accountsList = array();
+foreach ($accountsPorta as $key => $acc) {
+  $accountsList[$acc['i_account']] = array( "id" => $acc["id"]);
+}
+
+cerrarConexion_PO();
 
 ?>
 
@@ -113,12 +154,6 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
 
 
 <?php include_once "header.php" ?>
-
-<!-- <pre><h4>  
-<?php 
-  var_dump(select_custom_sql("*","af_chequeo_det","c_IChequeo='1'","",""));
-?>
-</h3></pre>  -->
 
 <table class="ewStdTable">
   <tbody>
@@ -139,6 +174,13 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
 
 <div id="page_title" style="text-align:center; width:100%"></div>
 <!-- Tabla de chequeo  -->
+
+<!-- <div class="debug">
+<code>
+  <pre><?php var_dump($destinosPorta); ?></pre>
+</code>
+</div> -->
+
 <div id="tableContainer" class="col-sm-12">
   <form role="form" action="" method="post">
     <div class="row">
@@ -200,6 +242,8 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
   
   <div class="row">
   <?php 
+
+
     if ($chequeosCount > 0) {
     foreach ($chequeos as $check) {
       $destinos=select_custom_sql("*","af_chequeo_det","c_IChequeo='".$check['c_IChequeo']."'","","");
@@ -226,9 +270,8 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                   $resellers=select_custom_sql("*","af_chequeo_det_resellers","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."'","","");
                   $resellersCount = count($resellers);
 
-                  $destino_porta = select_sql_PO('select_destino_where', array($dest['c_IDestino']));
-                  $destinoName = $destino_porta[1]['destination'];
-                  $destinoDescription = $destino_porta[1]['description'];
+                  $destinoName = $destinosList[$dest['c_IDestino'].""]['destination'];
+                  $destinoDescription = $destinosList[$dest['c_IDestino'].""]['description'];
                   $destinoColor = is_On($dest['i_Alerta']) ? 'warning' : "";
                   $destinoColor = is_On($dest['i_Cuarentena']) ? 'danger' : $destinoColor;
             ?>
@@ -260,8 +303,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                           $cClass=select_custom_sql("*","af_chequeo_det_cclass","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."'","","");
                           $cClassCount = count($cClass);
 
-                          $res_porta = select_sql_PO('select_porta_customers_where', array($res['c_IReseller']));
-                          $resName = $res_porta[1]['name'];
+                          $resName = $resellersList[$res['c_IReseller']]['name'];
                           $resColor = is_On($res['i_Alerta']) ? 'warning' : "";
                           $resColor = is_On($res['i_Cuarentena']) ? 'danger' : $resColor;
                     ?>
@@ -288,8 +330,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                   $customers=select_custom_sql("*","af_chequeo_det_clientes","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                   $customersCount = count($customers);
 
-                                  $cc_porta = select_sql_PO('select_porta_customers_class_where', array($cc['c_ICClass']));
-                                  $ccName = $cc_porta[1]['name'];
+                                  $ccName = $ccList[$cc['c_ICClass']]['name'];
                                   $ccColor = is_On($cc['i_Alerta']) ? 'warning' : "";
                                   $ccColor = is_On($cc['i_Cuarentena']) ? 'danger' : $ccColor;
                             ?>
@@ -320,8 +361,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                           $accounts=select_custom_sql("*","af_chequeo_det_cuentas","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND c_ICliente='".$cus['c_ICliente']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                           $accountsCount = count($accounts);
 
-                                          $cus_porta = select_sql_PO('select_porta_customers_where_class', array($cus['c_ICliente']));
-                                          $cusName = $cus_porta[1]['name'];
+                                          $cusName = $customersList[$cus['c_ICliente']]['name'];
                                           $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
                                           $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
                                     ?>
@@ -353,8 +393,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
                                               if ($accountsCount > 0) {
                                                 foreach ($accounts as $acc) {
 
-                                                  $acc_porta = select_sql_PO('select_porta_accounts_where', array($acc['c_ICuenta'],$acc['c_ICliente']));
-                                                  $accName = $acc_porta[1]['id'];
+                                                  $accName = $accountsList[$acc['c_ICuenta']]['id'];
                                                   $accColor = is_On($acc['i_Alerta']) ? 'warning' : "";
                                                   $accColor = is_On($acc['i_Cuarentena']) ? 'danger' : $accColor;
                                             ?>
