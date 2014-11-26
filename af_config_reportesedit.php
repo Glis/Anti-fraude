@@ -1013,21 +1013,21 @@ class caf_config_reportes_edit extends caf_config_reportes {
 		if (!$this->p_Destino->FldIsDetailKey && !is_null($this->p_Destino->FormValue) && $this->p_Destino->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->p_Destino->FldCaption());
 		}
-		if (!$this->p_Reseller->FldIsDetailKey && !is_null($this->p_Reseller->FormValue) && $this->p_Reseller->FormValue == "") {
+		/*if (!$this->p_Reseller->FldIsDetailKey && !is_null($this->p_Reseller->FormValue) && $this->p_Reseller->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->p_Reseller->FldCaption());
 		}
 		if (!$this->p_CClass->FldIsDetailKey && !is_null($this->p_CClass->FormValue) && $this->p_CClass->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->p_CClass->FldCaption());
-		}
+		}*/
 		if (!$this->x_DirCorreo->FldIsDetailKey && !is_null($this->x_DirCorreo->FormValue) && $this->x_DirCorreo->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->x_DirCorreo->FldCaption());
 		}
 		if (!$this->x_Titulo->FldIsDetailKey && !is_null($this->x_Titulo->FormValue) && $this->x_Titulo->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->x_Titulo->FldCaption());
 		}
-		if (!$this->x_Mensaje->FldIsDetailKey && !is_null($this->x_Mensaje->FormValue) && $this->x_Mensaje->FormValue == "") {
+		/*if (!$this->x_Mensaje->FldIsDetailKey && !is_null($this->x_Mensaje->FormValue) && $this->x_Mensaje->FormValue == "") {
 			ew_AddMessage($gsFormError, $Language->Phrase("EnterRequiredField") . " - " . $this->x_Mensaje->FldCaption());
-		}
+		}*/
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -1387,22 +1387,22 @@ faf_config_reportesedit.Validate = function() {
 			elm = this.GetElements("x" + infix + "_p_Destino");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->p_Destino->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_p_Reseller");
+			/*elm = this.GetElements("x" + infix + "_p_Reseller");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->p_Reseller->FldCaption()) ?>");
 			elm = this.GetElements("x" + infix + "_p_CClass");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->p_CClass->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_x_DirCorreo");
+			*/elm = this.GetElements("x" + infix + "_x_DirCorreo");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->x_DirCorreo->FldCaption()) ?>");
 			elm = this.GetElements("x" + infix + "_x_Titulo");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->x_Titulo->FldCaption()) ?>");
-			elm = this.GetElements("x" + infix + "_x_Mensaje");
+			/*elm = this.GetElements("x" + infix + "_x_Mensaje");
 			if (elm && !ew_HasValue(elm))
 				return this.OnError(elm, ewLanguage.Phrase("EnterRequiredField") + " - <?php echo ew_JsEncode2($af_config_reportes->x_Mensaje->FldCaption()) ?>");
-
+			*/
 			// Set up row object
 			ew_ElementsToRow(fobj);
 
@@ -1607,7 +1607,7 @@ faf_config_reportesedit.Lists["x_p_Destino"].Options = <?php echo (is_array($af_
 <?php } ?>
 <?php if ($af_config_reportes->p_Reseller->Visible) { // p_Reseller ?>
 	<tr id="r_p_Reseller">
-		<td><span id="elh_af_config_reportes_p_Reseller"><?php echo $af_config_reportes->p_Reseller->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td><span id="elh_af_config_reportes_p_Reseller"><?php echo $af_config_reportes->p_Reseller->FldCaption() ?></span></td>
 		<td<?php echo $af_config_reportes->p_Reseller->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_Reseller" class="control-group">
 <select class="form-control" data-field="x_p_Reseller" id="x_p_Reseller" name="x_p_Reseller"<?php echo $af_config_reportes->p_Reseller->EditAttributes() ?>>
@@ -1637,7 +1637,7 @@ faf_config_reportesedit.Lists["x_p_Reseller"].Options = <?php echo (is_array($af
 <?php } ?>
 <?php if ($af_config_reportes->p_CClass->Visible) { // p_CClass ?>
 	<tr id="r_p_CClass">
-		<td><span id="elh_af_config_reportes_p_CClass"><?php echo $af_config_reportes->p_CClass->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td><span id="elh_af_config_reportes_p_CClass"><?php echo $af_config_reportes->p_CClass->FldCaption() ?></span></td>
 		<td<?php echo $af_config_reportes->p_CClass->CellAttributes() ?>>
 <span id="el_af_config_reportes_p_CClass" class="control-group">
 <select class="form-control" data-field="x_p_CClass" id="x_p_CClass" name="x_p_CClass"<?php echo $af_config_reportes->p_CClass->EditAttributes() ?>>
@@ -1687,7 +1687,7 @@ faf_config_reportesedit.Lists["x_p_CClass"].Options = <?php echo (is_array($af_c
 <?php } ?>
 <?php if ($af_config_reportes->x_Mensaje->Visible) { // x_Mensaje ?>
 	<tr id="r_x_Mensaje">
-		<td><span id="elh_af_config_reportes_x_Mensaje"><?php echo $af_config_reportes->x_Mensaje->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
+		<td><span id="elh_af_config_reportes_x_Mensaje"><?php echo $af_config_reportes->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_config_reportes->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_config_reportes_x_Mensaje" class="control-group">
 <textarea class="form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_config_reportes->x_Mensaje->PlaceHolder) ?>"<?php echo $af_config_reportes->x_Mensaje->EditAttributes() ?>><?php echo $af_config_reportes->x_Mensaje->EditValue ?></textarea>

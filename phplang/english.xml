@@ -33,7 +33,7 @@
 		<phrase id="addbtn" value="Añadir"/>
 		<phrase id="addlink" value="Añadir"/>
 		<phrase id="addmasterdetaillink" value="Add Master/Detail"/>
-		<phrase id="addsuccess" value="Se añadio el registro de forma exitosa"/>
+		<phrase id="addsuccess" value="Se añadió el registro de forma exitosa"/>
 		<phrase id="advancedsearch" value="Advanced Search"/>
 		<phrase id="allrecords" value="Todo"/>
 		<phrase id="allword" value="All words"/>
@@ -94,7 +94,7 @@
 		<phrase id="masterdetailcopylink" value="Master/Detail Copy"/>
 		<phrase id="masterdetaileditlink" value="Master/Detail Edit"/>
 		<phrase id="masterdetailviewlink" value="Master/Detail View"/>
-		<phrase id="dupindex" value="Duplicate value '%v' for unique index '%f'"/>
+		<phrase id="dupindex" value="Valor duplicado '%v' para la clave '%f'"/>
 		<phrase id="dupkey" value="Clave primaria duplicada: '%f'"/>
 		<phrase id="edit" value="Editar"/>
 		<phrase id="editbtn" value="Editar"/>
@@ -298,7 +298,7 @@
 		<phrase id="tbltypeview" value="View: "/>
 		<phrase id="tbltypecustomview" value="Custom View: "/>
 		<phrase id="tbltypereport" value="Report: "/>
-		<phrase id="to" value="de"/>
+		<phrase id="to" value="hasta"/>
 		<phrase id="total" value="Total"/>
 		<phrase id="unauthorizeduserid" value="The current user (%c) is not authorized to assign the user ID (%u)."/>
 		<phrase id="unauthorizedparentuserid" value="The current user (%c) is not authorized to assign the parent user ID (%p)."/>
@@ -468,7 +468,7 @@
 <table id="af_acc_cuentas"><phrase id="tblcaption" value="Acciones Cuentas"/>
 <field id="cl_accion"><phrase id="fldcaption" value="Clase Acción"/>
 </field>
-<field id="t_accion"><phrase id="fldcaption" value="TipoAcción"/>
+<field id="t_accion"><phrase id="fldcaption" value="Tipo Acción"/>
 </field>
 <field id="c_ireseller"><phrase id="fldcaption" value="Reseller"/>
 </field>
@@ -520,12 +520,25 @@
 </field>
 </table>
 <table id="af_bitacora"/>
-<table id="af_chequeo"/>
 <table id="af_chequeo_det"/>
 <table id="af_chequeo_det_cclass"/>
 <table id="af_chequeo_det_clientes"/>
 <table id="af_chequeo_det_cuentas"/>
 <table id="af_chequeo_det_resellers"/>
+
+<table id="af_chequeo"><phrase id="tblcaption" value="Monitor"/>	
+<field id="c_ichequeo"><phrase id="fldcaption" value="Código"/>
+</field>
+<field id="f_inicio"><phrase id="fldcaption" value="Fecha Inicio"/>
+</field>
+<field id="f_fin"><phrase id="fldcaption" value="Fecha Fin"/>
+</field>
+<field id="f_inicio_vent"><phrase id="fldcaption" value="Fecha Inicio Ventana"/>
+</field>
+<field id="f_fin_vent"><phrase id="fldcaption" value="Fecha Fin Ventana"/>
+</field>
+</table>
+
 <table id="af_config"><phrase id="tblcaption" value="Configuración"/>
 <field id="q_min_chequeo"><phrase id="fldcaption" value="q Min Chequeo"/>
 </field>
@@ -636,26 +649,7 @@
 <field id="x_obs"><phrase id="fldcaption" value="x Obs"/>
 </field>
 </table>
-<table id="af_log_usuario"><phrase id="tblcaption" value="af log usuario"/>
-<field id="c_itransaccion"><phrase id="fldcaption" value="c ITransaccion"/>
-</field>
-<field id="f_transaccion"><phrase id="fldcaption" value="f Transaccion"/>
-</field>
-<field id="c_usuario"><phrase id="fldcaption" value="c Usuario"/>
-</field>
-<field id="t_tabla"><phrase id="fldcaption" value="t Tabla"/>
-</field>
-<field id="t_campo"><phrase id="fldcaption" value="t Campo"/>
-</field>
-<field id="t_cambio"><phrase id="fldcaption" value="t Cambio"/>
-</field>
-<field id="x_idregistro"><phrase id="fldcaption" value="x Id Registro"/>
-</field>
-<field id="x_valor_ant"><phrase id="fldcaption" value="x Valor Ant"/>
-</field>
-<field id="x_valor_actual"><phrase id="fldcaption" value="x Valor Actual"/>
-</field>
-</table>
+
 <table id="af_reportes"><phrase id="tblcaption" value="Reportes"/>
 <field id="c_ireporte"><phrase id="fldcaption" value="Reporte"/>
 </field>
@@ -858,5 +852,6 @@
 <field id="x_valor_actual"><phrase id="fldcaption" value="Valor Asignado"/>
 </field>
 </table>
+
 </project>
 </ew-language>

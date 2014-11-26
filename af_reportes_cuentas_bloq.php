@@ -39,26 +39,7 @@ if(!isset($_SESSION['USUARIO']))
 <div id="tableContainer" class="col-sm-12">
   <!-- <form role="form" action="" method="post"> -->
     <div class="row">
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="initialDateFil">Desde</label>
-          <input type="date" class="form-control" id="initialDateFil" name="initialDateFil" required>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="endDateFil">Hasta</label>
-          <input type="date" class="form-control" id="endDateFil" name="endDateFil" required>
-        </div>
-      </div>
-
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="destinoFil">Destino</label>
-          <input type="text" class="form-control" id="destinoFil" name="destinoFil" required>
-        </div>
-      </div>
-
+      
       <div class="col-sm-5">
         <div class="form-group">
           <label for="resellerFil">Reseller</label>
@@ -75,16 +56,6 @@ if(!isset($_SESSION['USUARIO']))
                 $k++;
               }
             ?>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="cclassFil">Customer Class</label>
-          <!-- <input type="text" class="form-control" id="cclassFil" name="cclassFil" required> -->
-          <select id="cclassFil" disabled class="form-control">
-            <option value="">Todo</option>
           </select>
         </div>
       </div>

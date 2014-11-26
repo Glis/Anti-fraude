@@ -126,7 +126,63 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['filtros_log']['clase']="";
                                         $_SESSION['filtros_log']['nivel']="";
                                         $_SESSION['filtros_log']['destino']="";
+                                        $_SESSION['filtros_m']['desde']="";
+                                        $_SESSION['filtros_m']['hasta']="";
+                                        $_SESSION['filtro_clientes_bloq'] = "";
+                                        $_SESSION['filtro_cuentas_bloq'] = "";
                                         
+                                        abrirConexion_PO();
+
+                                        //DESTINOS
+                                        $destinosPorta = select_sql_PO_manual('select_destinos_all');
+                                        $destinosList = array();
+
+                                        foreach ($destinosPorta as $key => $dest) {
+                                          $destinosList[$dest['i_dest']] = array( "destination" => $dest["destination"], "description" => $dest["description"], "country" => $dest["iso_3166_1_a2"]);
+                                        }
+
+                                        //RESELLERS
+                                        $resellersPorta = select_sql_PO_manual('select_porta_customers');
+                                        $resellersList = array();
+                                        foreach ($resellersPorta as $key => $res) {
+                                          $resellersList[$res['i_customer']] = array( "name" => $res["name"]);
+                                        }
+
+                                        //CUSTOMER CLASS
+                                        $ccPorta = select_sql_PO_manual('select_customer_class_all');
+                                        $ccList = array();
+                                        foreach ($ccPorta as $key => $cclass) {
+                                          $ccList[$cclass['i_customer_class']] = array( "name" => $cclass["name"]);
+                                        }
+
+                                        //CLIENTES
+                                        $customersPorta = select_sql_PO_manual('select_clientes_all');
+                                        $customersList = array();
+                                        foreach ($customersPorta as $key => $cus) {
+                                          $customersList[$cus['i_customer']] = array( "name" => $cus["name"]);
+                                        }
+
+                                        //CUENTAS 
+                                        $accountsPorta = select_sql_PO_manual('select_accounts_really_all');
+                                        $accountsList = array();
+                                        foreach ($accountsPorta as $key => $acc) {
+                                          $accountsList[$acc['i_account']] = array( "id" => $acc["id"]);
+                                        }
+
+                                        //COUNTRIES
+                                        $countriesPorta = select_sql_PO_manual('select_all_countries');
+                                        $countriesList = array();
+                                        foreach ($countriesPorta as $key => $c) {
+                                          $countriesList[$c['iso_3166_1_a2']] = array( "name" => $c["name"]);
+                                        }
+                                        $_SESSION['destinosList'] = $destinosList;
+                                        $_SESSION['resellersList'] = $resellersList;
+                                        $_SESSION['ccList'] = $ccList;
+                                        $_SESSION['customersList'] = $customersList;
+                                        $_SESSION['accountsList'] = $accountsList;
+                                        $_SESSION['countriesList'] = $countriesList;
+
+                                        cerrarConexion_PO();
                                         echo "<script language='javascript'>window.location='af_reportes_usuariolist.php'</script>"; 
                                     }
                                 }

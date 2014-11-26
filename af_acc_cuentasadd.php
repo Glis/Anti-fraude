@@ -26,7 +26,7 @@ while ($k <= $cant) {
 	$k++;
 }
 
-echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+echo('<div class="new_select_reseller" style="display:none">'); echo $html_res_resellers; echo'</div>';
 
 //
 // Page class
@@ -1111,17 +1111,21 @@ $( document ).ready(function() {
 });
 
 $(document).on('change','#x_c_IReseller',function(){
-
-		var dataString = "pag=customer_class_add&reseller="+$("#x_c_IReseller").find("option:selected").val();
-		$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(response) {  
-				$('#x_c_ICClass').empty().append(response);
-				$( "#x_c_ICClass" ).prop( "disabled", false );
-			  }
-			});
+		if($("#x_c_IReseller").find("option:selected").val() == ""){
+			$('#x_c_ICClass').empty().append("<option value='' selected='selected'>Por favor Seleccione</option>");
+				$( "#x_c_ICClass" ).prop( "disabled", true );
+		}else{
+			var dataString = "pag=customer_class_add&reseller="+$("#x_c_IReseller").find("option:selected").val();
+			$.ajax({  
+				  type: "POST",  
+				  url: "lib/functions.php",  
+				  data: dataString,  
+				  success: function(response) {  
+					$('#x_c_ICClass').empty().append(response);
+					$( "#x_c_ICClass" ).prop( "disabled", false );
+				  }
+				});
+		}
 		
 });
 

@@ -20,13 +20,18 @@ function is_On($value){
   return (intval($value) < 2);
 }
 
-$customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
-$customerCount = count($customers);
+if($_SESSION['filtro_clientes_bloq'] == ""){ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}else{ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1 AND c_IReseller=" . $_SESSION['filtro_clientes_bloq'],"f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}
 
 /*
 * SELECTS DE PORTAWAN
 */
-abrirConexion_PO();
+/*abrirConexion_PO();
 
 //DESTINOS
 $destinosPorta = select_sql_PO_manual('select_destinos_all');
@@ -43,11 +48,39 @@ foreach ($customersPorta as $key => $cus) {
   $customersList[$cus['i_customer']] = array( "name" => $cus["name"]);
 }
 
-cerrarConexion_PO();
+cerrarConexion_PO();*/
 
 ?>
 
+
 <?php include_once "header.php" ?>
+
+<script>
+$(document).on('click','#submit_filtros',function(){
+
+      var reseller = $('#resellerName').find("option:selected").val();
+
+
+      var dataString = "pag=monitor_clientes&filtro=x";
+      if (reseller == "vacio"){
+        dataString = dataString + "&reseller=vacio";
+      }else{
+        dataString = dataString + "&reseller=" + reseller;
+      }
+
+     
+      alert(dataString);
+      $.ajax({  
+        type: "POST",  
+        url: "lib/functions.php",  
+        data: dataString,  
+        success: function(html) {  
+        alert(html);location.reload();
+        }
+      });
+});
+
+</script>
 
 <table class="ewStdTable">
   <tbody>
@@ -69,7 +102,7 @@ cerrarConexion_PO();
 <div id="page_title" style="text-align:center; width:100%"></div>
 <div id="treeContainer" class="col-sm-12">
   <!-- Filtros -->
-  <form role="form">
+
     <div class="row">
       <div class="col-sm-5">
         <div class="form-group">
@@ -77,8 +110,7 @@ cerrarConexion_PO();
           <select id= "resellerName" class= "form-control">
             <option value="vacio">Todo</option>
             <?
-              $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
-              $_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
+            
               $res = select_sql_PO('select_porta_customers');
               $cant = count($res);
               $k = 1;
@@ -96,7 +128,7 @@ cerrarConexion_PO();
         <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
       </div>
     </div>
-  </form>
+
 
   <!-- Tabla de chequeo  -->
   
@@ -115,8 +147,11 @@ cerrarConexion_PO();
             if ($customerCount > 0) {
               foreach ($customers as $cus) {
 
-                $cusName = $customersList[$cus['c_ICliente']]['name'];
-                $destName = $destinosList[$cus['c_IDestino']]['destination'];                
+                //ARREGLO
+                //$cusName = $customersList[$cus['c_ICliente']]['name'];
+                //$destName = $destinosList[$cus['c_IDestino']]['destination'];
+                $cusName = $_SESSION['customersList'][$cus['c_ICliente']]['name'];
+                $destName = $_SESSION['destinosList'][$cus['c_IDestino']]['destination'];                
                 $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
                 $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
           ?>
@@ -145,6 +180,7 @@ cerrarConexion_PO();
 
 <!--   <pre><h4> -->  
   <?php 
+  $_SESSION['filtro_clientes_bloq'] = "";
   	/*$users = select_sql('select_usuarios');
   	$count = count($users);
   	$k = 1;

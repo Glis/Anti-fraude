@@ -1259,7 +1259,10 @@ Page_Rendering();
 // Page Rendering event
 $af_log_usuario_list->Page_Render();
 ?>
+
+
 <?php include_once "header.php" ?>
+
 <?php if ($af_log_usuario->Export == "") { ?>
 <script type="text/javascript">
 

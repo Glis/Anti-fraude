@@ -498,6 +498,43 @@ switch ($pagina) {
 		echo($html_res);
 		break;
 
+	case 'monitor':
+
+		if($_POST['desde'] == ''){
+			$_SESSION['filtros_m']['desde']="";
+		}else{		
+			$_SESSION['filtros_m']['desde'] = $_POST['desde'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['hasta'] == ''){
+			$_SESSION['filtros_m']['hasta']="";
+		}else{		
+			$_SESSION['filtros_m']['hasta'] = $_POST['hasta'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+		break;
+
+	case 'monitor_clientes':
+
+		if($_POST['reseller'] == 'vacio'){
+			$_SESSION['filtro_clientes_bloq']="";
+		}else{		
+			$_SESSION['filtro_clientes_bloq'] = $_POST['reseller'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+		break;
+
+	case 'monitor_cuentas':
+
+		if($_POST['reseller'] == 'vacio'){
+			$_SESSION['filtro_cuentas_bloq']="";
+		}else{		
+			$_SESSION['filtro_cuentas_bloq'] = $_POST['reseller'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+		break;
+
 	default:
 		# code...
 		break;

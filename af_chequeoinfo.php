@@ -97,10 +97,28 @@ class caf_chequeo extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		$where = "";  
+		if($_SESSION['filtros_m']['desde'] == "" && $_SESSION['filtros_m']['hasta'] == "" ){
+
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}else{
+
+			if(($_SESSION['filtros_m']['desde'] != "") && ($_SESSION['filtros_m']['hasta'] != "")){
+				$where = $this->SqlFrom() . ".`f_Inicio_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%' AND" . $this->SqlFrom() . ".`f_Fin` LIKE '" . $_SESSION['filtros_m']['hasta'] . "%' ";
+			}else{
+				if ($_SESSION['filtros_m']['desde'] != ""){
+					$where = $this->SqlFrom() . ".`f_Inicio_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%'";
+				}else{
+					if ($_SESSION['filtros_m']['hasta'] != "") {
+						$where = $this->SqlFrom() . ".`f_Fin_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%'";
+					}
+				}
+			}
+			return $where;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

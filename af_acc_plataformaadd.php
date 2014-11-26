@@ -1017,7 +1017,7 @@ $af_acc_plataforma_add->ShowMessage();
 		<td><span id="elh_af_acc_plataforma_cl_Accion"><?php echo $af_acc_plataforma->cl_Accion->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_acc_plataforma->cl_Accion->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_cl_Accion" class="control-group">
-<select data-field="x_cl_Accion" id="x_cl_Accion" name="x_cl_Accion"<?php echo $af_acc_plataforma->cl_Accion->EditAttributes() ?>>
+<select class= "form-control" data-field="x_cl_Accion" id="x_cl_Accion" name="x_cl_Accion"<?php echo $af_acc_plataforma->cl_Accion->EditAttributes() ?>>
 <?php
 if (is_array($af_acc_plataforma->cl_Accion->EditValue)) {
 	$arwrk = $af_acc_plataforma->cl_Accion->EditValue;
@@ -1047,7 +1047,7 @@ faf_acc_plataformaadd.Lists["x_cl_Accion"].Options = <?php echo (is_array($af_ac
 		<td><span id="elh_af_acc_plataforma_t_Accion"><?php echo $af_acc_plataforma->t_Accion->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></span></td>
 		<td<?php echo $af_acc_plataforma->t_Accion->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_t_Accion" class="control-group">
-<select data-field="x_t_Accion" id="x_t_Accion" name="x_t_Accion"<?php echo $af_acc_plataforma->t_Accion->EditAttributes() ?>>
+<select class= "form-control" data-field="x_t_Accion" id="x_t_Accion" name="x_t_Accion"<?php echo $af_acc_plataforma->t_Accion->EditAttributes() ?>>
 <?php
 if (is_array($af_acc_plataforma->t_Accion->EditValue)) {
 	$arwrk = $af_acc_plataforma->t_Accion->EditValue;
@@ -1077,7 +1077,7 @@ faf_acc_plataformaadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc
 		<td><span id="elh_af_acc_plataforma_x_DirCorreo"><?php echo $af_acc_plataforma->x_DirCorreo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_plataforma->x_DirCorreo->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_x_DirCorreo" class="control-group">
-<input type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_plataforma->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_DirCorreo->EditValue ?>"<?php echo $af_acc_plataforma->x_DirCorreo->EditAttributes() ?>>
+<input class= "form-control" type="text" data-field="x_x_DirCorreo" name="x_x_DirCorreo" id="x_x_DirCorreo" size="30" maxlength="100" placeholder="example@example.com<?php //echo ew_HtmlEncode($af_acc_plataforma->x_DirCorreo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_DirCorreo->EditValue ?>"<?php echo $af_acc_plataforma->x_DirCorreo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_plataforma->x_DirCorreo->CustomMsg ?></td>
 	</tr>
@@ -1087,7 +1087,7 @@ faf_acc_plataformaadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc
 		<td><span id="elh_af_acc_plataforma_x_Titulo"><?php echo $af_acc_plataforma->x_Titulo->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_plataforma->x_Titulo->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_x_Titulo" class="control-group">
-<input type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_Titulo->EditValue ?>"<?php echo $af_acc_plataforma->x_Titulo->EditAttributes() ?>>
+<input class= "form-control" type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_plataforma->x_Titulo->EditValue ?>"<?php echo $af_acc_plataforma->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_plataforma->x_Titulo->CustomMsg ?></td>
 	</tr>
@@ -1097,7 +1097,7 @@ faf_acc_plataformaadd.Lists["x_t_Accion"].Options = <?php echo (is_array($af_acc
 		<td><span id="elh_af_acc_plataforma_x_Mensaje"><?php echo $af_acc_plataforma->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_plataforma->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_acc_plataforma_x_Mensaje" class="control-group">
-<textarea data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_plataforma->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_plataforma->x_Mensaje->EditValue ?></textarea>
+<textarea class= "form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_plataforma->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_plataforma->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_plataforma->x_Mensaje->EditValue ?></textarea>
 </span>
 <?php echo $af_acc_plataforma->x_Mensaje->CustomMsg ?></td>
 	</tr>

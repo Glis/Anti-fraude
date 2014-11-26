@@ -79,7 +79,7 @@ if(!isset($_SESSION['USUARIO']))
 
 $(document).on('click','#gen_rep',function(){
                                               
-  $(location).attr('href','download.php?type=clientes_bloq&reseller=' + $('#resellerFil').find("option:selected").val();
+  $(location).attr('href','download.php?type=clientes_bloq&reseller=' + $('#resellerFil').find("option:selected").val());
                                               
                                               
 

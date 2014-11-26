@@ -104,6 +104,7 @@ if (isset($_POST['initialDateFil']) || isset($_POST['endDateFil'])) {
 /*
 * SELECTS DE PORTAWAN
 */
+/*
 abrirConexion_PO();
 
 //DESTINOS
@@ -143,7 +144,7 @@ foreach ($accountsPorta as $key => $acc) {
 }
 
 cerrarConexion_PO();
-
+*/
 
 //
 // Page class
@@ -1338,8 +1339,41 @@ $af_chequeo_list->ShowMessage();
 							************************FILTROS**************************
 							*********************************************************/?>
 
+<script>
+$(document).on('click','#submit_filtros',function(){
+
+			var desde = $('#initialDateFil').val();
+			var hasta = $('#endDateFil').val();
+
+
+			var dataString = "pag=monitor&filtro=x";
+			if (desde == "vacio"){
+				dataString = dataString + "&desde=vacio";
+			}else{
+				dataString = dataString + "&desde=" + desde;
+			}
+
+			if (hasta == "vacio"){
+				dataString = dataString + "&hasta=vacio";
+			}else{
+				dataString = dataString + "&hasta=" + hasta;
+			}
+
+			alert(dataString);
+			$.ajax({  
+			  type: "POST",  
+			  url: "lib/functions.php",  
+			  data: dataString,  
+			  success: function(html) {  
+				alert("html");location.reload();
+			  }
+			});
+});
+
+</script>
+
 <div class="filterContainer">
-	<form role="form" action="" method="post">
+
     <div class="row">
       <div class="col-sm-5">
         <div class="form-group">
@@ -1350,14 +1384,17 @@ $af_chequeo_list->ShowMessage();
       <div class="col-sm-5">
         <div class="form-group">
           <label for="endDateFil">Hasta</label>
-          <input type="date" class="form-control" id="endDateFil" name="endDateFil" required>
+          <input type="date" class="form-control" id="endDateFil" name="endDateFil">
         </div>
       </div>
       <div class="col-sm-2">
         <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
       </div>
     </div>
-  </form>
+
+
+  <?$_SESSION['filtros_m']['desde']=""; $_SESSION['filtros_m']['hasta']=""; 
+?>
 </div>
 
 							<?/******************************************************
@@ -1392,7 +1429,7 @@ $af_chequeo_list->ListOptions->Render("header", "left");
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_chequeo->f_Inicio->Visible) { // f_Inicio ?>
+<?php if (false) { // f_Inicio ?>
 	<?php if ($af_chequeo->SortUrl($af_chequeo->f_Inicio) == "") { ?>
 		<td><div id="elh_af_chequeo_f_Inicio" class="af_chequeo_f_Inicio"><div class="ewTableHeaderCaption"><?php echo $af_chequeo->f_Inicio->FldCaption() ?></div></div></td>
 	<?php } else { ?>
@@ -1401,7 +1438,7 @@ $af_chequeo_list->ListOptions->Render("header", "left");
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_chequeo->f_Fin->Visible) { // f_Fin ?>
+<?php if (false) { // f_Fin ?>
 	<?php if ($af_chequeo->SortUrl($af_chequeo->f_Fin) == "") { ?>
 		<td><div id="elh_af_chequeo_f_Fin" class="af_chequeo_f_Fin"><div class="ewTableHeaderCaption"><?php echo $af_chequeo->f_Fin->FldCaption() ?></div></div></td>
 	<?php } else { ?>
@@ -1498,13 +1535,13 @@ $af_chequeo_list->ListOptions->Render("body", "left", $af_chequeo_list->RowCnt);
 <?php echo $af_chequeo->c_IChequeo->ListViewValue() ?></a></span>
 <a id="<?php echo $af_chequeo_list->PageObjName . "_row_" . $af_chequeo_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($af_chequeo->f_Inicio->Visible) { // f_Inicio ?>
+	<?php if (false) { // f_Inicio ?>
 		<td<?php echo $af_chequeo->f_Inicio->CellAttributes() ?>>
 <span<?php echo $af_chequeo->f_Inicio->ViewAttributes() ?>>
 <?php echo $af_chequeo->f_Inicio->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_chequeo->f_Fin->Visible) { // f_Fin ?>
+	<?php if (false) { // f_Fin ?>
 		<td<?php echo $af_chequeo->f_Fin->CellAttributes() ?>>
 <span<?php echo $af_chequeo->f_Fin->ViewAttributes() ?>>
 <?php echo $af_chequeo->f_Fin->ListViewValue() ?></span>
@@ -1674,8 +1711,11 @@ if (EW_DEBUG_ENABLED)
                   $resellers=select_custom_sql("*","af_chequeo_det_resellers","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."'","","");
                   $resellersCount = count($resellers);
 
-                  $destinoName = $destinosList[$dest['c_IDestino'].""]['destination'];
-                  $destinoDescription = $destinosList[$dest['c_IDestino'].""]['description'];
+                  //ARREGLO
+                  //$destinoName = $destinosList[$dest['c_IDestino'].""]['destination'];
+                  $destinoName = $_SESSION['destinosList'][$dest['c_IDestino'].""]['destination'];
+                  //$destinoDescription = $destinosList[$dest['c_IDestino'].""]['description'];
+                  $destinoDescription = $_SESSION['destinosList'][$dest['c_IDestino'].""]['description'];
                   $destinoColor = is_On($dest['i_Alerta']) ? 'warning' : "";
                   $destinoColor = is_On($dest['i_Cuarentena']) ? 'danger' : $destinoColor;
             ?>
@@ -1688,7 +1728,7 @@ if (EW_DEBUG_ENABLED)
               <td class="icon-cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
               <td class="icon-cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
               <td class="icon-cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+              <td class="icon-cell white-back"><span id="CDR_destinos" class="download.php?type=CDR_destinos&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></span></span> </button></td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
@@ -1707,7 +1747,9 @@ if (EW_DEBUG_ENABLED)
                           $cClass=select_custom_sql("*","af_chequeo_det_cclass","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."'","","");
                           $cClassCount = count($cClass);
 
-                          $resName = $resellersList[$res['c_IReseller']]['name'];
+                           //ARREGLO
+                          //$resName = $resellersList[$res['c_IReseller']]['name'];
+                          $resName = $_SESSION['resellersList'][$res['c_IReseller']]['name'];
                           $resColor = is_On($res['i_Alerta']) ? 'warning' : "";
                           $resColor = is_On($res['i_Cuarentena']) ? 'danger' : $resColor;
                     ?>
@@ -1715,7 +1757,7 @@ if (EW_DEBUG_ENABLED)
                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" data-toggle="collapse" data-parent="#tbResellers"><span class="glyphicon glyphicon-plus"></span></a></td>
                       <td class="<? echo $resColor; ?>"><?php echo $resName; ?></td> <!-- Traer de PortaOne -->
                       <td class="<? echo $resColor; ?>"><? echo $res['q_Min_Reseller']; ?></td>
-                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                      <td class="icon-cell"><span id="CDR_resellers" class="download.php?type=CDR_resellers&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></span></td>
                     </tr>
                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" class="collapse">
                       <td></td>
@@ -1734,7 +1776,9 @@ if (EW_DEBUG_ENABLED)
                                   $customers=select_custom_sql("*","af_chequeo_det_clientes","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                   $customersCount = count($customers);
 
-                                  $ccName = $ccList[$cc['c_ICClass']]['name'];
+                                  //ARREGLO
+                                  //$ccName = $ccList[$cc['c_ICClass']]['name'];
+                                  $ccName = $_SESSION['ccList'][$cc['c_ICClass']]['name'];
                                   $ccColor = is_On($cc['i_Alerta']) ? 'warning' : "";
                                   $ccColor = is_On($cc['i_Cuarentena']) ? 'danger' : $ccColor;
                             ?>
@@ -1742,7 +1786,11 @@ if (EW_DEBUG_ENABLED)
                               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" data-toggle="collapse" data-parent="#tbCClass"><span class="glyphicon glyphicon-plus"></span></a></td>
                               <td class="<? echo $ccColor; ?>"><?php echo $ccName; ?></td> <!-- Traer de PortaOne -->
                               <td class="<? echo $ccColor; ?>"><? echo $cc['q_Min_CClass']; ?></td>
-                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                              <td class="icon-cell">
+                              	<span id="CDR_cclass" class="download.php?type=CDR_cclass&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>">
+                              		<?php echo "<span  title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+                              	</span>
+                              </td>
                             </tr>
                             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" class="collapse">
                               <td></td>
@@ -1765,7 +1813,9 @@ if (EW_DEBUG_ENABLED)
                                           $accounts=select_custom_sql("*","af_chequeo_det_cuentas","c_IChequeo='".$check['c_IChequeo']."' AND c_IDestino='".$dest['c_IDestino']."' AND c_IReseller='".$res['c_IReseller']."' AND c_ICClass='".$cc['c_ICClass']."' AND c_ICliente='".$cus['c_ICliente']."' AND (i_Alerta=1 OR i_Cuarentena=1 OR i_Bloqueo=1)","","");
                                           $accountsCount = count($accounts);
 
-                                          $cusName = $customersList[$cus['c_ICliente']]['name'];
+                                          //ARREGLO
+                                          //$cusName = $customersList[$cus['c_ICliente']]['name'];
+                                          $cusName = $_SESSION['customersList'][$cus['c_ICliente']]['name'];
                                           $cusColor = is_On($cus['i_Alerta']) ? 'warning' : "";
                                           $cusColor = is_On($cus['i_Cuarentena']) ? 'danger' : $cusColor;
                                     ?>
@@ -1777,7 +1827,12 @@ if (EW_DEBUG_ENABLED)
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Bloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Desbloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
-                                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
+                                      <td class="icon-cell">
+                                      	<span id="CDR_clientes" class="download.php?type=CDR_clientes&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>&c_cliente=<?php echo $cus['c_ICliente'];?>">
+                                      	<?php echo "</span><span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+                                      	<? if(is_On($cus['i_Bloqueo'])) echo "<span id='desbloqueo_cli' class=". $cus['c_ICliente']. "><span title='Desbloquear' class='glyphicon glyphicon-lock'></span></span>"; ?>
+                                      	
+                                      </td>
                                     </tr>
                                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" class="collapse">
                                       <td></td>
@@ -1797,7 +1852,9 @@ if (EW_DEBUG_ENABLED)
                                               if ($accountsCount > 0) {
                                                 foreach ($accounts as $acc) {
 
-                                                  $accName = $accountsList[$acc['c_ICuenta']]['id'];
+                                                  //ARREGLO
+                                                  //$accName = $accountsList[$acc['c_ICuenta']]['id'];
+                                                  $accName = $_SESSION['accountsList'][$acc['c_ICuenta']]['id'];
                                                   $accColor = is_On($acc['i_Alerta']) ? 'warning' : "";
                                                   $accColor = is_On($acc['i_Cuarentena']) ? 'danger' : $accColor;
                                             ?>
@@ -1808,7 +1865,7 @@ if (EW_DEBUG_ENABLED)
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Bloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Desbloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
-                                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
+                                              <td class="icon-cell"><span id="CDR_cuentas" class="download.php?type=CDR_cuentas&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>&c_cliente=<?php echo $cus['c_ICliente'];?>&c_cuenta=<?php echo $acc['c_ICuenta'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></span></td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
                                                 }
@@ -1920,6 +1977,60 @@ if (EW_DEBUG_ENABLED)
     console.log("collapsible_id:"+collapsible_id);
     $(collapsible_id).addClass("collapsible_open");
   });
+
+</script>
+
+<script>
+$(document).on('click','#CDR_destinos',function(){
+                                              
+  $(location).attr('href',$(this).attr('class'));
+ alert($(this).attr('class'));
+
+});
+
+$(document).on('click','#CDR_resellers',function(){
+                                              
+  $(location).attr('href',$(this).attr('class'));
+ alert($(this).attr('class'));
+
+});
+
+$(document).on('click','#CDR_cclass',function(){
+                                              
+  $(location).attr('href',$(this).attr('class'));
+ alert($(this).attr('class'));
+
+});
+
+$(document).on('click','#CDR_clientes',function(){
+                                              
+  $(location).attr('href',$(this).attr('class'));
+ alert($(this).attr('class'));
+
+});
+
+$(document).on('click','#CDR_cuentas',function(){
+                                              
+  $(location).attr('href',$(this).attr('class'));
+ alert($(this).attr('class'));
+
+});
+
+$(document).on('click','#desbloqueo_cli',function(){
+                                              
+  	//$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
+ 
+ 	var dataString = "i_customer=" + $(this).attr('class');
+ 	$.ajax({  
+	  type: "POST",  
+	  url: "DesbloqueoCliente.php",  
+	  data: dataString,  
+	  success: function(response) {  
+		$(this).hide(); alert ("termino");
+	  }
+	});
+
+});
 
 </script>
 

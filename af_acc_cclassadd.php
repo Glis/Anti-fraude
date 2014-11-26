@@ -26,7 +26,7 @@ while ($k <= $cant) {
 	$k++;
 }
 
-echo('<div class="new_select_reseller">'); echo $html_res_resellers; echo'</div>';
+echo('<div class="new_select_reseller" style="display:none">'); echo $html_res_resellers; echo'</div>';
 //
 // Page class
 //

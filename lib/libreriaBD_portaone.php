@@ -230,6 +230,9 @@ function select_sql_PO_manual($nombre, $ArrParams = NULL){
                 //Filtro Cliente
                 $sql = 'SELECT name, i_customer FROM Customers WHERE i_env=" . $ID_ENV2 . "  AND i_customer_type=1 AND name LIKE "%'.$ArrParams[0].'%"';
                 break;
+
+            case 'select_all_countries':
+                $sql = 'SELECT * FROM Countries';
             default:
                 break;
         }
