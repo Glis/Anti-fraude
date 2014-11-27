@@ -352,7 +352,7 @@ Dropdown Submenus
 	width: 40px;
 }
 
-.icon-cell{
+.icon_cell{
 	text-align: center;
 }
 
@@ -362,7 +362,7 @@ Dropdown Submenus
 	text-align: center;
 }
 
-.glyphicon-lock, .glyphicon-floppy-save{
+.glyphicon-lock, .glyphicon-floppy-save, .icon-unlock{
 	color: #666;
 	cursor: pointer;
 	width: auto;

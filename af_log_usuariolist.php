@@ -1306,7 +1306,7 @@ faf_log_usuariolist.Lists["x_t_Campo"] = {"LinkField":"x_rv_Low_Value","Ajax":nu
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_usuario_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_usuario_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

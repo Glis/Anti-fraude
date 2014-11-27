@@ -1328,7 +1328,6 @@ $af_chequeo_list->RenderOtherOptions();
 <?php
 $af_chequeo_list->ShowMessage();
 ?>
-
 <!-- <div class="debug">
 <code>
 	<pre><?php var_dump("algo"); ?></pre>
@@ -1724,11 +1723,15 @@ if (EW_DEBUG_ENABLED)
               <td class="<? echo $destinoColor; ?>"><?php echo $destinoName; ?></td>
               <td class="<? echo $destinoColor; ?>"><?php echo $destinoDescription; ?></td> <!-- Traer de PortaOne -->
               <td class="<? echo $destinoColor; ?>"><?php echo $dest['q_Min_Plataf']; ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><span id="CDR_destinos" class="download.php?type=CDR_destinos&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></span></span> </button></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back">
+	            <span id="CDR_destinos" class="download.php?type=CDR_destinos&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>">
+	              <?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+	            </span>
+	          </td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
@@ -1757,7 +1760,11 @@ if (EW_DEBUG_ENABLED)
                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" data-toggle="collapse" data-parent="#tbResellers"><span class="glyphicon glyphicon-plus"></span></a></td>
                       <td class="<? echo $resColor; ?>"><?php echo $resName; ?></td> <!-- Traer de PortaOne -->
                       <td class="<? echo $resColor; ?>"><? echo $res['q_Min_Reseller']; ?></td>
-                      <td class="icon-cell"><span id="CDR_resellers" class="download.php?type=CDR_resellers&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></span></td>
+                      <td class="icon_cell">
+                        <span id="CDR_resellers" class="download.php?type=CDR_resellers&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>">
+                          <?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+                        </span>
+                      </td>
                     </tr>
                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" class="collapse">
                       <td></td>
@@ -1786,7 +1793,7 @@ if (EW_DEBUG_ENABLED)
                               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" data-toggle="collapse" data-parent="#tbCClass"><span class="glyphicon glyphicon-plus"></span></a></td>
                               <td class="<? echo $ccColor; ?>"><?php echo $ccName; ?></td> <!-- Traer de PortaOne -->
                               <td class="<? echo $ccColor; ?>"><? echo $cc['q_Min_CClass']; ?></td>
-                              <td class="icon-cell">
+                              <td class="icon_cell">
                               	<span id="CDR_cclass" class="download.php?type=CDR_cclass&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>">
                               		<?php echo "<span  title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
                               	</span>
@@ -1827,10 +1834,11 @@ if (EW_DEBUG_ENABLED)
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Bloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Desbloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
-                                      <td class="icon-cell">
+                                      <td class="icon_cell">
                                       	<span id="CDR_clientes" class="download.php?type=CDR_clientes&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>&c_cliente=<?php echo $cus['c_ICliente'];?>">
-                                      	<?php echo "</span><span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
-                                      	<? if(is_On($cus['i_Bloqueo'])) echo "<span id='desbloqueo_cli' class=". $cus['c_ICliente']. "><span title='Desbloquear' class='glyphicon glyphicon-lock'></span></span>"; ?>
+                                      		<?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+                                      	</span>
+                                      	<? if(is_On($cus['i_Bloqueo'])) echo "<span id='desbloqueo_cli' class=". $cus['c_ICliente']. "><i title='Desbloquear' class='glyphicon icon-unlock'></i></span>"; ?> <!-- <span title='Desbloquear' class='glyphicon glyphicon-lock'></span></span> -->
                                       	
                                       </td>
                                     </tr>
@@ -1865,7 +1873,12 @@ if (EW_DEBUG_ENABLED)
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Bloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Desbloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
-                                              <td class="icon-cell"><span id="CDR_cuentas" class="download.php?type=CDR_cuentas&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>&c_cliente=<?php echo $cus['c_ICliente'];?>&c_cuenta=<?php echo $acc['c_ICuenta'];?>"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></span></td>
+                                              <td class="icon_cell">
+                                              	<span id="CDR_cuentas" class="download.php?type=CDR_cuentas&c_dest=<?php echo $dest['c_IDestino'];?>&c_chequeo=<?php echo $check['c_IChequeo'];?>&c_reseller=<?php echo $res['c_IReseller'];?>&c_cclass=<?php echo $cc['c_ICClass'];?>&c_cliente=<?php echo $cus['c_ICliente'];?>&c_cuenta=<?php echo $acc['c_ICuenta'];?>">
+                                              	   <?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?>
+                                              	</span>
+                                              	<? if(is_On($acc['i_Bloqueo'])) echo "<span id='desbloqueo_cuenta' class=". $acc['c_ICuenta']. "><i title='Desbloquear' class='glyphicon icon-unlock'></i></span>"; ?> <!-- <span title='Desbloquear' class='glyphicon glyphicon-lock'></span></span> -->
+                                              </td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
                                                 }
@@ -1945,6 +1958,31 @@ if (EW_DEBUG_ENABLED)
     
   </div>
 </div><!-- treeContainer -->
+<!-- Modal para los CDR -->
+<div class="modal fade" id="cdr_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Descargando CDR</h4>
+      </div>
+      <div class="modal-body">
+        <p>Descargando los CDRs solicitados, espere por favor...</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal para el bloqueo/desbloqueo de lientes -->
+<div class="modal fade" id="unlock_modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Desbloqueando, espere por favor...</h4>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<span id="logged_user" hidden><?php echo $_SESSION["USUARIO"]; ?></span>
 
 
 <script>
@@ -1982,51 +2020,96 @@ if (EW_DEBUG_ENABLED)
 
 <script>
 $(document).on('click','#CDR_destinos',function(){
-                                              
+  $('#cdr_modal').modal('show');                                        
   $(location).attr('href',$(this).attr('class'));
- alert($(this).attr('class'));
+  // alert($(this).attr('class'));
+  $('#cdr_modal').modal('hide'); 
 
 });
 
 $(document).on('click','#CDR_resellers',function(){
                                               
+  $('#cdr_modal').modal('show');                                        
   $(location).attr('href',$(this).attr('class'));
- alert($(this).attr('class'));
+   // alert($(this).attr('class'));
+  $('#cdr_modal').modal('hide'); 
 
 });
 
 $(document).on('click','#CDR_cclass',function(){
                                               
+  $('#cdr_modal').modal('show');                                        
   $(location).attr('href',$(this).attr('class'));
- alert($(this).attr('class'));
+   // alert($(this).attr('class'));
+  $('#cdr_modal').modal('hide'); 
 
 });
 
 $(document).on('click','#CDR_clientes',function(){
                                               
+  $('#cdr_modal').modal('show');                                        
   $(location).attr('href',$(this).attr('class'));
- alert($(this).attr('class'));
+   // alert($(this).attr('class'));
+  $('#cdr_modal').modal('hide'); 
 
 });
 
 $(document).on('click','#CDR_cuentas',function(){
                                               
+  $('#cdr_modal').modal('show');                                        
   $(location).attr('href',$(this).attr('class'));
- alert($(this).attr('class'));
+   // alert($(this).attr('class'));
+  $('#cdr_modal').modal('hide'); 
 
 });
 
 $(document).on('click','#desbloqueo_cli',function(){
+  	$('#unlock_modal').find('.modal-title').text('Desbloqueando el cliente seleccionado, espere por favor...');
+  	$('#unlock_modal').modal('show'); 
+
+  	var element= $(this);
                                               
   	//$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
  
- 	var dataString = "i_customer=" + $(this).attr('class');
+ 	var dataString = "i_customer=" + $(this).attr('class') + "&usuario=" + $("#logged_user").html();
  	$.ajax({  
 	  type: "POST",  
 	  url: "DesbloqueoCliente.php",  
 	  data: dataString,  
+	  success: function(response) {
+	  	element.hide();
+		// alert ("termino: "+response);
+  		$('#unlock_modal').modal('hide'); 
+	  },
+	  error: function(response){
+	  	// alert ("termino: "+response);
+ 		$('#unlock_modal').modal('hide'); 
+	  }
+	});
+
+});
+
+$(document).on('click','#desbloqueo_cuenta',function(){
+  	$('#unlock_modal').find('.modal-title').text('Desbloqueando la cuenta seleccionada, espere por favor...');
+  	$('#unlock_modal').modal('show');                                        
+    
+	var element= $(this);
+
+  	//$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
+ 
+ 	var dataString = "i_account=" + $(this).attr('class') + "&usuario=" + $("#logged_user").text();
+ 	$.ajax({  
+	  type: "POST",  
+	  url: "DesbloqueoCuenta.php",  
+	  data: dataString,  
 	  success: function(response) {  
-		$(this).hide(); alert ("termino");
+		element.hide(); 
+		// alert ("termino: "+response);
+  		$('#unlock_modal').modal('hide'); 
+	  },
+	  error: function(response){
+	  	// alert ("termino: "+response);
+ 		$('#unlock_modal').modal('hide'); 
 	  }
 	});
 

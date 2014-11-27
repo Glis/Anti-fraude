@@ -28,7 +28,7 @@ if (!$salida->logged) {
 //**************************************
 // Paso1: Desbloqueo usando llamada al API
 $i_customer   = $_POST['i_customer'];
-$USER_LOGEADO = 'netunoapi';         // Ejemplo
+$USER_LOGEADO = $_POST['usuario'];         // Ejemplo
 $iter = 1;
 //echo "DESBLOQUEO DE CLIENTE:" . $i_customer . "<br>";
 $salida2 = $salida->update_customer($i_customer, "N", $iter);

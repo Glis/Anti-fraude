@@ -1400,7 +1400,7 @@ faf_log_accioneslist.Lists["x_st_Accion"] = {"LinkField":"x_rv_Low_Value","Ajax"
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_log_acciones_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_log_acciones_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

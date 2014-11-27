@@ -45,7 +45,7 @@ if(!isset($_SESSION['USUARIO']))
 <div id="tableContainer" class="col-sm-12">
   <!-- <form role="form" action="" method="post"> -->
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-sm-5 col-sm-offset-2">
         <div class="form-group">
           <label for="resellerFil">Reseller</label>
           <!-- <input type="text" class="form-control" id="resellerFil" name="resellerFil" required> -->
@@ -65,8 +65,8 @@ if(!isset($_SESSION['USUARIO']))
         </div>
       </div>
 
-      <div class="col-sm-2">
-        <button type="submit" class="btn btn-primary" id="gen_rep">Generar Reporte</button>
+      <div class="col-sm-3">
+        <button type="submit" class="btn btn-primary submit_filtros" id="gen_rep">Generar Reporte</button>
       </div>
     </div>
  <!--  </form> -->

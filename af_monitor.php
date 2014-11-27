@@ -280,11 +280,11 @@ cerrarConexion_PO();
               <td class="<? echo $destinoColor; ?>"><?php echo $destinoName; ?></td>
               <td class="<? echo $destinoColor; ?>"><?php echo $destinoDescription; ?></td> <!-- Traer de PortaOne -->
               <td class="<? echo $destinoColor; ?>"><?php echo $dest['q_Min_Plataf']; ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
-              <td class="icon-cell white-back"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("R",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("CC",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("C",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo bulletCellContents("A",$check['c_IChequeo'],$dest['c_IDestino']); ?></td>
+              <td class="icon_cell white-back"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
             </tr>
             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>" class="collapse">
               <td></td>
@@ -311,7 +311,7 @@ cerrarConexion_PO();
                       <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" data-toggle="collapse" data-parent="#tbResellers"><span class="glyphicon glyphicon-plus"></span></a></td>
                       <td class="<? echo $resColor; ?>"><?php echo $resName; ?></td> <!-- Traer de PortaOne -->
                       <td class="<? echo $resColor; ?>"><? echo $res['q_Min_Reseller']; ?></td>
-                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                      <td class="icon_cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                     </tr>
                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>" class="collapse">
                       <td></td>
@@ -338,7 +338,7 @@ cerrarConexion_PO();
                               <td><a href="#ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" data-toggle="collapse" data-parent="#tbCClass"><span class="glyphicon glyphicon-plus"></span></a></td>
                               <td class="<? echo $ccColor; ?>"><?php echo $ccName; ?></td> <!-- Traer de PortaOne -->
                               <td class="<? echo $ccColor; ?>"><? echo $cc['q_Min_CClass']; ?></td>
-                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
+                              <td class="icon_cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?></td>
                             </tr>
                             <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>" class="collapse">
                               <td></td>
@@ -373,7 +373,7 @@ cerrarConexion_PO();
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Bloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['f_Desbloqueo']; ?></td>
                                       <td class="<? echo $cusColor; ?>"><? echo $cus['c_Usuario_Desbloqueo']; ?></td>
-                                      <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
+                                      <td class="icon_cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($cus['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                     </tr>
                                     <tr id="ch<? echo $check['c_IChequeo']; ?>-det<? echo $dest['c_IDestino']; ?>-res<? echo $res['c_IReseller']; ?>-cc<? echo $cc['c_ICClass']; ?>-cus<? echo $cus['c_ICliente']; ?>" class="collapse">
                                       <td></td>
@@ -404,7 +404,7 @@ cerrarConexion_PO();
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Bloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['f_Desbloqueo']; ?></td>
                                               <td class="<? echo $accColor; ?>"><? echo $acc['c_Usuario_Desbloqueo']; ?></td>
-                                              <td class="icon-cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
+                                              <td class="icon_cell"><?php echo "<span title='Descargar CDR' class='glyphicon glyphicon-floppy-save'></span>" ?><? if(is_On($acc['i_Bloqueo'])) echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
                                             </tr> <!-- quinto nivel -->
                                             <?php 
                                                 }

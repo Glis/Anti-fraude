@@ -1,8 +1,8 @@
 <?php
-include_once ("C:/AppServ/www/netuno/libreria.php");
-include_once ("C:/AppServ/www/netuno/libreriaBD.php");
-include_once ("C:/AppServ/www/netuno/libreriaBDPO.php");
-include_once ("C:/AppServ/www/netuno/nui.php");
+include_once ("lib/libreria.php");
+include_once ("lib/libreriaBD.php");
+include_once ("lib/libreriaBDPO.php");
+include_once ("lib/nui.php");
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
@@ -27,7 +27,8 @@ if (!$salida->logged) {
 // DESBLOQUEO DE CUENTA
 //**************************************
 // Paso1: Desbloqueo usando llamada al API
-$i_account= $_GET['i_account'];
+$i_account    = $_POST['i_account'];
+$USER_LOGEADO = $_POST['usuario']; 
 $iter = 1;
 //echo "DESBLOQUEO DE CUENTA:" . $i_account . "<br>";
 $salida2 = $salida->update_account($i_account, "N", $iter);

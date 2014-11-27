@@ -47,6 +47,7 @@ if (!isset($Language)) {
 		<?php } ?>
 
 		<!-- ///CUSTOM CSS INCLUDING/// -->
+		<link rel="stylesheet" href="css/whhg.css">
 		<link href="css/styles.css" rel="stylesheet">
 		<!-- ///CUSTOM CSS INCLUDING/// -->
 

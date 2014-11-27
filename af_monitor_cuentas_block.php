@@ -111,7 +111,7 @@ $(document).on('click','#submit_filtros',function(){
   <!-- Filtros -->
  
     <div class="row">
-      <div class="col-sm-5">
+      <div class="col-sm-5 col-sm-offset-2">
         <div class="form-group">
           <label for="resellerName">Resellers</label>
           <select id= "resellerName" class= "form-control">
@@ -130,7 +130,7 @@ $(document).on('click','#submit_filtros',function(){
           </select>
         </div>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-3">
         <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
       </div>
     </div>
@@ -166,7 +166,7 @@ $(document).on('click','#submit_filtros',function(){
             <td class="<? echo $accColor; ?>"><?php echo $destName; ?></td>
             <td class="<? echo $accColor; ?>"><?php echo $acc['c_IChequeo'];?></td>
             <td class="<? echo $accColor; ?>"><?php echo $acc['f_Bloqueo'];?></td>
-            <td class="icon-cell"><?php echo "<span title='Desbloquear' class='glyphicon glyphicon-lock'></span>"; ?></td>
+            <td class="icon_cell"><?php echo "<span id='desbloqueo_cuenta' class=". $acc['c_ICuenta']. "><i title='Desbloquear' class='glyphicon icon-unlock'></i></span>"; ?></td>
           </tr>
           <?php  
               }
@@ -186,5 +186,44 @@ $(document).on('click','#submit_filtros',function(){
 
 <?php  $_SESSION['filtro_cuentas_bloq'] = "";?>
 </div>
+<!-- Modal para el bloqueo/desbloqueo de lientes -->
+<div class="modal fade" id="unlock_modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Desbloqueando, espere por favor...</h4>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<span id="logged_user" hidden><?php echo $_SESSION["USUARIO"]; ?></span>
+
+<script>
+  $(document).on('click','#desbloqueo_cuenta',function(){
+      $('#unlock_modal').find('.modal-title').text('Desbloqueando la cuenta seleccionada, espere por favor...');
+      $('#unlock_modal').modal('show');                                        
+      
+    var element= $(this);
+
+      //$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
+   
+    var dataString = "i_account=" + $(this).attr('class') + "&usuario=" + $("#logged_user").text();
+    $.ajax({  
+      type: "POST",  
+      url: "DesbloqueoCuenta.php",  
+      data: dataString,  
+      success: function(response) {  
+      element.hide(); 
+      // alert ("termino: "+response);
+        $('#unlock_modal').modal('hide'); 
+      },
+      error: function(response){
+        // alert ("termino: "+response);
+      $('#unlock_modal').modal('hide'); 
+      }
+    });
+
+  });
+</script>
 
 <?php include_once "footer.php" ?>
