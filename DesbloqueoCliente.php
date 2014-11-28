@@ -2,7 +2,7 @@
 include_once ("lib/libreria.php");
 include_once ("lib/libreriaBD.php");
 include_once ("lib/libreriaBDPO.php");
-include_once ("lib/nui.php");
+include_once ("lib/nui2.php");
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);

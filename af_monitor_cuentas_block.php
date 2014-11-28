@@ -212,7 +212,7 @@ $(document).on('click','#submit_filtros',function(){
       type: "POST",  
       url: "DesbloqueoCuenta.php",  
       data: dataString,  
-      success: function(response) {  
+      success: function(response) { 
       element.hide(); 
       // alert ("termino: "+response);
         $('#unlock_modal').modal('hide'); 
