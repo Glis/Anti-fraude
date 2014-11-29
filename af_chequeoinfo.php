@@ -69,7 +69,7 @@ class caf_chequeo extends cTable {
 			} else {
 				$sThisSort = ($sLastSort == "ASC") ? "DESC" : "ASC";
 			}
-			$ofld->setSort($sThisSort);
+			$ofld->setSort(/*$sThisSort*/);
 			if ($ctrl) {
 				$sOrderBy = $this->getSessionOrderBy();
 				if (strpos($sOrderBy, $sSortField . " " . $sLastSort) !== FALSE) {
@@ -107,16 +107,17 @@ class caf_chequeo extends cTable {
 		}else{
 
 			if(($_SESSION['filtros_m']['desde'] != "") && ($_SESSION['filtros_m']['hasta'] != "")){
-				$where = $this->SqlFrom() . ".`f_Inicio_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%' AND" . $this->SqlFrom() . ".`f_Fin` LIKE '" . $_SESSION['filtros_m']['hasta'] . "%' ";
+				$where = $this->SqlFrom() . ".`f_Inicio` BETWEEN '" . $_SESSION['filtros_m']['desde'] . "' AND '" . $_SESSION['filtros_m']['hasta'] . "' AND " . $this->SqlFrom() . ".`f_Fin` BETWEEN '" . $_SESSION['filtros_m']['desde'] . "' AND '". $_SESSION['filtros_m']['hasta'] . "'";
 			}else{
 				if ($_SESSION['filtros_m']['desde'] != ""){
-					$where = $this->SqlFrom() . ".`f_Inicio_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%'";
+					$where = $this->SqlFrom() . ".`f_Inicio` = '" . $_SESSION['filtros_m']['desde'] . "'";
 				}else{
 					if ($_SESSION['filtros_m']['hasta'] != "") {
-						$where = $this->SqlFrom() . ".`f_Fin_Vent` LIKE '" . $_SESSION['filtros_m']['desde'] . "%'";
+						$where = $this->SqlFrom() . ".`f_Fin` = '" . $_SESSION['filtros_m']['desde'] . "'";
 					}
 				}
 			}
+			echo $where;
 			return $where;
 		}
 	}
@@ -130,7 +131,7 @@ class caf_chequeo extends cTable {
 	}
 
 	function SqlOrderBy() { // Order By
-		return "";
+		return "`c_IChequeo` DESC";
 	}
 
 	// Check if Anonymous User is allowed

@@ -19,7 +19,9 @@ if(!isset($_SESSION['USUARIO']))
 //
 // Page class
 //
-
+if(!$_SESSION['pagination']){
+	$_SESSION['filtros_umb_dest']= "";
+}
 $af_umb_destinos_list = NULL; // Initialize page object first
 
 class caf_umb_destinos_list extends caf_umb_destinos {
@@ -1354,7 +1356,28 @@ $af_umb_destinos_list->ShowMessage();
 							<?/******************************************************
 							************************FILTROS**************************
 							*********************************************************/?>
+
+<script>
+  window.onbeforeunload = confirmExit;
+  function confirmExit()
+  {
+  	var data = $('#control').val(); console.log('Vacio');
+  	if (data != "") {
+	  	dataString= "pag=unload&f1=filtros_umb_dest"
+	    $.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			console.log('Vacio');//$('#control').val(1);
+		  }
+		});
+   	};
+  }
+
+</script>
 <div id="filterContainer">
+	<input type="" value="" id="control">
 	<script type="text/javascript">
 	$(document).on('click','#submit_dest',function(){
 			var option = $("#dest").val();
@@ -1370,13 +1393,24 @@ $af_umb_destinos_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
+				$('#control').val("2");
 				location.reload();
 			  }
 			});
 
 		});
 
-
+	$(document).on('click','.pagination',function(){
+		dataString= "pag=unload&f1=filtros_umb_dest"
+	    $.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			
+		  }
+		});
+	});
 	</script>
 	<div class="row">
 		<div class="col-sm-6 col-sm-offset-2">

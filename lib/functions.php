@@ -535,6 +535,10 @@ switch ($pagina) {
 		}
 		break;
 
+	case 'unload':
+		$_SESSION['pagination'] = true;
+		break;
+
 	default:
 		# code...
 		break;

@@ -27,8 +27,8 @@ if($_GET['type'] == 'calidad_destino'){
 	$res = select_PO_sql('select_repCalidadDestino', $data);
 
 
-	echo "RESELLER|CUSTOMERCLASS|CUSTOMER|ACCOUNT|COUNTRY|DESTINATION|DISCONNECT_CAUSE|LLAMADAS|MINUTOS
-";
+	echo "RESELLER|CUSTOMERCLASS|CUSTOMER|ACCOUNT|COUNTRY|DESTINATION|DISCONNECT_CAUSE|LLAMADAS|MINUTOS";
+	echo "\r\n";
 	$k = 1;
 	$cant = count($res);
 	while ($k <= $cant) { 
@@ -40,8 +40,8 @@ if($_GET['type'] == 'calidad_destino'){
 			$res[$k]['destination']."|".
 			$res[$k]['disconnect_cause']."|".
 			$res[$k]['llamadas']."|".
-			$res[$k]['minutos']."
-";
+			$res[$k]['minutos'];
+		echo "\r\n";
 		$k++;
 
 	}
@@ -67,8 +67,8 @@ if($_GET['type'] == 'minutos_destino'){
 	$res = select_PO_sql('select_repMinDestino', $data);
 
 
-	echo "RESELLER|CUSTOMERCLASS|COUNTRY|DESTINATION|LLAMADAS|MINUTOS
-";
+	echo "RESELLER|CUSTOMERCLASS|COUNTRY|DESTINATION|LLAMADAS|MINUTOS";
+	echo "\r\n";
 	$k = 1;
 	$cant = count($res);
 	while ($k <= $cant) { 
@@ -77,8 +77,8 @@ if($_GET['type'] == 'minutos_destino'){
 			$res[$k]['country']."|".
 			$res[$k]['destination']."|".
 			$res[$k]['llamadas']."|".
-			$res[$k]['minutos']."
-";
+			$res[$k]['minutos'];
+		echo "\r\n";
 		$k++;
 
 	}
@@ -98,8 +98,8 @@ if($_GET['type'] == 'clientes_bloq'){
 
 	$res = select_sql('select_repClientesBloq', $data);
 
-	echo "CUSTOMER|COUNTRY|DESTINATION|COD_CHEQUEO|ALERTA?|CUARENTENA?|FECHA_BLOQUEO
-";
+	echo "CUSTOMER|COUNTRY|DESTINATION|COD_CHEQUEO|ALERTA?|CUARENTENA?|FECHA_BLOQUEO";
+	echo "\r\n";
 	$k = 1;
 	$cant = count($res);
 	while ($k <= $cant) { 
@@ -113,8 +113,8 @@ if($_GET['type'] == 'clientes_bloq'){
 			$res[$k]['c_ichequeo']."|".
 			$res[$k]['alerta']."|".
 			$res[$k]['cuarentena']."|".
-			$res[$k]['f_Bloqueo']."
-";
+			$res[$k]['f_Bloqueo'];
+		echo "\r\n";
 		$k++;
 
 	}
@@ -133,8 +133,8 @@ if($_GET['type'] == 'cuentas_bloq'){
 	$res = select_sql('select_repCuentasBloq', $data);
 
 
-	echo "CUSTOMER|ACCOUNT|DESTINATION|COD_CHEQUEO|ALERTA?|CUARENTENA?|FECHA_BLOQUEO
-";
+	echo "CUSTOMER|ACCOUNT|DESTINATION|COD_CHEQUEO|ALERTA?|CUARENTENA?|FECHA_BLOQUEO";
+	echo "\r\n";
 	$k = 1;
 	$cant = count($res);
 	while ($k <= $cant) { 
@@ -148,8 +148,8 @@ if($_GET['type'] == 'cuentas_bloq'){
 			$res[$k]['c_ichequeo']."|".
 			$res[$k]['alerta']."|".
 			$res[$k]['cuarentena']."|".
-			$res[$k]['f_Bloqueo']."
-";
+			$res[$k]['f_Bloqueo'];
+		echo "\r\n";
 		$k++;
 
 	}
@@ -174,12 +174,12 @@ if ($_GET['type'] == 'CDR_destinos') {
 	                                                      'c_IDestino'        => $C_IDESTINO));
 	$cant_xCDrsPl = count($xCDrsPl);
 	$i = 1;
-	echo "Cantidad: " . $cant_xCDrsPl . "
-";
-	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID' . "
-";
+	echo "Cantidad: " . $cant_xCDrsPl;
+	echo "\r\n";
+	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID';
+	echo "\r\n";
 	while ($i <= $cant_xCDrsPl) {
-	  echo $xCDrsPl[$i]['i_customer']           . '|' . 
+		echo $xCDrsPl[$i]['i_customer']           . '|' . 
 	       $xCDrsPl[$i]['customer_name']        . '|' . 
 	       $xCDrsPl[$i]['account_id']           . '|' . 
 	       $xCDrsPl[$i]['cli']                  . '|' . 
@@ -190,10 +190,10 @@ if ($_GET['type'] == 'CDR_destinos') {
 	       $xCDrsPl[$i]['connect_time']         . '|' . 
 	       $xCDrsPl[$i]['disconnect_time']      . '|' . 
 	       $xCDrsPl[$i]['charged_amount']       . '|' . 
-		     $xCDrsPl[$i]['charged_quantity']     . '|' . 
-		     $xCDrsPl[$i]['used_quantity']        . '|' . 
-		     $xCDrsPl[$i]['call_id']              . '
-';
+	       $xCDrsPl[$i]['charged_quantity']     . '|' . 
+	       $xCDrsPl[$i]['used_quantity']        . '|' . 
+	       $xCDrsPl[$i]['call_id'];
+	    echo "\r\n";
 	  
 	  $i++;;
 	}
@@ -222,10 +222,10 @@ if ($_GET['type'] == 'CDR_resellers') {
 	                                                     'c_IReseller'       => $C_IRESELLER));
 	$cant_xCDrsPl = count($xCDrsPl);
 	$i = 1;
-	echo "Cantidad: " . $cant_xCDrsPl . "
-";
-	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID' . "
-";
+	echo "Cantidad: " . $cant_xCDrsPl;
+	echo "\r\n";
+	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID';
+	echo "\r\n";
 	while ($i <= $cant_xCDrsPl) {
 	  echo $xCDrsPl[$i]['i_customer']           . '|' . 
 	       $xCDrsPl[$i]['customer_name']        . '|' . 
@@ -240,8 +240,8 @@ if ($_GET['type'] == 'CDR_resellers') {
 	       $xCDrsPl[$i]['charged_amount']       . '|' . 
 	       $xCDrsPl[$i]['charged_quantity']     . '|' . 
 	       $xCDrsPl[$i]['used_quantity']        . '|' . 
-	       $xCDrsPl[$i]['call_id']              . '
-';  
+	       $xCDrsPl[$i]['call_id']; 
+	   echo "\r\n"; 
 	  $i++;
 	}
 
@@ -272,10 +272,9 @@ if ($_GET['type'] == 'CDR_cclass') {
 	                                                        'c_ICClass'         => $C_ICCLASS));
 	$cant_xCDrsPl = count($xCDrsPl);
 	$i = 1;
-	echo "Cantidad: " . $cant_xCDrsPl . "
-";
-	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID' . "
-";
+	echo "Cantidad: " . $cant_xCDrsPl;
+	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID';
+	echo "\r\n";
 	while ($i <= $cant_xCDrsPl) {
 	  echo $xCDrsPl[$i]['i_customer']           . '|' . 
 	       $xCDrsPl[$i]['customer_name']        . '|' . 
@@ -290,8 +289,8 @@ if ($_GET['type'] == 'CDR_cclass') {
 	       $xCDrsPl[$i]['charged_amount']       . '|' . 
 		   $xCDrsPl[$i]['charged_quantity']     . '|' . 
 		   $xCDrsPl[$i]['used_quantity']        . '|' . 
-		   $xCDrsPl[$i]['call_id']              . '
-';
+		   $xCDrsPl[$i]['call_id'];
+	  echo "\r\n";
 	  
 	  $i++;
 	}
@@ -324,10 +323,10 @@ if ($_GET['type'] == 'CDR_clientes') {
 	                                                     'c_ICliente'        => $C_ICLIENTE));
 	$cant_xCDrsPl = count($xCDrsPl);
 	$i = 1;
-	echo "Cantidad: " . $cant_xCDrsPl . "
-";
-	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID' . "
-";
+	echo "Cantidad: " . $cant_xCDrsPl;
+	echo "\r\n";
+	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID';
+	echo "\r\n";
 	while ($i <= $cant_xCDrsPl) {
 	  echo $xCDrsPl[$i]['i_customer']           . '|' . 
 	       $xCDrsPl[$i]['customer_name']        . '|' . 
@@ -342,8 +341,8 @@ if ($_GET['type'] == 'CDR_clientes') {
 	       $xCDrsPl[$i]['charged_amount']       . '|' . 
 		   $xCDrsPl[$i]['charged_quantity']     . '|' . 
 		   $xCDrsPl[$i]['used_quantity']        . '|' . 
-		   $xCDrsPl[$i]['call_id']              . '
-';
+		   $xCDrsPl[$i]['call_id'];
+	  echo "\r\n";
 	  
 	  $i++;
 	}
@@ -378,10 +377,10 @@ if ($_GET['type'] == 'CDR_cuentas') {
 	                                                     'c_ICuenta'         => $C_ICUENTA));
 	$cant_xCDrsPl = count($xCDrsPl);
 	$i = 1;
-	echo "Cantidad: " . $cant_xCDrsPl . "
-";
-	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID' . "
-";
+	echo "Cantidad: " . $cant_xCDrsPl;
+	echo "\r\n";
+	echo 'I_CUSTOMER|CUSTOMER_NAME|ACCOUNT_ID|CLI|CLD|I_DEST|COUNTRY|DESCRIPTION|CONNECT_TIME|DISCONNECT_TIME|CHARGED_AMOUNT|CHARGED_QUANTITY|USED_QUANTITY|CALL_ID';
+	echo "\r\n";
 	while ($i <= $cant_xCDrsPl) {
 	  echo $xCDrsPl[$i]['i_customer']           . '|' . 
 	       $xCDrsPl[$i]['customer_name']        . '|' . 
@@ -394,10 +393,10 @@ if ($_GET['type'] == 'CDR_cuentas') {
 	       $xCDrsPl[$i]['connect_time']         . '|' . 
 	       $xCDrsPl[$i]['disconnect_time']      . '|' . 
 	       $xCDrsPl[$i]['charged_amount']       . '|' . 
-		     $xCDrsPl[$i]['charged_quantity']     . '|' . 
-		     $xCDrsPl[$i]['used_quantity']        . '|' . 
-		     $xCDrsPl[$i]['call_id']              . '
-';
+		   $xCDrsPl[$i]['charged_quantity']     . '|' . 
+		   $xCDrsPl[$i]['used_quantity']        . '|' . 
+		   $xCDrsPl[$i]['call_id'];
+		echo "\r\n";
 	  
 	  $i++;
 	}
