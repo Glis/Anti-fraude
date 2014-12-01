@@ -147,20 +147,34 @@ class caf_umb_destinos extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		if($_SESSION['filtros_umb_dest'] != ""){
-				$cant = count($_SESSION['filtros_umb_dest']);
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			$_SESSION['filtros_umb']['destino'] = "";
+		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
+		if($_SESSION['filtros_umb']['destino'] != "" ){
+				// echo "\nFiltro: ".$_SESSION['filtros_umb']['destino'];
+			
+				$cant = count($_SESSION['filtros_umb']['destino']);
+			
 				$k = 1;
 				$where = $this->SqlFrom().".`c_IDestino` IN (";
 				while($k <= $cant - 1){
-					$where .= $_SESSION['filtros_umb_dest'][$k]['i_dest']. ", ";
+					$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest']. ", ";
 					$k++;
 				}
-
-				$where .= $_SESSION['filtros_umb_dest'][$k]['i_dest'] . ")";
+			
+				$where .= $_SESSION['filtros_umb']['destino'][$k]['i_dest'] . ")";
 				$sWhere = $where; //var_dump($_SESSION['filtros_umb']);
-				return $sWhere; var_dump($sWhere);
+				
+				return $sWhere; 
 			
 		}else{
+			// echo "Filtros vacios.";
+
 			$sWhere = "";
 			$this->TableFilter = "";
 			ew_AddFilter($sWhere, $this->TableFilter);

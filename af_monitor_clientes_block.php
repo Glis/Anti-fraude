@@ -138,8 +138,8 @@ $(document).on('click','#submit_filtros',function(){
         <tbody id="tableBody">
           <tr>
             <th class="col-sm-6">Nombre Cliente</th>
-            <th >Fecha Bloqueo</th>
-            <th >Fecha Bloqueo</th>
+            <th >Destino</th>
+            <th >Código Chequeo</th>
             <th >Fecha Bloqueo</th>
             <th class="col-sm-1">Opciones</th>
           </tr>

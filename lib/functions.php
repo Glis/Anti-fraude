@@ -160,11 +160,18 @@ switch ($pagina) {
 
 	case 'umb_destinos':
 		if($_POST['valor'] == 'vacio'){
-			$_SESSION['filtros_umb_dest']="";
+			$_SESSION['filtros_umb']['destino']="";
 		}else{
 			$res = select_sql_PO('select_i_destino_where', array($_POST['valor']));
-			$_SESSION['filtros_umb_dest'] = $res;
-			$_SESSION['tipofiltro'] = $_POST['filtro'];
+			if (count($res) == 0){
+				
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_umb']['destino'] = $x;
+			}else{
+				$_SESSION['filtros_umb']['destino'] = $res;
+				$_SESSION['tipofiltro'] = $_POST['filtro'];
+				$_SESSION['preserve_filter'] = true;
+			}
 		}
 		
 		break;
@@ -173,10 +180,16 @@ switch ($pagina) {
 		
 		if($_POST['destino'] == 'vacio'){
 			$_SESSION['filtros_umb']['destino']="";
-		}else{		
-			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
-			$_SESSION['filtros_umb']['destino'] = $res;
-			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}else{	
+			if (count($res) == 0){
+				
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_umb']['destino'] = $x;
+			}else{	
+				$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+				$_SESSION['filtros_umb']['destino'] = $res;
+				$_SESSION['tipofiltro'] = $_POST['filtro'];
+			}
 		}
 
 		if($_POST['reseller'] == 'vacio'){
@@ -283,9 +296,15 @@ switch ($pagina) {
 		if($_POST['destino'] == 'vacio'){
 			$_SESSION['filtros_umb']['destino']="";
 		}else{		
-			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
-			$_SESSION['filtros_umb']['destino'] = $res;
-			$_SESSION['tipofiltro'] = $_POST['filtro'];
+			if (count($res) == 0){
+				
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_umb']['destino'] = $x;
+			}else{	
+				$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+				$_SESSION['filtros_umb']['destino'] = $res;
+				$_SESSION['tipofiltro'] = $_POST['filtro'];
+			}
 		}
 
 		if($_POST['reseller'] == 'vacio'){
@@ -311,9 +330,15 @@ switch ($pagina) {
 		if($_POST['destino'] == 'vacio'){
 			$_SESSION['filtros_umb']['destino']="";
 		}else{		
-			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
-			$_SESSION['filtros_umb']['destino'] = $res;
-			$_SESSION['tipofiltro'] = $_POST['filtro'];
+			if (count($res) == 0){
+				
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_umb']['destino'] = $x;
+			}else{	
+				$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+				$_SESSION['filtros_umb']['destino'] = $res;
+				$_SESSION['tipofiltro'] = $_POST['filtro'];
+			}
 		}
 
 		if($_POST['reseller'] == 'vacio'){
@@ -339,9 +364,15 @@ switch ($pagina) {
 		if($_POST['destino'] == 'vacio'){
 			$_SESSION['filtros_umb']['destino']="";
 		}else{		
-			$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
-			$_SESSION['filtros_umb']['destino'] = $res;
-			$_SESSION['tipofiltro'] = $_POST['filtro'];
+			if (count($res) == 0){
+				
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_umb']['destino'] = $x;
+			}else{	
+				$res = select_sql_PO('select_i_destino_where', array($_POST['destino']));
+				$_SESSION['filtros_umb']['destino'] = $res;
+				$_SESSION['tipofiltro'] = $_POST['filtro'];
+			}
 		}
 
 		if($_POST['reseller'] == 'vacio'){
@@ -478,6 +509,9 @@ switch ($pagina) {
 			if(count($res)> 0){
 				$_SESSION['filtros_log']['destino'] = $res;
 				$_SESSION['tipofiltro'] = $_POST['filtro'];
+			}else{
+				$x[1]['i_dest'] = -1231233312997;
+				$_SESSION['filtros_log']['destino'] = $x;		
 			}
 		}
 
@@ -535,8 +569,9 @@ switch ($pagina) {
 		}
 		break;
 
-	case 'unload':
-		$_SESSION['pagination'] = true;
+	case 'clear_filters':
+		if(isset($_SESSION['preserve_filter']))
+			unset($_SESSION['preserve_filter']);
 		break;
 
 	default:

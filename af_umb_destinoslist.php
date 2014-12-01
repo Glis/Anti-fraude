@@ -16,12 +16,14 @@ if(!isset($_SESSION['USUARIO']))
     header("Location: login.php");
     exit;
 }
+
+// if(!$_SESSION['preserve_filter']){
+// 	$_SESSION['filtros_umb']['destino']= "";
+// }
+
 //
 // Page class
 //
-if(!$_SESSION['pagination']){
-	$_SESSION['filtros_umb_dest']= "";
-}
 $af_umb_destinos_list = NULL; // Initialize page object first
 
 class caf_umb_destinos_list extends caf_umb_destinos {
@@ -1358,62 +1360,74 @@ $af_umb_destinos_list->ShowMessage();
 							*********************************************************/?>
 
 <script>
-  window.onbeforeunload = confirmExit;
-  function confirmExit()
-  {
-  	var data = $('#control').val(); console.log('Vacio');
-  	if (data != "") {
-	  	dataString= "pag=unload&f1=filtros_umb_dest"
-	    $.ajax({  
-		  type: "POST",  
-		  url: "lib/functions.php",  
-		  data: dataString,  
-		  success: function(html) {  
-			console.log('Vacio');//$('#control').val(1);
-		  }
-		});
-   	};
-  }
+  // window.onbeforeunload = confirmExit;
+  // function confirmExit()
+  // {
+  // 	var data = $('#control').val(); console.log('Vacio');
+  // 	if (data != "") {
+	 //  	dataString= "pag=unload&f1=filtros_umb_dest"
+	 //    $.ajax({  
+		//   type: "POST",  
+		//   url: "lib/functions.php",  
+		//   data: dataString,  
+		//   success: function(html) {  
+		// 	console.log('Vacio');//$('#control').val(1);
+		//   }
+		// });
+  //  	};
+  // }	
 
 </script>
 <div id="filterContainer">
-	<input type="" value="" id="control">
+	<!-- <input type="" value="" id="control"> -->
 	<script type="text/javascript">
 	$(document).on('click','#submit_dest',function(){
-			var option = $("#dest").val();
-			var dataString = "pag=umb_destinos&filtro=destinos";
-			if (option == ""){
-				dataString = dataString + "&valor=vacio";
-			}else{
-				dataString = dataString + "&valor=" + option;
-			}
+		var option = $("#dest").val();
+		var dataString = "pag=umb_destinos&filtro=destinos";
+		if (option == ""){
+			dataString = dataString + "&valor=vacio";
+		}else{
+			dataString = dataString + "&valor=" + option;
+		}
 
-			$.ajax({  
-			  type: "POST",  
-			  url: "lib/functions.php",  
-			  data: dataString,  
-			  success: function(html) {  
-				$('#control').val("2");
-				location.reload();
-			  }
-			});
-
-		});
-
-	$(document).on('click','.pagination',function(){
-		dataString= "pag=unload&f1=filtros_umb_dest"
-	    $.ajax({  
+		$.ajax({  
 		  type: "POST",  
 		  url: "lib/functions.php",  
 		  data: dataString,  
 		  success: function(html) {  
-			
+			// $('#control').val("2");
+			window.location="af_umb_destinoslist.php?start=1";
+		  }
+		});
+
+	});
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters"
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) {  
+			window.location="af_umb_destinoslist.php";
 		  }
 		});
 	});
+
+	// $(document).on('click','.pagination a',function(){
+	// 	alert("hice click en uno de los A del pagination");
+	// 	dataString= "pag=preserve&f1=filtros_umb_dest"
+	//     $.ajax({  
+	// 	  type: "POST",  
+	// 	  url: "lib/functions.php",  
+	// 	  data: dataString,  
+	// 	  success: function(html) {  
+			
+	// 	  }
+	// 	});
+	// });
 	</script>
 	<div class="row">
-		<div class="col-sm-6 col-sm-offset-2">
+		<div class="col-sm-6 col-sm-offset-1">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Destino</label>
 				<input type="text" name="dest" id="dest" class="form-control">
@@ -1422,14 +1436,13 @@ $af_umb_destinos_list->ShowMessage();
 		<div class="col-sm-2">
 			<button type="button" class="btn btn-primary" id="submit_dest">Buscar</button>
 		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
 	</div>
 	
 
 </div>
-
-
-<?$_SESSION['filtros_umb_dest']=""?>
-
 
 
 <table class="ewGrid"><tr><td class="ewGridContent">
