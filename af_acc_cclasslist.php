@@ -1438,7 +1438,7 @@ $af_acc_cclass_list->ShowMessage();
 		  url: "lib/functions.php",  
 		  data: dataString,  
 		  success: function(html) {  
-			location.reload();
+			window.location="af_acc_cclasslist.php?start=1";
 		  }
 		});
 
@@ -1460,12 +1460,35 @@ $af_acc_cclass_list->ShowMessage();
 		
 	});
 
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_acc_cclasslist.php";
+		  }
+		});
+	});
 
+	$(document).ready(function() {
+
+		var claccion= "<?php echo $_SESSION['filtros_acc']['clase_accion'];?>";
+		var taccion = "<?php echo $_SESSION['filtros_acc']['tipo_accion'];?>";
+		var resellerv = "<?php echo $_SESSION['filtros_acc']['reseller'];?>";
+		var cclassv = "<?php echo $_SESSION['filtros_acc']['cclass'];?>";
+		
+		$('#select_accion option[value=' + claccion +']').attr("selected",true);
+		$('#select_tipo_accion option[value=' + taccion +']').attr("selected",true);
+		$('#resellers_filtro option[value=' + taccion +']').attr("selected",true);
+		$('#cclass_filtro option[value=' + taccion +']').attr("selected",true);
+	});
 
 	</script>
 
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Clase Acción</label>
 				<select id= "select_accion" class= "form-control">
@@ -1483,7 +1506,7 @@ $af_acc_cclass_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-7">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Tipo Acción</label>
 				<select id= "select_tipo_accion" class= "form-control">
@@ -1495,22 +1518,23 @@ $af_acc_cclass_list->ShowMessage();
 						echo "<option value= '".$dom_tipo_accion[$k]['rv_Low_Value']. "'>". $dom_tipo_accion[$k]['rv_Meaning'] ."</option>";
 						$k++;
 					}
-				$_SESSION['filtros']="";
+				
 				?>
 
 				</select>
 			</div>
 		</div>
+		
 	</div>
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Reseller</label>
 				<select id="resellers_filtro" class="form-control">
 				<option value="vacio">Todo</option>
 				<?
-				$_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
-				$_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
+				// $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+				// $_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
 				$res = select_sql_PO('select_porta_customers');
 				$cant = count($res);
 				$k = 1;
@@ -1524,7 +1548,8 @@ $af_acc_cclass_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-5">
+
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Customer Class</label>
 				<select id="cclass_filtro" disabled class="form-control">
@@ -1532,10 +1557,17 @@ $af_acc_cclass_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-2">
+	</div>
+		
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
 			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
 	</div>
+	
 </div>
 
 							<?/******************************************************

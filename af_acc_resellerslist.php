@@ -1342,13 +1342,13 @@ $af_acc_resellers_list->ShowMessage();
 
 <script type="text/javascript">
 $(document).on('click', '#submit_filtros', function() { 
-	if($(this).val() != 100){
+
 
 		var clase_accion = $('#select_accion').find("option:selected").val();
 		var tipo_accion = $('#select_tipo_accion').find("option:selected").val();
 		var reseller = $('#resellers_filtro').find("option:selected").val();
 		var dataString = "pag=acc_resellers&filtro=clase_accion";
-		if (clase_accion == ""){
+		if (clase_accion == "vacio"){
 			dataString = dataString + "&clase_accion=vacio";
 		}else{
 			dataString = dataString + "&clase_accion=" + clase_accion;
@@ -1360,7 +1360,7 @@ $(document).on('click', '#submit_filtros', function() {
 			dataString = dataString + "&tipo_accion=" + tipo_accion;
 		}
 
-		if (reseller == ""){
+		if (reseller == "vacio"){
 			dataString = dataString + "&reseller=vacio";
 		}else{
 			dataString = dataString + "&reseller=" + reseller;
@@ -1371,20 +1371,42 @@ $(document).on('click', '#submit_filtros', function() {
 		  url: "lib/functions.php",  
 		  data: dataString,  
 		  success: function(html) {  
-			location.reload();
+			window.location="af_acc_resellerslist.php?start=1";
 		  }
-		  });
-	}
+		});
+});
+
+$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_acc_resellerslist.php";
+		  }
+		});
+	});
+
+$(document).ready(function() {
+
+		var claccion= "<?php echo $_SESSION['filtros_acc']['clase_accion'];?>";
+		var taccion = "<?php echo $_SESSION['filtros_acc']['tipo_accion'];?>";
+		var resellerv = "<?php echo $_SESSION['filtros_acc']['reseller'];?>";
+		
+		$('#select_accion option[value=' + claccion +']').attr("selected",true);
+		$('#select_tipo_accion option[value=' + taccion +']').attr("selected",true);
+		$('#resellers_filtro option[value=' + taccion +']').attr("selected",true);
+	
 });
 </script>
 
 <div class="row">
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<div class="form-group">
 			<label class= "filtro_label">Filtro Clase Acción</label>
 			<select id= "select_accion" class= "form-control">
-				<option value = 100>Seleccione una Acción</option>
-				<option value = 'All'>All</option>
+				<option value = "vacio">Todo</option>
 			<? $dom_accion = select_sql('select_dominio', 'DNIO_CLASE_ACCION');
 				$count = count($dom_accion);
 				$k = 1;
@@ -1397,12 +1419,11 @@ $(document).on('click', '#submit_filtros', function() {
 			</select>
 		</div>
 	</div>
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<div class="form-group">
 			<label class= "filtro_label">Filtro Tipo Acción</label>
 			<select id= "select_tipo_accion" class= "form-control">
-				<option value = 100>Seleccione un Tipo de Acción</option>
-				<option value = 'All'>All</option>
+				<option value = "vacio">Todo</option>
 			<? $dom_tipo_accion = select_sql('select_dominio', 'DNIO_TIPO_ACCION_PLAT');
 				$count = count($dom_tipo_accion);
 				$k = 1;
@@ -1434,8 +1455,14 @@ $(document).on('click', '#submit_filtros', function() {
 			</select>
 		</div>
 	</div>
-	<div class="col-sm-2">
-		<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+	
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
 	</div>
 </div>
 

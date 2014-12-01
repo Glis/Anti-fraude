@@ -17,13 +17,15 @@ switch ($pagina) {
 		break;
 
 	case 'config_reportes':
-		$_SESSION['filtros'] = $_POST['valor'];
-		$_SESSION['tipofiltro'] = $_POST['filtro'];
-		if($_POST['valor'] == 'vacio')$_SESSION['filtros']="";
+		
+		if($_POST['filtros'] == 'vacio'){
+			$_SESSION['filtros']="";
+		}else{		
+			$_SESSION['filtros'] = $_POST['valor'];
+		}
 		break;
 	
 	case 'acc_cclass':
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
 
 		if($_POST['clase_accion'] == 'vacio'){
 			$_SESSION['filtros_acc']['clase_accion']="";
@@ -125,15 +127,23 @@ switch ($pagina) {
 		break;
 	
 	case 'acc_plataforma':
-		$_SESSION['filtros'] = $_POST['valor'];
-		$_SESSION['tipofiltro'] = $_POST['filtro'];
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
+		if($_POST['clase_accion'] == 'vacio'){
+			$_SESSION['filtros_acc']['clase_accion']="";
+		}else{		
+			$_SESSION['filtros_acc']['clase_accion'] = $_POST['clase_accion'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['tipo_accion'] == 'vacio'){
+			$_SESSION['filtros_acc']['tipo_accion']="";
+		}else{		
+			$_SESSION['filtros_acc']['tipo_accion'] = $_POST['tipo_accion'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
 		break;
 	
 	case 'acc_resellers':
-
-		
-		if($_POST['valor'] == 'All')$_SESSION['filtros']="";
 
 		if($_POST['clase_accion'] == 'vacio'){
 			$_SESSION['filtros_acc']['clase_accion']="";
@@ -161,6 +171,7 @@ switch ($pagina) {
 	case 'umb_destinos':
 		if($_POST['valor'] == 'vacio'){
 			$_SESSION['filtros_umb']['destino']="";
+			$_SESSION['filtros_umb']['destino_valor'] = "";
 		}else{
 			$res = select_sql_PO('select_i_destino_where', array($_POST['valor']));
 			if (count($res) == 0){
@@ -168,6 +179,7 @@ switch ($pagina) {
 				$x[1]['i_dest'] = -1231233312997;
 				$_SESSION['filtros_umb']['destino'] = $x;
 			}else{
+				$_SESSION['filtros_umb']['destino_valor'] = $_POST['valor'];
 				$_SESSION['filtros_umb']['destino'] = $res;
 				$_SESSION['tipofiltro'] = $_POST['filtro'];
 				$_SESSION['preserve_filter'] = true;
@@ -572,6 +584,7 @@ switch ($pagina) {
 	case 'clear_filters':
 		if(isset($_SESSION['preserve_filter']))
 			unset($_SESSION['preserve_filter']);
+		
 		break;
 
 	default:

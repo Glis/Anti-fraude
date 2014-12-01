@@ -112,6 +112,16 @@ class caf_acc_resellers extends cTable {
 	}
 
 	function SqlWhere() { // Where
+
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			 $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+			 $_SESSION['filtros_acc']['reseller'] = "";
+		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
 		$where="";
 		if(($_SESSION['filtros_acc']['clase_accion'] == "") && ($_SESSION['filtros_acc']['tipo_accion'] == "") && ($_SESSION['filtros_acc']['reseller'] == "")){
 				

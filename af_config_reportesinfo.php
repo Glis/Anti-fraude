@@ -143,6 +143,15 @@ class caf_config_reportes extends cTable {
 	}
 
 	function SqlWhere() { // Where
+
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			 $_SESSION['filtros'] = "";
+		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
 		if($_SESSION['filtros'] != ""){
 			$where = $this->SqlFrom() . ".`c_IReporte` = '" . $_SESSION['filtros'] . "'";
 			return $where;

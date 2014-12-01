@@ -145,7 +145,17 @@ class caf_acc_clientes extends cTable {
 	}
 
 	function SqlWhere() { // Where
-			if(($_SESSION['filtros_acc']['tipo_accion'] == "") && ($_SESSION['filtros_acc']['clase_accion'] == "") && ($_SESSION['filtros_acc']['reseller'] == "") && ($_SESSION['filtros_acc']['cclass'] == "")){
+		
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			 $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+			 $_SESSION['filtros_acc']['reseller'] = ""; $_SESSION['filtros_acc']['cclass'] = "";
+		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
+		if(($_SESSION['filtros_acc']['tipo_accion'] == "") && ($_SESSION['filtros_acc']['clase_accion'] == "") && ($_SESSION['filtros_acc']['reseller'] == "") && ($_SESSION['filtros_acc']['cclass'] == "")){
 				
 			$sWhere = "";
 			$this->TableFilter = "";

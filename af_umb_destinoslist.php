@@ -1359,25 +1359,6 @@ $af_umb_destinos_list->ShowMessage();
 							************************FILTROS**************************
 							*********************************************************/?>
 
-<script>
-  // window.onbeforeunload = confirmExit;
-  // function confirmExit()
-  // {
-  // 	var data = $('#control').val(); console.log('Vacio');
-  // 	if (data != "") {
-	 //  	dataString= "pag=unload&f1=filtros_umb_dest"
-	 //    $.ajax({  
-		//   type: "POST",  
-		//   url: "lib/functions.php",  
-		//   data: dataString,  
-		//   success: function(html) {  
-		// 	console.log('Vacio');//$('#control').val(1);
-		//   }
-		// });
-  //  	};
-  // }	
-
-</script>
 <div id="filterContainer">
 	<!-- <input type="" value="" id="control"> -->
 	<script type="text/javascript">
@@ -1402,7 +1383,7 @@ $af_umb_destinos_list->ShowMessage();
 
 	});
 	$(document).on('click','#reset_fil',function(){
-		dataString= "pag=clear_filters"
+		dataString= "pag=clear_filters";
 		$.ajax({  
 		  type: "POST",  
 		  url: "lib/functions.php",  
@@ -1413,24 +1394,12 @@ $af_umb_destinos_list->ShowMessage();
 		});
 	});
 
-	// $(document).on('click','.pagination a',function(){
-	// 	alert("hice click en uno de los A del pagination");
-	// 	dataString= "pag=preserve&f1=filtros_umb_dest"
-	//     $.ajax({  
-	// 	  type: "POST",  
-	// 	  url: "lib/functions.php",  
-	// 	  data: dataString,  
-	// 	  success: function(html) {  
-			
-	// 	  }
-	// 	});
-	// });
 	</script>
 	<div class="row">
 		<div class="col-sm-6 col-sm-offset-1">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Destino</label>
-				<input type="text" name="dest" id="dest" class="form-control">
+				<input type="text" name="dest" id="dest" class="form-control" value="<?php if($_SESSION['filtros_umb']['destino_valor'] != "") echo($_SESSION['filtros_umb']['destino_valor']);?>">
 			</div>
 		</div>
 		<div class="col-sm-2">

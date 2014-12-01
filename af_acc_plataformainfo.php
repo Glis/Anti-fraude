@@ -107,16 +107,40 @@ class caf_acc_plataforma extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		if($_SESSION['filtros'] != ""){
-			if($_SESSION['tipofiltro'] == 'clase_accion'){
-				return $this->SqlFrom().".`cl_Accion`=".$_SESSION['filtros'];
-			}else{
-				if($_SESSION['tipofiltro'] == 'tipo_accion')return $this->SqlFrom().".`t_Accion`=".$_SESSION['filtros'];
-			}
+
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			 $_SESSION['filtros_acc']['tipo_accion'] = ""; $_SESSION['filtros_acc']['clase_accion'] = "";
+			 $_SESSION['filtros_acc']['reseller'] = "";
 		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+		
+		$where="";
+		if(($_SESSION['filtros_acc']['clase_accion'] == "") && ($_SESSION['filtros_acc']['tipo_accion'] == "")){
+				
 			$sWhere = "";
 			$this->TableFilter = "";
 			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+			
+		}else{
+			if($_SESSION['filtros_acc']['clase_accion'] != ""){
+				$where = $this->SqlFrom().".`cl_Accion`=" .$_SESSION['filtros_acc']['clase_accion'];
+			}
+
+			if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['cl_Accion'] != ""){
+				
+				$where .= " AND " . $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
+	
+			}else{
+				if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['clase_accion'] == ""){
+					$where = $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
+				}
+			}
+
+			$sWhere = $where;
 			return $sWhere;
 		}
 	}
