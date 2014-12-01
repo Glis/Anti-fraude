@@ -852,6 +852,59 @@
 <field id="x_valor_actual"><phrase id="fldcaption" value="Valor Asignado"/>
 </field>
 </table>
-
+<table id="af_chequeo_det_clientes"><phrase id="tblcaption" value="Monitor Cuentas Bloqueadas"/>
+<field id="c_ichequeo"><phrase id="fldcaption" value="Código Chequeo"/>
+</field>
+<field id="c_idestino"><phrase id="fldcaption" value="Destino"/>
+</field>
+<field id="c_ireseller"><phrase id="fldcaption" value="c IReseller"/>
+</field>
+<field id="c_icclass"><phrase id="fldcaption" value="c ICClass"/>
+</field>
+<field id="c_icliente"><phrase id="fldcaption" value="Customer Name"/>
+</field>
+<field id="q_min_cliente"><phrase id="fldcaption" value="q Min Cliente"/>
+</field>
+<field id="i_alerta"><phrase id="fldcaption" value="i Alerta"/>
+</field>
+<field id="i_cuarentena"><phrase id="fldcaption" value="i Cuarentena"/>
+</field>
+<field id="i_bloqueo"><phrase id="fldcaption" value="i Bloqueo"/>
+</field>
+<field id="f_bloqueo"><phrase id="fldcaption" value="f Bloqueo"/>
+</field>
+<field id="f_desbloqueo"><phrase id="fldcaption" value="Fecha Bloqueo"/>
+</field>
+<field id="c_usuario_desbloqueo"><phrase id="fldcaption" value="c Usuario Desbloqueo"/>
+</field>
+</table>
+<table id="af_chequeo_det_cuentas"><phrase id="tblcaption" value="Monitor Cuentas Bloqueadas"/>
+<field id="c_ichequeo"><phrase id="fldcaption" value="Código Chequeo"/>
+</field>
+<field id="c_idestino"><phrase id="fldcaption" value="Destino"/>
+</field>
+<field id="c_ireseller"><phrase id="fldcaption" value="c IReseller"/>
+</field>
+<field id="c_icclass"><phrase id="fldcaption" value="c ICClass"/>
+</field>
+<field id="c_icliente"><phrase id="fldcaption" value="Customer Name"/>
+</field>
+<field id="c_icuenta"><phrase id="fldcaption" value="Account ID"/>
+</field>
+<field id="q_min_cuenta"><phrase id="fldcaption" value="q Min Cuenta"/>
+</field>
+<field id="i_alerta"><phrase id="fldcaption" value="i Alerta"/>
+</field>
+<field id="i_cuarentena"><phrase id="fldcaption" value="i Cuarentena"/>
+</field>
+<field id="i_bloqueo"><phrase id="fldcaption" value="i Bloqueo"/>
+</field>
+<field id="f_bloqueo"><phrase id="fldcaption" value="f Bloqueo"/>
+</field>
+<field id="f_desbloqueo"><phrase id="fldcaption" value="f Desbloqueo"/>
+</field>
+<field id="c_usuario_desbloqueo"><phrase id="fldcaption" value="c Usuario Desbloqueo"/>
+</field>
+</table>
 </project>
 </ew-language>
