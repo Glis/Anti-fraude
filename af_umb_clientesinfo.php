@@ -27,7 +27,7 @@ class caf_umb_clientes extends cTable {
 		$this->TableVar = 'af_umb_clientes';
 		$this->TableName = 'af_umb_clientes';
 		$this->TableType = 'TABLE';
-		$this->ExportAll = FALSE;
+		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
 		$this->ExportPageOrientation = "portrait"; // Page orientation (PDF only)
 		$this->ExportPageSize = "a4"; // Page size (PDF only)

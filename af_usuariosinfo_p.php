@@ -26,7 +26,7 @@ class caf_usuarios extends cTable {
 		$this->TableVar = 'af_usuarios';
 		$this->TableName = 'af_usuarios';
 		$this->TableType = 'TABLE';
-		$this->ExportAll = FALSE;
+		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
 		$this->ExportPageOrientation = "portrait"; // Page orientation (PDF only)
 		$this->ExportPageSize = "a4"; // Page size (PDF only)

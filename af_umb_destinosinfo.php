@@ -32,7 +32,7 @@ class caf_umb_destinos extends cTable {
 		$this->TableVar = 'af_umb_destinos';
 		$this->TableName = 'af_umb_destinos';
 		$this->TableType = 'TABLE';
-		$this->ExportAll = FALSE;
+		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
 		$this->ExportPageOrientation = "portrait"; // Page orientation (PDF only)
 		$this->ExportPageSize = "a4"; // Page size (PDF only)
