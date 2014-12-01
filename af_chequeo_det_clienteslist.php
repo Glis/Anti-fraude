@@ -1217,7 +1217,7 @@ faf_chequeo_det_clienteslist.ValidateRequired = false;
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_chequeo_det_clientes_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_chequeo_det_clientes_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_chequeo_det_clientes_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;

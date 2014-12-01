@@ -852,7 +852,7 @@
 <field id="x_valor_actual"><phrase id="fldcaption" value="Valor Asignado"/>
 </field>
 </table>
-<table id="af_chequeo_det_clientes"><phrase id="tblcaption" value="Monitor Cuentas Bloqueadas"/>
+<table id="af_chequeo_det_clientes"><phrase id="tblcaption" value="Monitor Clientes Bloqueados"/>
 <field id="c_ichequeo"><phrase id="fldcaption" value="Código Chequeo"/>
 </field>
 <field id="c_idestino"><phrase id="fldcaption" value="Destino"/>

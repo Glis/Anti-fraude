@@ -6,8 +6,10 @@
         Monitor <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="af_monitor_clientes_block.php">Clientes Bloqueados</a></li>
-        <li><a href="af_monitor_cuentas_block.php">Cuentas Bloqueadas</a></li>
+        <li><a href="af_monitor_clientes_block.php">Clientes Bloqueados(viejo)</a></li>
+        <li><a href="af_monitor_cuentas_block.php">Cuentas Bloqueadas(viejo)</a></li>
+        <li><a href="af_chequeo_det_clienteslist.php">Clientes Bloqueados</a></li>
+        <li><a href="af_chequeo_det_cuentaslist.php">Cuentas Bloqueadas</a></li>
         <li class="divider"></li>
         <li><a href="af_chequeolist.php">Monitor</a></li>
       </ul>
