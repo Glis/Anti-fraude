@@ -391,7 +391,8 @@ Dropdown Submenus
 .table > tfoot > tr.warning > td,
 .table > thead > tr.warning > th,
 .table > tbody > tr.warning > th,
-.table > tfoot > tr.warning > th {
+.table > tfoot > tr.warning > th,
+.ewTable td.warning {
   background-color: rgb(255,255,130); !important;
   color: #666 !important;
 }
@@ -415,7 +416,8 @@ Dropdown Submenus
 .table > tfoot > tr.danger > td,
 .table > thead > tr.danger > th,
 .table > tbody > tr.danger > th,
-.table > tfoot > tr.danger > th {
+.table > tfoot > tr.danger > th,
+.ewTable td.danger {
   background-color: RGB(255,130,130); !important;
   color: white !important;
 }

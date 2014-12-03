@@ -7,7 +7,28 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_chequeo_det_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
+
 <?php
+
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+} 
+
+function is_On($value){
+  return (intval($value) < 2);
+}
+
+if($_SESSION['filtro_clientes_bloq'] == ""){ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}else{ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1 AND c_IReseller=" . $_SESSION['filtro_clientes_bloq'],"f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}
 
 //
 // Page class
@@ -853,18 +874,47 @@ class caf_chequeo_det_clientes_list extends caf_chequeo_det_clientes {
 		// c_Usuario_Desbloqueo
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
+			$cusColor = is_On($this->i_Alerta->CurrentValue) ? 'warning' : "";
+			$cusColor = is_On( $this->i_Cuarentena->CurrentValue) ? 'danger' : $cusColor;
 
 			// c_ICliente
-			$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
+			if (strval($this->c_ICliente->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICliente->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
+
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_ICliente, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_ICliente->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
+				} else {
+					$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
+				}
+			} else {
+				$this->c_ICliente->ViewValue = NULL;
+			}
 			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICliente->CellCssClass = $cusColor;
 
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
+			$this->c_IDestino->CellCssClass = $cusColor;
 
 			// c_IChequeo
 			$this->c_IChequeo->ViewValue = $this->c_IChequeo->CurrentValue;
 			$this->c_IChequeo->ViewCustomAttributes = "";
+			$this->c_IChequeo->CellCssClass = $cusColor;
 
 			// f_Bloqueo
 			$this->f_Bloqueo->ViewValue = $this->f_Bloqueo->CurrentValue;
@@ -890,6 +940,7 @@ class caf_chequeo_det_clientes_list extends caf_chequeo_det_clientes {
 			// f_Desbloqueo
 			$this->f_Desbloqueo->ViewValue = $this->f_Desbloqueo->CurrentValue;
 			$this->f_Desbloqueo->ViewCustomAttributes = "";
+			$this->f_Desbloqueo->CellCssClass = $cusColor;
 
 			// i_Alerta
 			$this->i_Alerta->ViewValue = $this->i_Alerta->CurrentValue;
@@ -1140,6 +1191,12 @@ class caf_chequeo_det_clientes_list extends caf_chequeo_det_clientes {
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
 
+		$opt = &$this->ListOptions->Add("opciones");
+		$opt->Header = "Opciones";
+		$opt->CssClass = "col-sm-1";
+		// $opt->OnLeft = TRUE; // Link on left
+		// $opt->MoveTo(1); // Move to first column
+
 	}
 
 	// ListOptions Rendered event
@@ -1147,6 +1204,7 @@ class caf_chequeo_det_clientes_list extends caf_chequeo_det_clientes {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
+		$this->ListOptions->Items["opciones"]->Body = "<span id='desbloqueo_cli' class=".$this->c_ICliente->CurrentValue. "><i title='Desbloquear' class='glyphicon icon-unlock'></i></span>";
 
 	}
 
@@ -1240,6 +1298,70 @@ $af_chequeo_det_clientes_list->RenderOtherOptions();
 <?php
 $af_chequeo_det_clientes_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+<script>
+$(document).on('click','#submit_filtros',function(){
+
+      var reseller = $('#resellerName').find("option:selected").val();
+
+
+      var dataString = "pag=monitor_clientes&filtro=x";
+      if (reseller == "vacio"){
+        dataString = dataString + "&reseller=vacio";
+      }else{
+        dataString = dataString + "&reseller=" + reseller;
+      }
+
+     
+      alert(dataString);
+      $.ajax({  
+        type: "POST",  
+        url: "lib/functions.php",  
+        data: dataString,  
+        success: function(html) {  
+          // alert(html);
+          location.reload();
+        }
+      });
+});
+
+</script>
+
+<div class="row">
+  <div class="col-sm-5 col-sm-offset-2">
+    <div class="form-group">
+      <label for="resellerName">Resellers</label>
+      <select id= "resellerName" class= "form-control">
+        <option value="vacio">Todo</option>
+        <?
+        
+          $res = select_sql_PO('select_porta_customers');
+          $cant = count($res);
+          $k = 1;
+
+          while ($k <= $cant) {
+            echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+            $k++;
+          }
+
+        ?>
+      </select>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
+  </div>
+</div>
+
+
+							<?/******************************************************
+							************************END FILTROS**************************
+							*********************************************************/?>
+
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_chequeo_det_clienteslist" id="faf_chequeo_det_clienteslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_chequeo_det_clientes">
@@ -1259,9 +1381,9 @@ $af_chequeo_det_clientes_list->ListOptions->Render("header", "left");
 ?>
 <?php if ($af_chequeo_det_clientes->c_ICliente->Visible) { // c_ICliente ?>
 	<?php if ($af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_ICliente) == "") { ?>
-		<td><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_ICliente->FldCaption() ?></div></div></td>
+		<td class="col-sm-6"><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_ICliente->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_ICliente) ?>',2);"><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente">
+		<td class="col-sm-6"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_ICliente) ?>',2);"><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_ICliente->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_clientes->c_ICliente->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_clientes->c_ICliente->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
@@ -1459,6 +1581,19 @@ if ($af_chequeo_det_clientes_list->Recordset)
 </div>
 <?php } ?>
 </td></tr></table>
+
+<!-- Modal para el bloqueo/desbloqueo de lientes -->
+<div class="modal fade" id="unlock_modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Desbloqueando, espere por favor...</h4>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<span id="logged_user" hidden><?php echo $_SESSION["USUARIO"]; ?></span>
+
 <?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <script type="text/javascript">
 faf_chequeo_det_clienteslist.Init();
@@ -1480,6 +1615,33 @@ if (EW_DEBUG_ENABLED)
 
 </script>
 <?php } ?>
+<script>
+  $(document).on('click','#desbloqueo_cli',function(){
+      $('#unlock_modal').find('.modal-title').text('Desbloqueando el cliente seleccionado, espere por favor...');
+      $('#unlock_modal').modal('show'); 
+
+      var element= $(this);
+                                                
+      //$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
+   
+    var dataString = "i_customer=" + $(this).attr('class') + "&usuario=" + $("#logged_user").html();
+    $.ajax({  
+      type: "POST",  
+      url: "DesbloqueoCliente.php",  
+      data: dataString,  
+      success: function(response) {
+        element.hide();
+      // alert ("termino: "+response);
+        $('#unlock_modal').modal('hide'); 
+      },
+      error: function(response){
+        // alert ("termino: "+response);
+      $('#unlock_modal').modal('hide'); 
+      }
+    });
+
+  });
+</script>
 <?php include_once "footer.php" ?>
 <?php
 $af_chequeo_det_clientes_list->Page_Terminate();
