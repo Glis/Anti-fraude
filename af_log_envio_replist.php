@@ -1318,22 +1318,48 @@ $af_log_envio_rep_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				location.reload();
+				window.location="af_log_envio_replist.php?start=1";
 			  }
 			});
 
 		});
 
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_log_envio_replist.php";
+		  }
+		});
+	});
+
+	$(document).ready(function() {
+
+
+		var desdev = "<?php echo $_SESSION['filtros_log']['desde'];?>";
+		var hastav = "<?php echo $_SESSION['filtros_log']['hasta'];?>";
+		var rep = "<?php echo $_SESSION['filtros_log']['reporte'];?>";
+		var st = "<?php echo $_SESSION['filtros_log']['estatus'];?>";
+		
+		$('#initialDateFil').val(desdev);
+		$('#endDateFil').val(hastav);
+		$('#select_reporte option[value=' + rep +']').attr("selected",true);
+		$('#select_estatus option[value=' + st +']').attr("selected",true);
+	});
+
 	</script>
 
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label for="initialDateFil">Desde</label>
 				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
 			</div>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label for="endDateFil">Hasta</label>
 				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
@@ -1341,7 +1367,7 @@ $af_log_envio_rep_list->ShowMessage();
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label class= "filtro_label">Tipo de Reporte</label>
 				<select id= "select_reporte" class= "form-control">
@@ -1358,7 +1384,7 @@ $af_log_envio_rep_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-5">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Estatus de Envío</label>
 				<select id= "select_estatus" class= "form-control">
@@ -1375,8 +1401,15 @@ $af_log_envio_rep_list->ShowMessage();
 				</select>
 			</div>
 		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
 		<div class="col-sm-2">
-			<button type="submit" id ="submit_filtros" class="btn btn-primary">Buscar</button>
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
 		</div>
 	</div>
 

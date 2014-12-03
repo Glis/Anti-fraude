@@ -1338,17 +1338,39 @@ $af_umb_resellers_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				location.reload();
+				window.location="af_umb_resellerslist.php?start=1";				
 			  }
 			});
 
 		});
 
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_umb_resellerslist.php";
+		  }
+		});
+	});
+
+	$(document).ready(function() {
+
+
+		var resellerv = "<?php echo $_SESSION['filtros_umb']['reseller'];?>";
+		var destino = "<?php echo $_SESSION['filtros_umb']['destino_valor'];?>";
+		
+		$('#resellers_filtro option[value=' + resellerv +']').attr("selected",true);
+		$('#dest').text(destino);
+	});
+
 
 	</script>
 
 	<div class="row">
-		<div class="col-sm-5">
+		<div class="col-sm-5 col-sm-offset-1">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Destino</label>
 				<input type="text" name="dest" id="dest" class="form-control">
@@ -1360,7 +1382,6 @@ $af_umb_resellers_list->ShowMessage();
 				<select id="resellers_filtro" class="form-control">
 				<option value="vacio">Todo</option>
 				<?
-				$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
 				$res = select_sql_PO('select_porta_customers');
 				$cant = count($res);
 				$k = 1;
@@ -1374,11 +1395,17 @@ $af_umb_resellers_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-2">
+		
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
 			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
 		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
 	</div>
-	
 </div>
 
 

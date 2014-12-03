@@ -1481,8 +1481,8 @@ $af_acc_cclass_list->ShowMessage();
 		
 		$('#select_accion option[value=' + claccion +']').attr("selected",true);
 		$('#select_tipo_accion option[value=' + taccion +']').attr("selected",true);
-		$('#resellers_filtro option[value=' + taccion +']').attr("selected",true);
-		$('#cclass_filtro option[value=' + taccion +']').attr("selected",true);
+		$('#resellers_filtro option[value=' + resellerv +']').attr("selected",true);
+		$('#cclass_filtro option[value=' + cclassv +']').attr("selected",true);
 	});
 
 	</script>

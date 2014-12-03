@@ -1308,15 +1308,36 @@ $af_resellers_usuario_list->ShowMessage();
 		  url: "lib/functions.php",  
 		  data: dataString,  
 		  success: function(html) {  
-			location.reload();
+			window.location="af_resellers_usuariolist.php?start=1";
 		  }
 		  });
 		
 	});
+
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_resellers_usuariolist.php";
+		  }
+		});
+	});
+
+	$(document).ready(function() {
+
+
+		var usr = "<?php echo $_SESSION['filtros'];?>";
+		
+		$('#select_usuarios option[value=' + usr +']').attr("selected",true);
+	});
+
 	</script>
 
 	<div class="row">
-		<div class="col-sm-6 col-sm-offset-3">
+		<div class="col-sm-6 col-sm-offset-1">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Usuario</label>
 				<select id= "select_usuarios" class= "form-control">
@@ -1336,6 +1357,9 @@ $af_resellers_usuario_list->ShowMessage();
 		</div>
 		<div class="col-sm-2">
 			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
 		</div>
 	</div>
 	

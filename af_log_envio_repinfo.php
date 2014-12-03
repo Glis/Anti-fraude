@@ -110,6 +110,19 @@ class caf_log_envio_rep extends cTable {
 	}
 
 	function SqlWhere() { // Where
+
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			$_SESSION['filtros_log']['desde']=""; 
+			$_SESSION['filtros_log']['hasta']=""; 
+  			$_SESSION['filtros_log']['estatus']=""; 
+  			$_SESSION['filtros_log']['reporte']="";
+
+		}else{
+				// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
 		$where = "";
 		if($_SESSION['filtros_log']['desde'] == "" && $_SESSION['filtros_log']['hasta'] == "" &&
 			$_SESSION['filtros_log']['reporte'] == "" && $_SESSION['filtros_log']['estatus'] == ""){
@@ -124,10 +137,10 @@ class caf_log_envio_rep extends cTable {
 				$where = $this->SqlFrom() . ".`f_Transaccion` BETWEEN '" . $_SESSION['filtros_log']['desde'] . "' AND '" . $_SESSION['filtros_log']['hasta'] . "' ";
 			}else{
 				if ($_SESSION['filtros_log']['desde'] != ""){
-					$where = $this->SqlFrom() . ".`f_Transaccion`='" . $_SESSION['filtros_log']['desde'] . "'";
+					$where = "date(" . $this->SqlFrom() . ".`f_Transaccion`)='" . $_SESSION['filtros_log']['desde'] . "'";
 				}else{
 					if ($_SESSION['filtros_log']['hasta'] != "") {
-						$where = $this->SqlFrom() . ".`f_Transaccion`='" . $_SESSION['filtros_log']['desde'] . "'";
+						$where = "date(" . $this->SqlFrom() . ".`f_Transaccion`)='" . $_SESSION['filtros_log']['hasta'] . "'";
 					}
 				}
 			}

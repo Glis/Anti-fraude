@@ -1398,7 +1398,8 @@ $af_log_usuario_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				location.reload();
+				window.location="af_log_usuariolist.php?start=1";
+				
 			  }
 			});
 
@@ -1423,11 +1424,50 @@ $af_log_usuario_list->ShowMessage();
 			}
 		});
 
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_log_usuariolist.php";
+		  }
+		});
+	});
 
+	$(document).ready(function() {
+
+
+		var desdev = "<?php echo $_SESSION['filtros_log']['desde'];?>";
+		var hastav = "<?php echo $_SESSION['filtros_log']['hasta'];?>";
+		var tabla = "<?php echo $_SESSION['filtros_log']['reporte'];?>";
+		var campo = "<?php echo $_SESSION['filtros_log']['estatus'];?>";
+		var tipoc = "<?php echo $_SESSION['filtros_log']['estatus'];?>";
+		var usuario = "<?php echo $_SESSION['filtros_log']['estatus'];?>";
+		
+		$('#initialDateFil').val(desdev);
+		$('#endDateFil').val(hastav);
+		$('#user').text(hastav);
+		$('#select_tabla option[value=' + tabla +']').attr("selected",true);
+		$('#select_campo option[value=' + campo +']').attr("selected",true);
+		$('#select_tipocambio option[value=' + tipoc +']').attr("selected",true);
+	});
 
 	</script>
-
-	<div class="row">
+	<div class="row">		
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="initialDateFil">Desde</label>
+				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="endDateFil">Hasta</label>
+				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
+			</div>
+		</div>
 		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Tabla Afectada</label>
@@ -1445,6 +1485,11 @@ $af_log_usuario_list->ShowMessage();
 				</select>
 			</div>
 		</div>
+		
+	</div>
+
+	<div class="row">
+		
 		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Campo Afectado</label>
@@ -1470,35 +1515,23 @@ $af_log_usuario_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-	</div>
-	<div class="row">		
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label for="initialDateFil">Desde</label>
-				<input type="date" class="form-control" id="initialDateFil" placeholder="01/01/2014" value="vacio">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label for="endDateFil">Hasta</label>
-				<input type="date" class="form-control" id="endDateFil" placeholder="02/01/2014" value="vacio">
-			</div>
-		</div>
+
 		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Usuario</label>
 				<input type="text" name="user" id="user" class="form-control">
 			</div>
 		</div>
-		<div class="col-sm-2">
-  			<button type="submit" id ="submit_filtros" class="btn btn-primary">Buscar</button>
-		</div>
 	</div>
 
-<?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; $_SESSION['filtros_log']['tabla']="";
-  $_SESSION['filtros_log']['campo']=""; $_SESSION['filtros_log']['cambio']="";$_SESSION['filtros_log']['usuario']="";
-?>
-
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
+	</div>
 </div>
 
 					<?/******************************************************

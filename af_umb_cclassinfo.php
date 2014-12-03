@@ -109,6 +109,18 @@ class caf_umb_cclass extends cTable {
 	}
 
 	function SqlWhere() { // Where
+
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			$_SESSION['filtros_umb']['destino'] = "";
+			$_SESSION['filtros_umb']['destino_valor'] = "";
+			$_SESSION['filtros_umb']['reseller'] = "";
+			$_SESSION['filtros_umb']['cclass'] = "";
+		}else{
+				// echo "Los Filtros fueron PRESERVADOS\n";
+				$_SESSION['preserve_filter'] = false;
+		}
+
 		$where="";
 		if(($_SESSION['filtros_umb']['destino'] == "") && ($_SESSION['filtros_umb']['reseller'] == "") && ($_SESSION['filtros_umb']['cclass'] == "")){
 				
@@ -118,6 +130,7 @@ class caf_umb_cclass extends cTable {
 			return $sWhere;
 			
 		}else{
+
 			if($_SESSION['filtros_umb']['destino'] != ""){
 				$cant = count($_SESSION['filtros_umb']['destino']);
 				$k = 1;

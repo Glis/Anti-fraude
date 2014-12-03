@@ -1409,7 +1409,7 @@ $af_umb_cuentas_list->ShowMessage();
 
 			var destino = $("#dest").val();
 			var reseller = $("#resellers_filtro").find("option:selected").val();
-			var cname = $("#cname").val();
+			var cname = $("#cname_filtro").val();
 			var dataString = "pag=umb_cuentas&filtro=destinos";
 			if (destino == ""){
 				dataString = dataString + "&destino=vacio";
@@ -1435,12 +1435,36 @@ $af_umb_cuentas_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				location.reload();
+				window.location="af_umb_cuentaslist.php?star=1";				
 			  }
 			});
 
 		});
 
+
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_umb_cuentaslist.php";
+		  }
+		});
+	});
+
+	$(document).ready(function() {
+
+
+		var resellerv = "<?php echo $_SESSION['filtros_umb']['reseller'];?>";
+		var cnamev = "<?php echo $_SESSION['filtros_umb']['cname'];?>";
+		var destino = "<?php echo $_SESSION['filtros_umb']['destino_valor'];?>";
+		
+		$('#resellers_filtro option[value=' + resellerv +']').attr("selected",true);
+		$('#dest').text(destino);
+		$('#cname_filtro').text(cnamev);
+	});
 
 	</script>
 
@@ -1451,13 +1475,12 @@ $af_umb_cuentas_list->ShowMessage();
 				<input type="text" name="dest" id="dest" class="form-control">
 			</div>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Reseller</label>
 				<select id="resellers_filtro" class="form-control">
 				<option value="vacio">Todo</option>
 				<?
-				$_SESSION['filtros_umb']['destino'] = ""; $_SESSION['filtros_umb']['reseller'] = "";
 				$res = select_sql_PO('select_porta_customers');
 				$cant = count($res);
 				$k = 1;
@@ -1471,17 +1494,23 @@ $af_umb_cuentas_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Customer Name</label>
-				<input type="text" name="cnam" id="cname" class="form-control">
+				<input type="text" name="cname" id="cname_filtro" class="form-control">
 			</div>
 		</div>
-		<div class="col-sm-2">
-			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
-		</div>
+		
 	</div>
 	
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
+	</div>
 </div>
 
 

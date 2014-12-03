@@ -931,19 +931,29 @@ class caf_log_acciones_list extends caf_log_acciones {
 				$this->cl_Accion->ViewValue = NULL;
 			}
 			$this->cl_Accion->ViewCustomAttributes = "";
+			$val = "";
+			if((int)$this->nv_Accion->CurrentValue == 1)$val='DNIO_TIPO_ACCION_PLAT';
 
+			if((int)$this->nv_Accion->CurrentValue == 2)$val='DNIO_TIPO_ACCION_RES';
+			
+			if((int)$this->nv_Accion->CurrentValue == 3)$val='DNIO_TIPO_ACCION_CCLASS';
+
+			if((int)$this->nv_Accion->CurrentValue == 4)$val='DNIO_TIPO_ACCION_CLI';
+
+			if((int)$this->nv_Accion->CurrentValue == 5)$val='DNIO_TIPO_ACCION_CTA';
 			// t_Accion
 			if (strval($this->t_Accion->CurrentValue) <> "") {
 				$sFilterWrk = "`rv_Low_Value`" . ew_SearchString("=", $this->t_Accion->CurrentValue, EW_DATATYPE_NUMBER);
 			$sSqlWrk = "SELECT `rv_Low_Value`, `rv_Meaning` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_dominios`";
 			$sWhereWrk = "";
-			$lookuptblfilter = "`rv_Domain` = 'DNIO_TIPO_ACCION_PLAT'";
+			$lookuptblfilter = "`rv_Domain` = '". $val. "'";
 			if (strval($lookuptblfilter) <> "") {
 				ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			}
 			if ($sFilterWrk <> "") {
 				ew_AddFilter($sWhereWrk, $sFilterWrk);
 			}
+
 
 			// Call Lookup selecting
 			$this->Lookup_Selecting($this->t_Accion, $sWhereWrk);
@@ -1486,11 +1496,39 @@ $af_log_acciones_list->ShowMessage();
 			  url: "lib/functions.php",  
 			  data: dataString,  
 			  success: function(html) {  
-				alert("html");location.reload();
+				window.location="af_log_accioneslist.php?start=1";
 			  }
 			});
 
 		});
+
+	$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_log_accioneslist.php";
+		  }
+		});
+	});
+
+	$(document).ready(function() {
+
+
+		var desdev = "<?php echo $_SESSION['filtros_log']['desde'];?>";
+		var hastav = "<?php echo $_SESSION['filtros_log']['hasta'];?>";
+		var tipoacc = "<?php echo $_SESSION['filtros_log']['clase'];?>";
+		var nivelacc = "<?php echo $_SESSION['filtros_log']['nivel'];?>";
+		var destino = "<?php echo $_SESSION['filtros_log']['destino_valor'];?>";
+		
+		$('#initialDateFil').val(desdev);
+		$('#endDateFil').val(hastav);
+		$('#select_clase option[value=' + nivelacc +']').attr("selected",true);
+		$('#select_nivel option[value=' + nivelacc +']').attr("selected",true);
+		$('#dest').text(destino);
+	});
 
 	</script>
 	
@@ -1515,7 +1553,7 @@ $af_log_acciones_list->ShowMessage();
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-4">
+		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label class= "filtro_label">Filtro Clase Acción</label>
 				<select id= "select_clase" class= "form-control">
@@ -1549,14 +1587,18 @@ $af_log_acciones_list->ShowMessage();
 				</select>
 			</div>
 		</div>
-		<div class="col-sm-4">
-  			<button type="submit" id ="submit_filtros" class="btn btn-primary">Buscar</button>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
 		</div>
 	</div>
 
-<?$_SESSION['filtros_log']['desde']=""; $_SESSION['filtros_log']['hasta']=""; 
-  $_SESSION['filtros_log']['clase']=""; $_SESSION['filtros_log']['destino']=""; $_SESSION['filtros_log']['nivel']="";
-?>
+
 
 </div>
 
