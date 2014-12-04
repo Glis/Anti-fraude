@@ -7,7 +7,28 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_chequeo_det_cuentasinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
+
 <?php
+
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
+
+function is_On($value){
+  return (intval($value) < 2);
+} 
+
+if($_SESSION['filtro_cuentas_bloq'] == ""){
+  $accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $accountCount = count($accounts);
+}else{
+  $accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1 AND c_IReseller=" . $_SESSION['filtro_cuentas_bloq'],"f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $accountCount = count($accounts);
+}
 
 //
 // Page class
@@ -871,14 +892,18 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		// c_Usuario_Desbloqueo
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
+			$cusColor = is_On($this->i_Alerta->CurrentValue) ? 'warning' : "";
+			$cusColor = is_On( $this->i_Cuarentena->CurrentValue) ? 'danger' : $cusColor;
 
 			// c_ICliente
 			$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
 			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICliente->CellCssClass = $cusColor;
 
 			// c_ICuenta
 			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 			$this->c_ICuenta->ViewCustomAttributes = "";
+			$this->c_ICuenta->CellCssClass = $cusColor;
 
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
@@ -887,6 +912,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			// c_IChequeo
 			$this->c_IChequeo->ViewValue = $this->c_IChequeo->CurrentValue;
 			$this->c_IChequeo->ViewCustomAttributes = "";
+			$this->c_IChequeo->CellCssClass = $cusColor;
 
 			// f_Bloqueo
 			$this->f_Bloqueo->ViewValue = $this->f_Bloqueo->CurrentValue;
@@ -944,6 +970,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->f_Bloqueo->LinkCustomAttributes = "";
 			$this->f_Bloqueo->HrefValue = "";
 			$this->f_Bloqueo->TooltipValue = "";
+			$this->f_Bloqueo->CellCssClass = $cusColor;
 		}
 
 		// Call Row Rendered event
@@ -1161,6 +1188,9 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
+		$opt = &$this->ListOptions->Add("opciones");
+		$opt->Header = "Opciones";
+		$opt->CssClass = "col-sm-1";
 
 	}
 
