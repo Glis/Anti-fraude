@@ -445,3 +445,7 @@ div.tooltip-inner {
 	max-width: 350px;
 }
 
+#tooltip_a span{
+	width: 20%;
+}
+

@@ -1369,8 +1369,8 @@ faf_acc_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_acc_cc
 <?php if ($af_acc_cclass->x_Titulo->Visible) { // x_Titulo ?>
 	<tr id="r_x_Titulo">
 		<td>
-			<a rel="tooltip" data-placement="left"data-html="true" data-toggle="tooltip" class="tooltipLink" title="#tooltip_info">
-			  <span class="glyphicon glyphicon-info-sign"></span>
+			<a id="tooltip_a" rel="tooltip" data-placement="left"data-html="true" data-toggle="tooltip" class="tooltipLink" title="#tooltip_info">
+			  <span class="glyphicon glyphicon-question-sign"></span>
 			</a>
 			<span id="elh_af_acc_cclass_x_Titulo"><?php echo $af_acc_cclass->x_Titulo->FldCaption() ?></span>
 
@@ -1385,7 +1385,12 @@ faf_acc_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_acc_cc
 <?php } ?>
 <?php if ($af_acc_cclass->x_Mensaje->Visible) { // x_Mensaje ?>
 	<tr id="r_x_Mensaje">
-		<td><span id="elh_af_acc_cclass_x_Mensaje"><?php echo $af_acc_cclass->x_Mensaje->FldCaption() ?></span></td>
+
+		<td>
+			<a id="tooltip_a" rel="tooltip" data-placement="left"data-html="true" data-toggle="tooltip" class="tooltipLink" title="#tooltip_info">
+			  <span class="glyphicon glyphicon-question-sign"></span>
+			</a>
+			<span id="elh_af_acc_cclass_x_Mensaje"><?php echo $af_acc_cclass->x_Mensaje->FldCaption() ?></span></td>
 		<td<?php echo $af_acc_cclass->x_Mensaje->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_Mensaje" class="control-group">
 <textarea class="form-control" data-field="x_x_Mensaje" name="x_x_Mensaje" id="x_x_Mensaje" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Mensaje->PlaceHolder) ?>"<?php echo $af_acc_cclass->x_Mensaje->EditAttributes() ?>><?php echo $af_acc_cclass->x_Mensaje->EditValue ?></textarea>
