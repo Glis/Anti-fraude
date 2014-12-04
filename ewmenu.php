@@ -6,12 +6,10 @@
         Monitor <span class="caret"></span>
       </a>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="af_monitor_clientes_block.php">Clientes Bloqueados(viejo)</a></li>
-        <li><a href="af_monitor_cuentas_block.php">Cuentas Bloqueadas(viejo)</a></li>
+        <li><a href="af_chequeolist.php">Monitor</a></li>
+        <li class="divider"></li>
         <li><a href="af_chequeo_det_clienteslist.php">Clientes Bloqueados</a></li>
         <li><a href="af_chequeo_det_cuentaslist.php">Cuentas Bloqueadas</a></li>
-        <li class="divider"></li>
-        <li><a href="af_chequeolist.php">Monitor</a></li>
       </ul>
     </li>
     <li class="dropdown col-sm-3">
@@ -48,11 +46,11 @@
         <li class="dropdown-submenu">
           <a tabindex="-1" href="#">Acciones</a>
           <ul class="dropdown-menu">
+            <li><a href="af_acc_plataformalist.php">Plataforma</a></li>
+            <li><a href="af_acc_resellerslist.php">Reseller</a></li>
+            <li><a href="af_acc_cclasslist.php">Customer Class</a></li>
             <li><a href="af_acc_clienteslist.php">Clientes</a></li>
             <li><a href="af_acc_cuentaslist.php">Cuentas</a></li>
-            <li><a href="af_acc_cclasslist.php">Customer Class</a></li>
-            <li><a href="af_acc_resellerslist.php">Reseller</a></li>
-            <li><a href="af_acc_plataformalist.php">Plataforma</a></li>
           </ul>
         </li>
         
@@ -62,10 +60,10 @@
           <a tabindex="-1" href="#">Umbrales</a>
           <ul class="dropdown-menu">
             <li><a href="af_umb_destinoslist.php">Plataforma</a></li>
+            <li><a href="af_umb_resellerslist.php">Reseller</a></li>
+            <li><a href="af_umb_cclasslist.php">Customer Class</a></li>
             <li><a href="af_umb_clienteslist.php">Clientes</a></li>
             <li><a href="af_umb_cuentaslist.php">Cuentas</a></li>
-            <li><a href="af_umb_cclasslist.php">Customer Class</a></li>
-            <li><a href="af_umb_resellerslist.php">Reseller</a></li>
           </ul>
         </li>
       </ul>
