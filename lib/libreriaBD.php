@@ -1,6 +1,6 @@
 <?php
 function abrirConexion(){
-    //session_start();
+    //{session_set_cookie_params(0); session_start();}
     $server="127.0.0.1:3306";
     $database="reportes";
     $dbpassword="0000";

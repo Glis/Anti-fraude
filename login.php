@@ -2,7 +2,7 @@
 include_once ("lib/nui2.php");
 include ("lib/libreriaBD.php");
 include ("lib/libreriaBD_portaone.php");
-session_start();
+{session_set_cookie_params(0); session_start();}
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);

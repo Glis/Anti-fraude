@@ -1,5 +1,5 @@
 <?php
-if (session_id() == "") session_start(); // Initialize Session data
+if (session_id() == "") {session_set_cookie_params(0); session_start();} // Initialize Session data
 include_once "lib/libreriaBDPO.php";
 include_once "lib/libreria.php";
 include_once "lib/libreriaBD.php";

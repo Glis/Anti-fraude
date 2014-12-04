@@ -135,7 +135,7 @@ class caf_acc_resellers extends cTable {
 				$where = $this->SqlFrom().".`cl_Accion`=" .$_SESSION['filtros_acc']['clase_accion'];
 			}
 
-			if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['cl_Accion'] != ""){
+			if($_SESSION['filtros_acc']['tipo_accion'] != "" && $_SESSION['filtros_acc']['clase_accion'] != ""){
 				
 				$where .= " AND " . $this->SqlFrom().".`t_Accion`=" .$_SESSION['filtros_acc']['tipo_accion'];
 	

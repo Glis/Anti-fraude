@@ -1,7 +1,7 @@
 <?php include_once "libreriaBD_portaone.php" ?>
 <?php include_once "libreriaBD.php" ?>
 <?php
-session_start();
+{session_set_cookie_params(0); session_start();}
 
 $pagina = $_POST['pag'];
 

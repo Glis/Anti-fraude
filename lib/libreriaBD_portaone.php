@@ -4,7 +4,7 @@ include("libreria.php");
 $ID_ENV2 = $ID_ENV;
 
 function abrirConexion_PO(){
-    //session_start();
+    //{session_set_cookie_params(0); session_start();}
     $server="192.168.10.13:3306";
     $database="porta-billing";
     $dbpassword="panama_178$";
@@ -25,7 +25,7 @@ function abrirConexion_PO(){
 }
 
 function abrirConexion_PO_2(&$conexion){
-    //session_start();
+    //{session_set_cookie_params(0); session_start();}
     $server="192.168.10.13:3306";
     $database="porta-billing";
     $dbpassword="panama_178$";

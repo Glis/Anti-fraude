@@ -359,10 +359,6 @@ class caf_chequeo_det_clientes extends cTable {
 				ew_AddFilter($where, ew_QuotedName('c_IDestino') . '=' . ew_QuotedValue($rs['c_IDestino'], $this->c_IDestino->FldDataType));
 			if (array_key_exists('c_IChequeo', $rs))
 				ew_AddFilter($where, ew_QuotedName('c_IChequeo') . '=' . ew_QuotedValue($rs['c_IChequeo'], $this->c_IChequeo->FldDataType));
-			if (array_key_exists('c_ICClass', $rs))
-				ew_AddFilter($where, ew_QuotedName('c_ICClass') . '=' . ew_QuotedValue($rs['c_ICClass'], $this->c_ICClass->FldDataType));
-			if (array_key_exists('c_IReseller', $rs))
-				ew_AddFilter($where, ew_QuotedName('c_IReseller') . '=' . ew_QuotedValue($rs['c_IReseller'], $this->c_IReseller->FldDataType));
 		}
 		$filter = $this->CurrentFilter;
 		ew_AddFilter($filter, $where);
@@ -381,7 +377,7 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`c_ICliente` = '@c_ICliente@' AND `c_IDestino` = '@c_IDestino@' AND `c_IChequeo` = @c_IChequeo@ AND `c_ICClass` = '@c_ICClass@' AND `c_IReseller` = '@c_IReseller@'";
+		return "`c_ICliente` = '@c_ICliente@' AND `c_IDestino` = '@c_IDestino@' AND `c_IChequeo` = @c_IChequeo@";
 	}
 
 	// Key filter
@@ -392,8 +388,6 @@ class caf_chequeo_det_clientes extends cTable {
 		if (!is_numeric($this->c_IChequeo->CurrentValue))
 			$sKeyFilter = "0=1"; // Invalid key
 		$sKeyFilter = str_replace("@c_IChequeo@", ew_AdjustSql($this->c_IChequeo->CurrentValue), $sKeyFilter); // Replace key value
-		$sKeyFilter = str_replace("@c_ICClass@", ew_AdjustSql($this->c_ICClass->CurrentValue), $sKeyFilter); // Replace key value
-		$sKeyFilter = str_replace("@c_IReseller@", ew_AdjustSql($this->c_IReseller->CurrentValue), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -477,16 +471,6 @@ class caf_chequeo_det_clientes extends cTable {
 		} else {
 			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->c_ICClass->CurrentValue)) {
-			$sUrl .= "&c_ICClass=" . urlencode($this->c_ICClass->CurrentValue);
-		} else {
-			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
-		}
-		if (!is_null($this->c_IReseller->CurrentValue)) {
-			$sUrl .= "&c_IReseller=" . urlencode($this->c_IReseller->CurrentValue);
-		} else {
-			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
-		}
 		return $sUrl;
 	}
 
@@ -522,8 +506,6 @@ class caf_chequeo_det_clientes extends cTable {
 			$arKey[] = @$_GET["c_ICliente"]; // c_ICliente
 			$arKey[] = @$_GET["c_IDestino"]; // c_IDestino
 			$arKey[] = @$_GET["c_IChequeo"]; // c_IChequeo
-			$arKey[] = @$_GET["c_ICClass"]; // c_ICClass
-			$arKey[] = @$_GET["c_IReseller"]; // c_IReseller
 			$arKeys[] = $arKey;
 
 			//return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -532,7 +514,7 @@ class caf_chequeo_det_clientes extends cTable {
 		// Check keys
 		$ar = array();
 		foreach ($arKeys as $key) {
-			if (!is_array($key) || count($key) <> 5)
+			if (!is_array($key) || count($key) <> 3)
 				continue; // Just skip so other keys will still work
 			if (!is_numeric($key[2])) // c_IChequeo
 				continue;
@@ -550,8 +532,6 @@ class caf_chequeo_det_clientes extends cTable {
 			$this->c_ICliente->CurrentValue = $key[0];
 			$this->c_IDestino->CurrentValue = $key[1];
 			$this->c_IChequeo->CurrentValue = $key[2];
-			$this->c_ICClass->CurrentValue = $key[3];
-			$this->c_IReseller->CurrentValue = $key[4];
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;

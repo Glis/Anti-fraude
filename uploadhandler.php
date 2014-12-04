@@ -154,7 +154,7 @@ class UploadHandler
     }
 
     protected function get_user_id() {
-        @session_start();
+        @{session_set_cookie_params(0); session_start();}
         return session_id();
     }
 

@@ -1,21 +1,42 @@
 <?php
-if (session_id() == "") session_start(); // Initialize Session data
+if (session_id() == "") {session_set_cookie_params(0); session_start();} // Initialize Session data
 ob_start(); // Turn on output buffering
 ?>
 <?php include_once "ewcfg10.php" ?>
 <?php include_once "ewmysql10.php" ?>
 <?php include_once "phpfn10.php" ?>
-<?php include_once "af_chequeo_det_cuentasinfo.php" ?>
+<?php include_once "af_chequeo_det_clientesinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
+
 <?php
+
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+} 
+
+function is_On($value){
+  return (intval($value) < 2);
+}
+
+if($_SESSION['filtro_clientes_bloq'] == ""){ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}else{ 
+  $customers=select_custom_sql("*","af_chequeo_det_clientes","i_Bloqueo=1 AND c_IReseller=" . $_SESSION['filtro_clientes_bloq'],"f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $customerCount = count($customers);
+}
 
 //
 // Page class
 //
 
-$af_chequeo_det_cuentas_list = NULL; // Initialize page object first
+$af_chequeo_det_clientes_list = NULL; // Initialize page object first
 
-class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
+class caf_chequeo_det_clientes_list extends caf_chequeo_det_clientes {
 
 	// Page ID
 	var $PageID = 'list';
@@ -24,13 +45,13 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 	var $ProjectID = "{6DD8CE42-32CB-41B2-9566-7C52A93FF8EA}";
 
 	// Table name
-	var $TableName = 'af_chequeo_det_cuentas';
+	var $TableName = 'af_chequeo_det_clientes';
 
 	// Page object name
-	var $PageObjName = 'af_chequeo_det_cuentas_list';
+	var $PageObjName = 'af_chequeo_det_clientes_list';
 
 	// Grid form hidden field names
-	var $FormName = 'faf_chequeo_det_cuentaslist';
+	var $FormName = 'faf_chequeo_det_clienteslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -201,10 +222,10 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (af_chequeo_det_cuentas)
-		if (!isset($GLOBALS["af_chequeo_det_cuentas"]) || get_class($GLOBALS["af_chequeo_det_cuentas"]) == "caf_chequeo_det_cuentas") {
-			$GLOBALS["af_chequeo_det_cuentas"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["af_chequeo_det_cuentas"];
+		// Table object (af_chequeo_det_clientes)
+		if (!isset($GLOBALS["af_chequeo_det_clientes"]) || get_class($GLOBALS["af_chequeo_det_clientes"]) == "caf_chequeo_det_clientes") {
+			$GLOBALS["af_chequeo_det_clientes"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["af_chequeo_det_clientes"];
 		}
 
 		// Initialize URLs
@@ -215,12 +236,12 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "af_chequeo_det_cuentasadd.php";
+		$this->AddUrl = "af_chequeo_det_clientesadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "af_chequeo_det_cuentasdelete.php";
-		$this->MultiUpdateUrl = "af_chequeo_det_cuentasupdate.php";
+		$this->MultiDeleteUrl = "af_chequeo_det_clientesdelete.php";
+		$this->MultiUpdateUrl = "af_chequeo_det_clientesupdate.php";
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -228,7 +249,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'af_chequeo_det_cuentas', TRUE);
+			define("EW_TABLE_NAME", 'af_chequeo_det_clientes', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -474,15 +495,12 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 	// Set up key values
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
-		if (count($arrKeyFlds) >= 6) {
+		if (count($arrKeyFlds) >= 3) {
 			$this->c_ICliente->setFormValue($arrKeyFlds[0]);
-			$this->c_ICuenta->setFormValue($arrKeyFlds[1]);
-			$this->c_IDestino->setFormValue($arrKeyFlds[2]);
-			$this->c_IChequeo->setFormValue($arrKeyFlds[3]);
+			$this->c_IDestino->setFormValue($arrKeyFlds[1]);
+			$this->c_IChequeo->setFormValue($arrKeyFlds[2]);
 			if (!is_numeric($this->c_IChequeo->FormValue))
 				return FALSE;
-			$this->c_IReseller->setFormValue($arrKeyFlds[4]);
-			$this->c_ICClass->setFormValue($arrKeyFlds[5]);
 		}
 		return TRUE;
 	}
@@ -498,10 +516,9 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
 			$this->UpdateSort($this->c_ICliente, $bCtrl); // c_ICliente
-			$this->UpdateSort($this->c_ICuenta, $bCtrl); // c_ICuenta
 			$this->UpdateSort($this->c_IDestino, $bCtrl); // c_IDestino
 			$this->UpdateSort($this->c_IChequeo, $bCtrl); // c_IChequeo
-			$this->UpdateSort($this->f_Bloqueo, $bCtrl); // f_Bloqueo
+			$this->UpdateSort($this->f_Desbloqueo, $bCtrl); // f_Desbloqueo
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -531,10 +548,9 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
 				$this->c_ICliente->setSort("");
-				$this->c_ICuenta->setSort("");
 				$this->c_IDestino->setSort("");
 				$this->c_IChequeo->setSort("");
-				$this->f_Bloqueo->setSort("");
+				$this->f_Desbloqueo->setSort("");
 			}
 
 			// Reset start position
@@ -580,7 +596,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->c_ICliente->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_ICuenta->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IDestino->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IChequeo->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IReseller->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_ICClass->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
+		$oListOpt->Body = "<label class=\"checkbox\"><input type=\"checkbox\" name=\"key_m[]\" value=\"" . ew_HtmlEncode($this->c_ICliente->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IDestino->CurrentValue . $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"] . $this->c_IChequeo->CurrentValue) . "\" onclick='ew_ClickMultiCheckbox(event, this);'></label>";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -616,7 +632,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 				// Add custom action
 				$item = &$option->Add("custom_" . $action);
-				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_chequeo_det_cuentaslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
+				$item->Body = "<a class=\"ewAction ewCustomAction\" href=\"\" onclick=\"ew_SubmitSelected(document.faf_chequeo_det_clienteslist, '" . ew_CurrentUrl() . "', null, '" . $action . "');return false;\">" . $name . "</a>";
 			}
 
 			// Hide grid edit, multi-delete and multi-update
@@ -766,16 +782,15 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
-		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
 		$this->c_IDestino->setDbValue($rs->fields('c_IDestino'));
 		$this->c_IChequeo->setDbValue($rs->fields('c_IChequeo'));
 		$this->f_Bloqueo->setDbValue($rs->fields('f_Bloqueo'));
-		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
 		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
-		$this->q_Min_Cuenta->setDbValue($rs->fields('q_Min_Cuenta'));
 		$this->i_Bloqueo->setDbValue($rs->fields('i_Bloqueo'));
-		$this->i_Alerta->setDbValue($rs->fields('i_Alerta'));
+		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
+		$this->q_Min_Cliente->setDbValue($rs->fields('q_Min_Cliente'));
 		$this->f_Desbloqueo->setDbValue($rs->fields('f_Desbloqueo'));
+		$this->i_Alerta->setDbValue($rs->fields('i_Alerta'));
 		$this->i_Cuarentena->setDbValue($rs->fields('i_Cuarentena'));
 		$this->c_Usuario_Desbloqueo->setDbValue($rs->fields('c_Usuario_Desbloqueo'));
 	}
@@ -785,16 +800,15 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->c_ICliente->DbValue = $row['c_ICliente'];
-		$this->c_ICuenta->DbValue = $row['c_ICuenta'];
 		$this->c_IDestino->DbValue = $row['c_IDestino'];
 		$this->c_IChequeo->DbValue = $row['c_IChequeo'];
 		$this->f_Bloqueo->DbValue = $row['f_Bloqueo'];
-		$this->c_IReseller->DbValue = $row['c_IReseller'];
 		$this->c_ICClass->DbValue = $row['c_ICClass'];
-		$this->q_Min_Cuenta->DbValue = $row['q_Min_Cuenta'];
 		$this->i_Bloqueo->DbValue = $row['i_Bloqueo'];
-		$this->i_Alerta->DbValue = $row['i_Alerta'];
+		$this->c_IReseller->DbValue = $row['c_IReseller'];
+		$this->q_Min_Cliente->DbValue = $row['q_Min_Cliente'];
 		$this->f_Desbloqueo->DbValue = $row['f_Desbloqueo'];
+		$this->i_Alerta->DbValue = $row['i_Alerta'];
 		$this->i_Cuarentena->DbValue = $row['i_Cuarentena'];
 		$this->c_Usuario_Desbloqueo->DbValue = $row['c_Usuario_Desbloqueo'];
 	}
@@ -808,24 +822,12 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->c_ICliente->CurrentValue = $this->getKey("c_ICliente"); // c_ICliente
 		else
 			$bValidKey = FALSE;
-		if (strval($this->getKey("c_ICuenta")) <> "")
-			$this->c_ICuenta->CurrentValue = $this->getKey("c_ICuenta"); // c_ICuenta
-		else
-			$bValidKey = FALSE;
 		if (strval($this->getKey("c_IDestino")) <> "")
 			$this->c_IDestino->CurrentValue = $this->getKey("c_IDestino"); // c_IDestino
 		else
 			$bValidKey = FALSE;
 		if (strval($this->getKey("c_IChequeo")) <> "")
 			$this->c_IChequeo->CurrentValue = $this->getKey("c_IChequeo"); // c_IChequeo
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("c_IReseller")) <> "")
-			$this->c_IReseller->CurrentValue = $this->getKey("c_IReseller"); // c_IReseller
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("c_ICClass")) <> "")
-			$this->c_ICClass->CurrentValue = $this->getKey("c_ICClass"); // c_ICClass
 		else
 			$bValidKey = FALSE;
 
@@ -859,65 +861,90 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 		// Common render codes for all row types
 		// c_ICliente
-		// c_ICuenta
 		// c_IDestino
 		// c_IChequeo
 		// f_Bloqueo
-		// c_IReseller
 		// c_ICClass
-		// q_Min_Cuenta
 		// i_Bloqueo
-		// i_Alerta
+		// c_IReseller
+		// q_Min_Cliente
 		// f_Desbloqueo
+		// i_Alerta
 		// i_Cuarentena
 		// c_Usuario_Desbloqueo
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
+			$cusColor = is_On($this->i_Alerta->CurrentValue) ? 'warning' : "";
+			$cusColor = is_On( $this->i_Cuarentena->CurrentValue) ? 'danger' : $cusColor;
 
 			// c_ICliente
-			$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
-			$this->c_ICliente->ViewCustomAttributes = "";
+			if (strval($this->c_ICliente->CurrentValue) <> "") {
+				$sFilterWrk = "`c_Usuario`" . ew_SearchString("=", $this->c_ICliente->CurrentValue, EW_DATATYPE_STRING);
+			$sSqlWrk = "SELECT `c_Usuario`, `c_Usuario` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `af_usuarios`";
+			$sWhereWrk = "";
+			if ($sFilterWrk <> "") {
+				ew_AddFilter($sWhereWrk, $sFilterWrk);
+			}
 
-			// c_ICuenta
-			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
-			$this->c_ICuenta->ViewCustomAttributes = "";
+			// Call Lookup selecting
+			$this->Lookup_Selecting($this->c_ICliente, $sWhereWrk);
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+				$rswrk = $conn->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$this->c_ICliente->ViewValue = $rswrk->fields('DispFld');
+					$rswrk->Close();
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
+				} else {
+					$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
+					$result = select_sql_PO("select_porta_customers_where_class", array($this->c_ICliente->CurrentValue));
+					$this->c_ICliente->ViewValue = $result[1]['name'];
+				}
+			} else {
+				$this->c_ICliente->ViewValue = NULL;
+			}
+			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICliente->CellCssClass = $cusColor;
 
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
 			$this->c_IDestino->ViewCustomAttributes = "";
+			$this->c_IDestino->CellCssClass = $cusColor;
 
 			// c_IChequeo
 			$this->c_IChequeo->ViewValue = $this->c_IChequeo->CurrentValue;
 			$this->c_IChequeo->ViewCustomAttributes = "";
+			$this->c_IChequeo->CellCssClass = $cusColor;
 
 			// f_Bloqueo
 			$this->f_Bloqueo->ViewValue = $this->f_Bloqueo->CurrentValue;
 			$this->f_Bloqueo->ViewValue = ew_FormatDateTime($this->f_Bloqueo->ViewValue, 9);
 			$this->f_Bloqueo->ViewCustomAttributes = "";
 
-			// c_IReseller
-			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-			$this->c_IReseller->ViewCustomAttributes = "";
-
 			// c_ICClass
 			$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
 			$this->c_ICClass->ViewCustomAttributes = "";
-
-			// q_Min_Cuenta
-			$this->q_Min_Cuenta->ViewValue = $this->q_Min_Cuenta->CurrentValue;
-			$this->q_Min_Cuenta->ViewCustomAttributes = "";
 
 			// i_Bloqueo
 			$this->i_Bloqueo->ViewValue = $this->i_Bloqueo->CurrentValue;
 			$this->i_Bloqueo->ViewCustomAttributes = "";
 
-			// i_Alerta
-			$this->i_Alerta->ViewValue = $this->i_Alerta->CurrentValue;
-			$this->i_Alerta->ViewCustomAttributes = "";
+			// c_IReseller
+			$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+			$this->c_IReseller->ViewCustomAttributes = "";
+
+			// q_Min_Cliente
+			$this->q_Min_Cliente->ViewValue = $this->q_Min_Cliente->CurrentValue;
+			$this->q_Min_Cliente->ViewCustomAttributes = "";
 
 			// f_Desbloqueo
 			$this->f_Desbloqueo->ViewValue = $this->f_Desbloqueo->CurrentValue;
 			$this->f_Desbloqueo->ViewCustomAttributes = "";
+			$this->f_Desbloqueo->CellCssClass = $cusColor;
+
+			// i_Alerta
+			$this->i_Alerta->ViewValue = $this->i_Alerta->CurrentValue;
+			$this->i_Alerta->ViewCustomAttributes = "";
 
 			// i_Cuarentena
 			$this->i_Cuarentena->ViewValue = $this->i_Cuarentena->CurrentValue;
@@ -932,11 +959,6 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->c_ICliente->HrefValue = "";
 			$this->c_ICliente->TooltipValue = "";
 
-			// c_ICuenta
-			$this->c_ICuenta->LinkCustomAttributes = "";
-			$this->c_ICuenta->HrefValue = "";
-			$this->c_ICuenta->TooltipValue = "";
-
 			// c_IDestino
 			$this->c_IDestino->LinkCustomAttributes = "";
 			$this->c_IDestino->HrefValue = "";
@@ -947,10 +969,10 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->c_IChequeo->HrefValue = "";
 			$this->c_IChequeo->TooltipValue = "";
 
-			// f_Bloqueo
-			$this->f_Bloqueo->LinkCustomAttributes = "";
-			$this->f_Bloqueo->HrefValue = "";
-			$this->f_Bloqueo->TooltipValue = "";
+			// f_Desbloqueo
+			$this->f_Desbloqueo->LinkCustomAttributes = "";
+			$this->f_Desbloqueo->HrefValue = "";
+			$this->f_Desbloqueo->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -999,7 +1021,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
-		$item->Body = "<a id=\"emf_af_chequeo_det_cuentas\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_chequeo_det_cuentas',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_chequeo_det_cuentaslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
+		$item->Body = "<a id=\"emf_af_chequeo_det_clientes\" href=\"javascript:void(0);\" class=\"ewExportLink ewEmail\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_af_chequeo_det_clientes',hdr:ewLanguage.Phrase('ExportToEmail'),f:document.faf_chequeo_det_clienteslist,sel:false});\">" . $Language->Phrase("ExportToEmail") . "</a>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1169,6 +1191,12 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
 
+		$opt = &$this->ListOptions->Add("opciones");
+		$opt->Header = "Opciones";
+		$opt->CssClass = "col-sm-1";
+		// $opt->OnLeft = TRUE; // Link on left
+		// $opt->MoveTo(1); // Move to first column
+
 	}
 
 	// ListOptions Rendered event
@@ -1176,6 +1204,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
+		$this->ListOptions->Items["opciones"]->Body = "<span id='desbloqueo_cli' class=".$this->c_ICliente->CurrentValue. "><i title='Desbloquear' class='glyphicon icon-unlock'></i></span>";
 
 	}
 
@@ -1191,35 +1220,35 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 <?php
 
 // Create page object
-if (!isset($af_chequeo_det_cuentas_list)) $af_chequeo_det_cuentas_list = new caf_chequeo_det_cuentas_list();
+if (!isset($af_chequeo_det_clientes_list)) $af_chequeo_det_clientes_list = new caf_chequeo_det_clientes_list();
 
 // Page init
-$af_chequeo_det_cuentas_list->Page_Init();
+$af_chequeo_det_clientes_list->Page_Init();
 
 // Page main
-$af_chequeo_det_cuentas_list->Page_Main();
+$af_chequeo_det_clientes_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$af_chequeo_det_cuentas_list->Page_Render();
+$af_chequeo_det_clientes_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($af_chequeo_det_cuentas->Export == "") { ?>
+<?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <script type="text/javascript">
 
 // Page object
-var af_chequeo_det_cuentas_list = new ew_Page("af_chequeo_det_cuentas_list");
-af_chequeo_det_cuentas_list.PageID = "list"; // Page ID
-var EW_PAGE_ID = af_chequeo_det_cuentas_list.PageID; // For backward compatibility
+var af_chequeo_det_clientes_list = new ew_Page("af_chequeo_det_clientes_list");
+af_chequeo_det_clientes_list.PageID = "list"; // Page ID
+var EW_PAGE_ID = af_chequeo_det_clientes_list.PageID; // For backward compatibility
 
 // Form object
-var faf_chequeo_det_cuentaslist = new ew_Form("faf_chequeo_det_cuentaslist");
-faf_chequeo_det_cuentaslist.FormKeyCountName = '<?php echo $af_chequeo_det_cuentas_list->FormKeyCountName ?>';
+var faf_chequeo_det_clienteslist = new ew_Form("faf_chequeo_det_clienteslist");
+faf_chequeo_det_clienteslist.FormKeyCountName = '<?php echo $af_chequeo_det_clientes_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-faf_chequeo_det_cuentaslist.Form_CustomValidate = 
+faf_chequeo_det_clienteslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1228,9 +1257,9 @@ faf_chequeo_det_cuentaslist.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-faf_chequeo_det_cuentaslist.ValidateRequired = true;
+faf_chequeo_det_clienteslist.ValidateRequired = true;
 <?php } else { ?>
-faf_chequeo_det_cuentaslist.ValidateRequired = false; 
+faf_chequeo_det_clienteslist.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
@@ -1242,205 +1271,254 @@ faf_chequeo_det_cuentaslist.ValidateRequired = false;
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($af_chequeo_det_cuentas->Export == "") { ?>
+<?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
-<?php if ($af_chequeo_det_cuentas_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_chequeo_det_cuentas_list->ExportOptions->Render("body") ?></div>
+<?php if ($af_chequeo_det_clientes_list->ExportOptions->Visible()) { ?>
+<div id="page_title" class="ewListExportOptions"><?php $af_chequeo_det_clientes_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
 	if ($bSelectLimit) {
-		$af_chequeo_det_cuentas_list->TotalRecs = $af_chequeo_det_cuentas->SelectRecordCount();
+		$af_chequeo_det_clientes_list->TotalRecs = $af_chequeo_det_clientes->SelectRecordCount();
 	} else {
-		if ($af_chequeo_det_cuentas_list->Recordset = $af_chequeo_det_cuentas_list->LoadRecordset())
-			$af_chequeo_det_cuentas_list->TotalRecs = $af_chequeo_det_cuentas_list->Recordset->RecordCount();
+		if ($af_chequeo_det_clientes_list->Recordset = $af_chequeo_det_clientes_list->LoadRecordset())
+			$af_chequeo_det_clientes_list->TotalRecs = $af_chequeo_det_clientes_list->Recordset->RecordCount();
 	}
-	$af_chequeo_det_cuentas_list->StartRec = 1;
-	if ($af_chequeo_det_cuentas_list->DisplayRecs <= 0 || ($af_chequeo_det_cuentas->Export <> "" && $af_chequeo_det_cuentas->ExportAll)) // Display all records
-		$af_chequeo_det_cuentas_list->DisplayRecs = $af_chequeo_det_cuentas_list->TotalRecs;
-	if (!($af_chequeo_det_cuentas->Export <> "" && $af_chequeo_det_cuentas->ExportAll))
-		$af_chequeo_det_cuentas_list->SetUpStartRec(); // Set up start record position
+	$af_chequeo_det_clientes_list->StartRec = 1;
+	if ($af_chequeo_det_clientes_list->DisplayRecs <= 0 || ($af_chequeo_det_clientes->Export <> "" && $af_chequeo_det_clientes->ExportAll)) // Display all records
+		$af_chequeo_det_clientes_list->DisplayRecs = $af_chequeo_det_clientes_list->TotalRecs;
+	if (!($af_chequeo_det_clientes->Export <> "" && $af_chequeo_det_clientes->ExportAll))
+		$af_chequeo_det_clientes_list->SetUpStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$af_chequeo_det_cuentas_list->Recordset = $af_chequeo_det_cuentas_list->LoadRecordset($af_chequeo_det_cuentas_list->StartRec-1, $af_chequeo_det_cuentas_list->DisplayRecs);
-$af_chequeo_det_cuentas_list->RenderOtherOptions();
+		$af_chequeo_det_clientes_list->Recordset = $af_chequeo_det_clientes_list->LoadRecordset($af_chequeo_det_clientes_list->StartRec-1, $af_chequeo_det_clientes_list->DisplayRecs);
+$af_chequeo_det_clientes_list->RenderOtherOptions();
 ?>
-<?php $af_chequeo_det_cuentas_list->ShowPageHeader(); ?>
+<?php $af_chequeo_det_clientes_list->ShowPageHeader(); ?>
 <?php
-$af_chequeo_det_cuentas_list->ShowMessage();
+$af_chequeo_det_clientes_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+<script>
+$(document).on('click','#submit_filtros',function(){
+
+      var reseller = $('#resellerName').find("option:selected").val();
+
+
+      var dataString = "pag=monitor_clientes&filtro=x";
+      if (reseller == "vacio"){
+        dataString = dataString + "&reseller=vacio";
+      }else{
+        dataString = dataString + "&reseller=" + reseller;
+      }
+
+     
+      alert(dataString);
+      $.ajax({  
+        type: "POST",  
+        url: "lib/functions.php",  
+        data: dataString,  
+        success: function(html) {  
+          // alert(html);
+          location.reload();
+        }
+      });
+});
+
+</script>
+
+<div class="row">
+  <div class="col-sm-5 col-sm-offset-2">
+    <div class="form-group">
+      <label for="resellerName">Resellers</label>
+      <select id= "resellerName" class= "form-control">
+        <option value="vacio">Todo</option>
+        <?
+        
+          $res = select_sql_PO('select_porta_customers');
+          $cant = count($res);
+          $k = 1;
+
+          while ($k <= $cant) {
+            echo ('<option value='.$res[$k]['i_customer'].'>'. $res[$k]['name'] . '</option>');
+            $k++;
+          }
+
+        ?>
+      </select>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
+  </div>
+</div>
+
+
+							<?/******************************************************
+							************************END FILTROS**************************
+							*********************************************************/?>
+
+
 <table class="ewGrid"><tr><td class="ewGridContent">
-<form name="faf_chequeo_det_cuentaslist" id="faf_chequeo_det_cuentaslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
-<input type="hidden" name="t" value="af_chequeo_det_cuentas">
-<div id="gmp_af_chequeo_det_cuentas" class="ewGridMiddlePanel">
-<?php if ($af_chequeo_det_cuentas_list->TotalRecs > 0) { ?>
-<table id="tbl_af_chequeo_det_cuentaslist" class="ewTable ewTableSeparate">
-<?php echo $af_chequeo_det_cuentas->TableCustomInnerHtml ?>
+<form name="faf_chequeo_det_clienteslist" id="faf_chequeo_det_clienteslist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
+<input type="hidden" name="t" value="af_chequeo_det_clientes">
+<div id="gmp_af_chequeo_det_clientes" class="ewGridMiddlePanel">
+<?php if ($af_chequeo_det_clientes_list->TotalRecs > 0) { ?>
+<table id="tbl_af_chequeo_det_clienteslist" class="ewTable ewTableSeparate">
+<?php echo $af_chequeo_det_clientes->TableCustomInnerHtml ?>
 <thead><!-- Table header -->
 	<tr class="ewTableHeader">
 <?php
 
 // Render list options
-$af_chequeo_det_cuentas_list->RenderListOptions();
+$af_chequeo_det_clientes_list->RenderListOptions();
 
 // Render list options (header, left)
-$af_chequeo_det_cuentas_list->ListOptions->Render("header", "left");
+$af_chequeo_det_clientes_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($af_chequeo_det_cuentas->c_ICliente->Visible) { // c_ICliente ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_ICliente) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_c_ICliente" class="af_chequeo_det_cuentas_c_ICliente"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_ICliente->FldCaption() ?></div></div></td>
+<?php if ($af_chequeo_det_clientes->c_ICliente->Visible) { // c_ICliente ?>
+	<?php if ($af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_ICliente) == "") { ?>
+		<td class="col-sm-6"><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_ICliente->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_ICliente) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_ICliente" class="af_chequeo_det_cuentas_c_ICliente">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_ICliente->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_ICliente->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_ICliente->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td class="col-sm-6"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_ICliente) ?>',2);"><div id="elh_af_chequeo_det_clientes_c_ICliente" class="af_chequeo_det_clientes_c_ICliente">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_ICliente->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_clientes->c_ICliente->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_clientes->c_ICliente->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_chequeo_det_cuentas->c_ICuenta->Visible) { // c_ICuenta ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_ICuenta) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_c_ICuenta" class="af_chequeo_det_cuentas_c_ICuenta"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_ICuenta->FldCaption() ?></div></div></td>
+<?php if ($af_chequeo_det_clientes->c_IDestino->Visible) { // c_IDestino ?>
+	<?php if ($af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_IDestino) == "") { ?>
+		<td><div id="elh_af_chequeo_det_clientes_c_IDestino" class="af_chequeo_det_clientes_c_IDestino"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_IDestino->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_ICuenta) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_ICuenta" class="af_chequeo_det_cuentas_c_ICuenta">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_ICuenta->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_ICuenta->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_ICuenta->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_IDestino) ?>',2);"><div id="elh_af_chequeo_det_clientes_c_IDestino" class="af_chequeo_det_clientes_c_IDestino">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_IDestino->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_clientes->c_IDestino->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_clientes->c_IDestino->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_chequeo_det_cuentas->c_IDestino->Visible) { // c_IDestino ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IDestino) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_c_IDestino" class="af_chequeo_det_cuentas_c_IDestino"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IDestino->FldCaption() ?></div></div></td>
+<?php if ($af_chequeo_det_clientes->c_IChequeo->Visible) { // c_IChequeo ?>
+	<?php if ($af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_IChequeo) == "") { ?>
+		<td><div id="elh_af_chequeo_det_clientes_c_IChequeo" class="af_chequeo_det_clientes_c_IChequeo"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_IChequeo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IDestino) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_IDestino" class="af_chequeo_det_cuentas_c_IDestino">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IDestino->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_IDestino->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_IDestino->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->c_IChequeo) ?>',2);"><div id="elh_af_chequeo_det_clientes_c_IChequeo" class="af_chequeo_det_clientes_c_IChequeo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->c_IChequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_clientes->c_IChequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_clientes->c_IChequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
-<?php if ($af_chequeo_det_cuentas->c_IChequeo->Visible) { // c_IChequeo ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IChequeo) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_c_IChequeo" class="af_chequeo_det_cuentas_c_IChequeo"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IChequeo->FldCaption() ?></div></div></td>
+<?php if ($af_chequeo_det_clientes->f_Desbloqueo->Visible) { // f_Desbloqueo ?>
+	<?php if ($af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->f_Desbloqueo) == "") { ?>
+		<td><div id="elh_af_chequeo_det_clientes_f_Desbloqueo" class="af_chequeo_det_clientes_f_Desbloqueo"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->f_Desbloqueo->FldCaption() ?></div></div></td>
 	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IChequeo) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_IChequeo" class="af_chequeo_det_cuentas_c_IChequeo">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IChequeo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_IChequeo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_IChequeo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_chequeo_det_cuentas->f_Bloqueo->Visible) { // f_Bloqueo ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->f_Bloqueo) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_f_Bloqueo" class="af_chequeo_det_cuentas_f_Bloqueo"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->f_Bloqueo->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->f_Bloqueo) ?>',2);"><div id="elh_af_chequeo_det_cuentas_f_Bloqueo" class="af_chequeo_det_cuentas_f_Bloqueo">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->f_Bloqueo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->f_Bloqueo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->f_Bloqueo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_clientes->SortUrl($af_chequeo_det_clientes->f_Desbloqueo) ?>',2);"><div id="elh_af_chequeo_det_clientes_f_Desbloqueo" class="af_chequeo_det_clientes_f_Desbloqueo">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_clientes->f_Desbloqueo->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_clientes->f_Desbloqueo->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_clientes->f_Desbloqueo->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
 <?php
 
 // Render list options (header, right)
-$af_chequeo_det_cuentas_list->ListOptions->Render("header", "right");
+$af_chequeo_det_clientes_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($af_chequeo_det_cuentas->ExportAll && $af_chequeo_det_cuentas->Export <> "") {
-	$af_chequeo_det_cuentas_list->StopRec = $af_chequeo_det_cuentas_list->TotalRecs;
+if ($af_chequeo_det_clientes->ExportAll && $af_chequeo_det_clientes->Export <> "") {
+	$af_chequeo_det_clientes_list->StopRec = $af_chequeo_det_clientes_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($af_chequeo_det_cuentas_list->TotalRecs > $af_chequeo_det_cuentas_list->StartRec + $af_chequeo_det_cuentas_list->DisplayRecs - 1)
-		$af_chequeo_det_cuentas_list->StopRec = $af_chequeo_det_cuentas_list->StartRec + $af_chequeo_det_cuentas_list->DisplayRecs - 1;
+	if ($af_chequeo_det_clientes_list->TotalRecs > $af_chequeo_det_clientes_list->StartRec + $af_chequeo_det_clientes_list->DisplayRecs - 1)
+		$af_chequeo_det_clientes_list->StopRec = $af_chequeo_det_clientes_list->StartRec + $af_chequeo_det_clientes_list->DisplayRecs - 1;
 	else
-		$af_chequeo_det_cuentas_list->StopRec = $af_chequeo_det_cuentas_list->TotalRecs;
+		$af_chequeo_det_clientes_list->StopRec = $af_chequeo_det_clientes_list->TotalRecs;
 }
-$af_chequeo_det_cuentas_list->RecCnt = $af_chequeo_det_cuentas_list->StartRec - 1;
-if ($af_chequeo_det_cuentas_list->Recordset && !$af_chequeo_det_cuentas_list->Recordset->EOF) {
-	$af_chequeo_det_cuentas_list->Recordset->MoveFirst();
-	if (!$bSelectLimit && $af_chequeo_det_cuentas_list->StartRec > 1)
-		$af_chequeo_det_cuentas_list->Recordset->Move($af_chequeo_det_cuentas_list->StartRec - 1);
-} elseif (!$af_chequeo_det_cuentas->AllowAddDeleteRow && $af_chequeo_det_cuentas_list->StopRec == 0) {
-	$af_chequeo_det_cuentas_list->StopRec = $af_chequeo_det_cuentas->GridAddRowCount;
+$af_chequeo_det_clientes_list->RecCnt = $af_chequeo_det_clientes_list->StartRec - 1;
+if ($af_chequeo_det_clientes_list->Recordset && !$af_chequeo_det_clientes_list->Recordset->EOF) {
+	$af_chequeo_det_clientes_list->Recordset->MoveFirst();
+	if (!$bSelectLimit && $af_chequeo_det_clientes_list->StartRec > 1)
+		$af_chequeo_det_clientes_list->Recordset->Move($af_chequeo_det_clientes_list->StartRec - 1);
+} elseif (!$af_chequeo_det_clientes->AllowAddDeleteRow && $af_chequeo_det_clientes_list->StopRec == 0) {
+	$af_chequeo_det_clientes_list->StopRec = $af_chequeo_det_clientes->GridAddRowCount;
 }
 
 // Initialize aggregate
-$af_chequeo_det_cuentas->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$af_chequeo_det_cuentas->ResetAttrs();
-$af_chequeo_det_cuentas_list->RenderRow();
-while ($af_chequeo_det_cuentas_list->RecCnt < $af_chequeo_det_cuentas_list->StopRec) {
-	$af_chequeo_det_cuentas_list->RecCnt++;
-	if (intval($af_chequeo_det_cuentas_list->RecCnt) >= intval($af_chequeo_det_cuentas_list->StartRec)) {
-		$af_chequeo_det_cuentas_list->RowCnt++;
+$af_chequeo_det_clientes->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$af_chequeo_det_clientes->ResetAttrs();
+$af_chequeo_det_clientes_list->RenderRow();
+while ($af_chequeo_det_clientes_list->RecCnt < $af_chequeo_det_clientes_list->StopRec) {
+	$af_chequeo_det_clientes_list->RecCnt++;
+	if (intval($af_chequeo_det_clientes_list->RecCnt) >= intval($af_chequeo_det_clientes_list->StartRec)) {
+		$af_chequeo_det_clientes_list->RowCnt++;
 
 		// Set up key count
-		$af_chequeo_det_cuentas_list->KeyCount = $af_chequeo_det_cuentas_list->RowIndex;
+		$af_chequeo_det_clientes_list->KeyCount = $af_chequeo_det_clientes_list->RowIndex;
 
 		// Init row class and style
-		$af_chequeo_det_cuentas->ResetAttrs();
-		$af_chequeo_det_cuentas->CssClass = "";
-		if ($af_chequeo_det_cuentas->CurrentAction == "gridadd") {
+		$af_chequeo_det_clientes->ResetAttrs();
+		$af_chequeo_det_clientes->CssClass = "";
+		if ($af_chequeo_det_clientes->CurrentAction == "gridadd") {
 		} else {
-			$af_chequeo_det_cuentas_list->LoadRowValues($af_chequeo_det_cuentas_list->Recordset); // Load row values
+			$af_chequeo_det_clientes_list->LoadRowValues($af_chequeo_det_clientes_list->Recordset); // Load row values
 		}
-		$af_chequeo_det_cuentas->RowType = EW_ROWTYPE_VIEW; // Render view
+		$af_chequeo_det_clientes->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$af_chequeo_det_cuentas->RowAttrs = array_merge($af_chequeo_det_cuentas->RowAttrs, array('data-rowindex'=>$af_chequeo_det_cuentas_list->RowCnt, 'id'=>'r' . $af_chequeo_det_cuentas_list->RowCnt . '_af_chequeo_det_cuentas', 'data-rowtype'=>$af_chequeo_det_cuentas->RowType));
+		$af_chequeo_det_clientes->RowAttrs = array_merge($af_chequeo_det_clientes->RowAttrs, array('data-rowindex'=>$af_chequeo_det_clientes_list->RowCnt, 'id'=>'r' . $af_chequeo_det_clientes_list->RowCnt . '_af_chequeo_det_clientes', 'data-rowtype'=>$af_chequeo_det_clientes->RowType));
 
 		// Render row
-		$af_chequeo_det_cuentas_list->RenderRow();
+		$af_chequeo_det_clientes_list->RenderRow();
 
 		// Render list options
-		$af_chequeo_det_cuentas_list->RenderListOptions();
+		$af_chequeo_det_clientes_list->RenderListOptions();
 ?>
-	<tr<?php echo $af_chequeo_det_cuentas->RowAttributes() ?>>
+	<tr<?php echo $af_chequeo_det_clientes->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$af_chequeo_det_cuentas_list->ListOptions->Render("body", "left", $af_chequeo_det_cuentas_list->RowCnt);
+$af_chequeo_det_clientes_list->ListOptions->Render("body", "left", $af_chequeo_det_clientes_list->RowCnt);
 ?>
-	<?php if ($af_chequeo_det_cuentas->c_ICliente->Visible) { // c_ICliente ?>
-		<td<?php echo $af_chequeo_det_cuentas->c_ICliente->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->c_ICliente->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->c_ICliente->ListViewValue() ?></span>
-<a id="<?php echo $af_chequeo_det_cuentas_list->PageObjName . "_row_" . $af_chequeo_det_cuentas_list->RowCnt ?>"></a></td>
+	<?php if ($af_chequeo_det_clientes->c_ICliente->Visible) { // c_ICliente ?>
+		<td<?php echo $af_chequeo_det_clientes->c_ICliente->CellAttributes() ?>>
+<span<?php echo $af_chequeo_det_clientes->c_ICliente->ViewAttributes() ?>>
+<?php echo $af_chequeo_det_clientes->c_ICliente->ListViewValue() ?></span>
+<a id="<?php echo $af_chequeo_det_clientes_list->PageObjName . "_row_" . $af_chequeo_det_clientes_list->RowCnt ?>"></a></td>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas->c_ICuenta->Visible) { // c_ICuenta ?>
-		<td<?php echo $af_chequeo_det_cuentas->c_ICuenta->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->c_ICuenta->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->c_ICuenta->ListViewValue() ?></span>
+	<?php if ($af_chequeo_det_clientes->c_IDestino->Visible) { // c_IDestino ?>
+		<td<?php echo $af_chequeo_det_clientes->c_IDestino->CellAttributes() ?>>
+<span<?php echo $af_chequeo_det_clientes->c_IDestino->ViewAttributes() ?>>
+<?php echo $af_chequeo_det_clientes->c_IDestino->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas->c_IDestino->Visible) { // c_IDestino ?>
-		<td<?php echo $af_chequeo_det_cuentas->c_IDestino->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->c_IDestino->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->c_IDestino->ListViewValue() ?></span>
+	<?php if ($af_chequeo_det_clientes->c_IChequeo->Visible) { // c_IChequeo ?>
+		<td<?php echo $af_chequeo_det_clientes->c_IChequeo->CellAttributes() ?>>
+<span<?php echo $af_chequeo_det_clientes->c_IChequeo->ViewAttributes() ?>>
+<?php echo $af_chequeo_det_clientes->c_IChequeo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas->c_IChequeo->Visible) { // c_IChequeo ?>
-		<td<?php echo $af_chequeo_det_cuentas->c_IChequeo->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->c_IChequeo->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->c_IChequeo->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas->f_Bloqueo->Visible) { // f_Bloqueo ?>
-		<td<?php echo $af_chequeo_det_cuentas->f_Bloqueo->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->f_Bloqueo->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->f_Bloqueo->ListViewValue() ?></span>
+	<?php if ($af_chequeo_det_clientes->f_Desbloqueo->Visible) { // f_Desbloqueo ?>
+		<td<?php echo $af_chequeo_det_clientes->f_Desbloqueo->CellAttributes() ?>>
+<span<?php echo $af_chequeo_det_clientes->f_Desbloqueo->ViewAttributes() ?>>
+<?php echo $af_chequeo_det_clientes->f_Desbloqueo->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$af_chequeo_det_cuentas_list->ListOptions->Render("body", "right", $af_chequeo_det_cuentas_list->RowCnt);
+$af_chequeo_det_clientes_list->ListOptions->Render("body", "right", $af_chequeo_det_clientes_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($af_chequeo_det_cuentas->CurrentAction <> "gridadd")
-		$af_chequeo_det_cuentas_list->Recordset->MoveNext();
+	if ($af_chequeo_det_clientes->CurrentAction <> "gridadd")
+		$af_chequeo_det_clientes_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($af_chequeo_det_cuentas->CurrentAction == "") { ?>
+<?php if ($af_chequeo_det_clientes->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -1448,43 +1526,43 @@ $af_chequeo_det_cuentas_list->ListOptions->Render("body", "right", $af_chequeo_d
 <?php
 
 // Close recordset
-if ($af_chequeo_det_cuentas_list->Recordset)
-	$af_chequeo_det_cuentas_list->Recordset->Close();
+if ($af_chequeo_det_clientes_list->Recordset)
+	$af_chequeo_det_clientes_list->Recordset->Close();
 ?>
-<?php if ($af_chequeo_det_cuentas->Export == "") { ?>
+<?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <div class="ewGridLowerPanel">
-<?php if ($af_chequeo_det_cuentas->CurrentAction <> "gridadd" && $af_chequeo_det_cuentas->CurrentAction <> "gridedit") { ?>
+<?php if ($af_chequeo_det_clientes->CurrentAction <> "gridadd" && $af_chequeo_det_clientes->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>">
 <table class="ewPager">
 <tr><td>
-<?php if (!isset($af_chequeo_det_cuentas_list->Pager)) $af_chequeo_det_cuentas_list->Pager = new cNumericPager($af_chequeo_det_cuentas_list->StartRec, $af_chequeo_det_cuentas_list->DisplayRecs, $af_chequeo_det_cuentas_list->TotalRecs, $af_chequeo_det_cuentas_list->RecRange) ?>
-<?php if ($af_chequeo_det_cuentas_list->Pager->RecordCount > 0) { ?>
+<?php if (!isset($af_chequeo_det_clientes_list->Pager)) $af_chequeo_det_clientes_list->Pager = new cNumericPager($af_chequeo_det_clientes_list->StartRec, $af_chequeo_det_clientes_list->DisplayRecs, $af_chequeo_det_clientes_list->TotalRecs, $af_chequeo_det_clientes_list->RecRange) ?>
+<?php if ($af_chequeo_det_clientes_list->Pager->RecordCount > 0) { ?>
 <table class="ewStdTable"><tbody><tr><td>
 <div class="pagination"><ul>
-	<?php if ($af_chequeo_det_cuentas_list->Pager->FirstButton->Enabled) { ?>
-	<li><a href="<?php echo $af_chequeo_det_cuentas_list->PageUrl() ?>start=<?php echo $af_chequeo_det_cuentas_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
+	<?php if ($af_chequeo_det_clientes_list->Pager->FirstButton->Enabled) { ?>
+	<li><a href="<?php echo $af_chequeo_det_clientes_list->PageUrl() ?>start=<?php echo $af_chequeo_det_clientes_list->Pager->FirstButton->Start ?>"><?php echo $Language->Phrase("PagerFirst") ?></a></li>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas_list->Pager->PrevButton->Enabled) { ?>
-	<li><a href="<?php echo $af_chequeo_det_cuentas_list->PageUrl() ?>start=<?php echo $af_chequeo_det_cuentas_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
+	<?php if ($af_chequeo_det_clientes_list->Pager->PrevButton->Enabled) { ?>
+	<li><a href="<?php echo $af_chequeo_det_clientes_list->PageUrl() ?>start=<?php echo $af_chequeo_det_clientes_list->Pager->PrevButton->Start ?>"><?php echo $Language->Phrase("PagerPrevious") ?></a></li>
 	<?php } ?>
-	<?php foreach ($af_chequeo_det_cuentas_list->Pager->Items as $PagerItem) { ?>
-		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_chequeo_det_cuentas_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
+	<?php foreach ($af_chequeo_det_clientes_list->Pager->Items as $PagerItem) { ?>
+		<li<?php if (!$PagerItem->Enabled) { echo " class=\" active\""; } ?>><a href="<?php if ($PagerItem->Enabled) { echo $af_chequeo_det_clientes_list->PageUrl() . "start=" . $PagerItem->Start; } else { echo "#"; } ?>"><?php echo $PagerItem->Text ?></a></li>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas_list->Pager->NextButton->Enabled) { ?>
-	<li><a href="<?php echo $af_chequeo_det_cuentas_list->PageUrl() ?>start=<?php echo $af_chequeo_det_cuentas_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
+	<?php if ($af_chequeo_det_clientes_list->Pager->NextButton->Enabled) { ?>
+	<li><a href="<?php echo $af_chequeo_det_clientes_list->PageUrl() ?>start=<?php echo $af_chequeo_det_clientes_list->Pager->NextButton->Start ?>"><?php echo $Language->Phrase("PagerNext") ?></a></li>
 	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas_list->Pager->LastButton->Enabled) { ?>
-	<li><a href="<?php echo $af_chequeo_det_cuentas_list->PageUrl() ?>start=<?php echo $af_chequeo_det_cuentas_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
+	<?php if ($af_chequeo_det_clientes_list->Pager->LastButton->Enabled) { ?>
+	<li><a href="<?php echo $af_chequeo_det_clientes_list->PageUrl() ?>start=<?php echo $af_chequeo_det_clientes_list->Pager->LastButton->Start ?>"><?php echo $Language->Phrase("PagerLast") ?></a></li>
 	<?php } ?>
 </ul></div>
 </td>
 <td>
-	<?php if ($af_chequeo_det_cuentas_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
-	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_chequeo_det_cuentas_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_chequeo_det_cuentas_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_chequeo_det_cuentas_list->Pager->RecordCount ?>
+	<?php if ($af_chequeo_det_clientes_list->Pager->ButtonCount > 0) { ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php } ?>
+	<?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $af_chequeo_det_clientes_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $af_chequeo_det_clientes_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $af_chequeo_det_clientes_list->Pager->RecordCount ?>
 </td>
 </tr></tbody></table>
 <?php } else { ?>
-	<?php if ($af_chequeo_det_cuentas_list->SearchWhere == "0=101") { ?>
+	<?php if ($af_chequeo_det_clientes_list->SearchWhere == "0=101") { ?>
 	<p><?php echo $Language->Phrase("EnterSearchCriteria") ?></p>
 	<?php } else { ?>
 	<p><?php echo $Language->Phrase("NoRecord") ?></p>
@@ -1496,27 +1574,40 @@ if ($af_chequeo_det_cuentas_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($af_chequeo_det_cuentas_list->OtherOptions as &$option)
+	foreach ($af_chequeo_det_clientes_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
 </div>
 <?php } ?>
 </td></tr></table>
-<?php if ($af_chequeo_det_cuentas->Export == "") { ?>
+
+<!-- Modal para el bloqueo/desbloqueo de lientes -->
+<div class="modal fade" id="unlock_modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Desbloqueando, espere por favor...</h4>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<span id="logged_user" hidden><?php echo $_SESSION["USUARIO"]; ?></span>
+
+<?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <script type="text/javascript">
-faf_chequeo_det_cuentaslist.Init();
+faf_chequeo_det_clienteslist.Init();
 <?php if (EW_MOBILE_REFLOW && ew_IsMobile()) { ?>
 ew_Reflow();
 <?php } ?>
 </script>
 <?php } ?>
 <?php
-$af_chequeo_det_cuentas_list->ShowPageFooter();
+$af_chequeo_det_clientes_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($af_chequeo_det_cuentas->Export == "") { ?>
+<?php if ($af_chequeo_det_clientes->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1524,7 +1615,34 @@ if (EW_DEBUG_ENABLED)
 
 </script>
 <?php } ?>
+<script>
+  $(document).on('click','#desbloqueo_cli',function(){
+      $('#unlock_modal').find('.modal-title').text('Desbloqueando el cliente seleccionado, espere por favor...');
+      $('#unlock_modal').modal('show'); 
+
+      var element= $(this);
+                                                
+      //$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
+   
+    var dataString = "i_customer=" + $(this).attr('class') + "&usuario=" + $("#logged_user").html();
+    $.ajax({  
+      type: "POST",  
+      url: "DesbloqueoCliente.php",  
+      data: dataString,  
+      success: function(response) {
+        element.hide();
+      // alert ("termino: "+response);
+        $('#unlock_modal').modal('hide'); 
+      },
+      error: function(response){
+        // alert ("termino: "+response);
+      $('#unlock_modal').modal('hide'); 
+      }
+    });
+
+  });
+</script>
 <?php include_once "footer.php" ?>
 <?php
-$af_chequeo_det_cuentas_list->Page_Terminate();
+$af_chequeo_det_clientes_list->Page_Terminate();
 ?>

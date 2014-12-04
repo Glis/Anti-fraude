@@ -1,5 +1,5 @@
 <?php
-if (session_id() == "") session_start(); // Initialize Session data
+if (session_id() == "") {session_set_cookie_params(0); session_start();} // Initialize Session data
 ob_start(); // Turn on output buffering
 ?>
 <?php include_once "ewcfg10.php" ?>
@@ -7,7 +7,28 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_chequeo_det_cuentasinfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
+<?php include_once "lib/libreriaBD_portaone.php" ?>
+
 <?php
+
+if(!isset($_SESSION['USUARIO']))
+{
+    header("Location: login.php");
+    exit;
+}
+
+function is_On($value){
+  return (intval($value) < 2);
+} 
+
+if($_SESSION['filtro_cuentas_bloq'] == ""){
+  $accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1","f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $accountCount = count($accounts);
+}else{
+  $accounts=select_custom_sql("*","af_chequeo_det_cuentas","i_Bloqueo=1 AND c_IReseller=" . $_SESSION['filtro_cuentas_bloq'],"f_Bloqueo DESC", ""/*"LIMIT 10"*/);
+  $accountCount = count($accounts);
+}
 
 //
 // Page class
@@ -499,7 +520,6 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->CurrentOrderType = @$_GET["ordertype"];
 			$this->UpdateSort($this->c_ICliente, $bCtrl); // c_ICliente
 			$this->UpdateSort($this->c_ICuenta, $bCtrl); // c_ICuenta
-			$this->UpdateSort($this->c_IDestino, $bCtrl); // c_IDestino
 			$this->UpdateSort($this->c_IChequeo, $bCtrl); // c_IChequeo
 			$this->UpdateSort($this->f_Bloqueo, $bCtrl); // f_Bloqueo
 			$this->setStartRecordNumber(1); // Reset start position
@@ -532,7 +552,6 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 				$this->setSessionOrderBy($sOrderBy);
 				$this->c_ICliente->setSort("");
 				$this->c_ICuenta->setSort("");
-				$this->c_IDestino->setSort("");
 				$this->c_IChequeo->setSort("");
 				$this->f_Bloqueo->setSort("");
 			}
@@ -873,14 +892,18 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		// c_Usuario_Desbloqueo
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
+			$cusColor = is_On($this->i_Alerta->CurrentValue) ? 'warning' : "";
+			$cusColor = is_On( $this->i_Cuarentena->CurrentValue) ? 'danger' : $cusColor;
 
 			// c_ICliente
 			$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
 			$this->c_ICliente->ViewCustomAttributes = "";
+			$this->c_ICliente->CellCssClass = $cusColor;
 
 			// c_ICuenta
 			$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
 			$this->c_ICuenta->ViewCustomAttributes = "";
+			$this->c_ICuenta->CellCssClass = $cusColor;
 
 			// c_IDestino
 			$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
@@ -889,6 +912,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			// c_IChequeo
 			$this->c_IChequeo->ViewValue = $this->c_IChequeo->CurrentValue;
 			$this->c_IChequeo->ViewCustomAttributes = "";
+			$this->c_IChequeo->CellCssClass = $cusColor;
 
 			// f_Bloqueo
 			$this->f_Bloqueo->ViewValue = $this->f_Bloqueo->CurrentValue;
@@ -937,11 +961,6 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->c_ICuenta->HrefValue = "";
 			$this->c_ICuenta->TooltipValue = "";
 
-			// c_IDestino
-			$this->c_IDestino->LinkCustomAttributes = "";
-			$this->c_IDestino->HrefValue = "";
-			$this->c_IDestino->TooltipValue = "";
-
 			// c_IChequeo
 			$this->c_IChequeo->LinkCustomAttributes = "";
 			$this->c_IChequeo->HrefValue = "";
@@ -951,6 +970,7 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 			$this->f_Bloqueo->LinkCustomAttributes = "";
 			$this->f_Bloqueo->HrefValue = "";
 			$this->f_Bloqueo->TooltipValue = "";
+			$this->f_Bloqueo->CellCssClass = $cusColor;
 		}
 
 		// Call Row Rendered event
@@ -1168,6 +1188,9 @@ class caf_chequeo_det_cuentas_list extends caf_chequeo_det_cuentas {
 		//$opt->Header = "xxx";
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
+		$opt = &$this->ListOptions->Add("opciones");
+		$opt->Header = "Opciones";
+		$opt->CssClass = "col-sm-1";
 
 	}
 
@@ -1246,7 +1269,7 @@ faf_chequeo_det_cuentaslist.ValidateRequired = false;
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_chequeo_det_cuentas_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_chequeo_det_cuentas_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_chequeo_det_cuentas_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1301,15 +1324,6 @@ $af_chequeo_det_cuentas_list->ListOptions->Render("header", "left");
 	<?php } else { ?>
 		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_ICuenta) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_ICuenta" class="af_chequeo_det_cuentas_c_ICuenta">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_ICuenta->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_ICuenta->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_ICuenta->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></td>
-	<?php } ?>
-<?php } ?>		
-<?php if ($af_chequeo_det_cuentas->c_IDestino->Visible) { // c_IDestino ?>
-	<?php if ($af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IDestino) == "") { ?>
-		<td><div id="elh_af_chequeo_det_cuentas_c_IDestino" class="af_chequeo_det_cuentas_c_IDestino"><div class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IDestino->FldCaption() ?></div></div></td>
-	<?php } else { ?>
-		<td><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $af_chequeo_det_cuentas->SortUrl($af_chequeo_det_cuentas->c_IDestino) ?>',2);"><div id="elh_af_chequeo_det_cuentas_c_IDestino" class="af_chequeo_det_cuentas_c_IDestino">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $af_chequeo_det_cuentas->c_IDestino->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($af_chequeo_det_cuentas->c_IDestino->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($af_chequeo_det_cuentas->c_IDestino->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></td>
 	<?php } ?>
 <?php } ?>		
@@ -1405,12 +1419,6 @@ $af_chequeo_det_cuentas_list->ListOptions->Render("body", "left", $af_chequeo_de
 		<td<?php echo $af_chequeo_det_cuentas->c_ICuenta->CellAttributes() ?>>
 <span<?php echo $af_chequeo_det_cuentas->c_ICuenta->ViewAttributes() ?>>
 <?php echo $af_chequeo_det_cuentas->c_ICuenta->ListViewValue() ?></span>
-</td>
-	<?php } ?>
-	<?php if ($af_chequeo_det_cuentas->c_IDestino->Visible) { // c_IDestino ?>
-		<td<?php echo $af_chequeo_det_cuentas->c_IDestino->CellAttributes() ?>>
-<span<?php echo $af_chequeo_det_cuentas->c_IDestino->ViewAttributes() ?>>
-<?php echo $af_chequeo_det_cuentas->c_IDestino->ListViewValue() ?></span>
 </td>
 	<?php } ?>
 	<?php if ($af_chequeo_det_cuentas->c_IChequeo->Visible) { // c_IChequeo ?>

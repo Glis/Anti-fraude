@@ -1,22 +1,23 @@
 <?php
 
 // Global variable for table object
-$af_chequeo_det_clientes = NULL;
+$af_chequeo_det_cuentas = NULL;
 
 //
-// Table class for af_chequeo_det_clientes
+// Table class for af_chequeo_det_cuentas
 //
-class caf_chequeo_det_clientes extends cTable {
+class caf_chequeo_det_cuentas extends cTable {
 	var $c_ICliente;
+	var $c_ICuenta;
 	var $c_IDestino;
 	var $c_IChequeo;
 	var $f_Bloqueo;
-	var $c_ICClass;
-	var $i_Bloqueo;
 	var $c_IReseller;
-	var $q_Min_Cliente;
-	var $f_Desbloqueo;
+	var $c_ICClass;
+	var $q_Min_Cuenta;
+	var $i_Bloqueo;
 	var $i_Alerta;
+	var $f_Desbloqueo;
 	var $i_Cuarentena;
 	var $c_Usuario_Desbloqueo;
 
@@ -28,8 +29,8 @@ class caf_chequeo_det_clientes extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 'af_chequeo_det_clientes';
-		$this->TableName = 'af_chequeo_det_clientes';
+		$this->TableVar = 'af_chequeo_det_cuentas';
+		$this->TableName = 'af_chequeo_det_cuentas';
 		$this->TableType = 'TABLE';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -45,56 +46,60 @@ class caf_chequeo_det_clientes extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// c_ICliente
-		$this->c_ICliente = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_ICliente', 'c_ICliente', '`c_ICliente`', '`c_ICliente`', 200, -1, FALSE, '`c_ICliente`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_ICliente = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_ICliente', 'c_ICliente', '`c_ICliente`', '`c_ICliente`', 200, -1, FALSE, '`c_ICliente`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_ICliente'] = &$this->c_ICliente;
 
+		// c_ICuenta
+		$this->c_ICuenta = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_ICuenta', 'c_ICuenta', '`c_ICuenta`', '`c_ICuenta`', 200, -1, FALSE, '`c_ICuenta`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->fields['c_ICuenta'] = &$this->c_ICuenta;
+
 		// c_IDestino
-		$this->c_IDestino = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_IDestino', 'c_IDestino', '`c_IDestino`', '`c_IDestino`', 200, -1, FALSE, '`c_IDestino`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_IDestino = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_IDestino', 'c_IDestino', '`c_IDestino`', '`c_IDestino`', 200, -1, FALSE, '`c_IDestino`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_IDestino'] = &$this->c_IDestino;
 
 		// c_IChequeo
-		$this->c_IChequeo = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_IChequeo', 'c_IChequeo', '`c_IChequeo`', '`c_IChequeo`', 3, -1, FALSE, '`c_IChequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_IChequeo = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_IChequeo', 'c_IChequeo', '`c_IChequeo`', '`c_IChequeo`', 3, -1, FALSE, '`c_IChequeo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->c_IChequeo->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['c_IChequeo'] = &$this->c_IChequeo;
 
 		// f_Bloqueo
-		$this->f_Bloqueo = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_f_Bloqueo', 'f_Bloqueo', '`f_Bloqueo`', '`f_Bloqueo`', 200, 9, FALSE, '`f_Bloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->f_Bloqueo = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_f_Bloqueo', 'f_Bloqueo', '`f_Bloqueo`', '`f_Bloqueo`', 200, 9, FALSE, '`f_Bloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['f_Bloqueo'] = &$this->f_Bloqueo;
 
+		// c_IReseller
+		$this->c_IReseller = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_IReseller', 'c_IReseller', '`c_IReseller`', '`c_IReseller`', 200, -1, FALSE, '`c_IReseller`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->fields['c_IReseller'] = &$this->c_IReseller;
+
 		// c_ICClass
-		$this->c_ICClass = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_ICClass', 'c_ICClass', '`c_ICClass`', '`c_ICClass`', 200, -1, FALSE, '`c_ICClass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_ICClass = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_ICClass', 'c_ICClass', '`c_ICClass`', '`c_ICClass`', 200, -1, FALSE, '`c_ICClass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_ICClass'] = &$this->c_ICClass;
 
+		// q_Min_Cuenta
+		$this->q_Min_Cuenta = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_q_Min_Cuenta', 'q_Min_Cuenta', '`q_Min_Cuenta`', '`q_Min_Cuenta`', 3, -1, FALSE, '`q_Min_Cuenta`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->q_Min_Cuenta->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['q_Min_Cuenta'] = &$this->q_Min_Cuenta;
+
 		// i_Bloqueo
-		$this->i_Bloqueo = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_i_Bloqueo', 'i_Bloqueo', '`i_Bloqueo`', '`i_Bloqueo`', 3, -1, FALSE, '`i_Bloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->i_Bloqueo = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_i_Bloqueo', 'i_Bloqueo', '`i_Bloqueo`', '`i_Bloqueo`', 3, -1, FALSE, '`i_Bloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->i_Bloqueo->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['i_Bloqueo'] = &$this->i_Bloqueo;
 
-		// c_IReseller
-		$this->c_IReseller = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_IReseller', 'c_IReseller', '`c_IReseller`', '`c_IReseller`', 200, -1, FALSE, '`c_IReseller`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->fields['c_IReseller'] = &$this->c_IReseller;
-
-		// q_Min_Cliente
-		$this->q_Min_Cliente = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_q_Min_Cliente', 'q_Min_Cliente', '`q_Min_Cliente`', '`q_Min_Cliente`', 3, -1, FALSE, '`q_Min_Cliente`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->q_Min_Cliente->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['q_Min_Cliente'] = &$this->q_Min_Cliente;
-
-		// f_Desbloqueo
-		$this->f_Desbloqueo = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_f_Desbloqueo', 'f_Desbloqueo', '`f_Desbloqueo`', '`f_Desbloqueo`', 200, -1, FALSE, '`f_Desbloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
-		$this->fields['f_Desbloqueo'] = &$this->f_Desbloqueo;
-
 		// i_Alerta
-		$this->i_Alerta = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_i_Alerta', 'i_Alerta', '`i_Alerta`', '`i_Alerta`', 3, -1, FALSE, '`i_Alerta`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->i_Alerta = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_i_Alerta', 'i_Alerta', '`i_Alerta`', '`i_Alerta`', 3, -1, FALSE, '`i_Alerta`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->i_Alerta->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['i_Alerta'] = &$this->i_Alerta;
 
+		// f_Desbloqueo
+		$this->f_Desbloqueo = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_f_Desbloqueo', 'f_Desbloqueo', '`f_Desbloqueo`', '`f_Desbloqueo`', 200, -1, FALSE, '`f_Desbloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->fields['f_Desbloqueo'] = &$this->f_Desbloqueo;
+
 		// i_Cuarentena
-		$this->i_Cuarentena = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_i_Cuarentena', 'i_Cuarentena', '`i_Cuarentena`', '`i_Cuarentena`', 3, -1, FALSE, '`i_Cuarentena`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->i_Cuarentena = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_i_Cuarentena', 'i_Cuarentena', '`i_Cuarentena`', '`i_Cuarentena`', 3, -1, FALSE, '`i_Cuarentena`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->i_Cuarentena->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['i_Cuarentena'] = &$this->i_Cuarentena;
 
 		// c_Usuario_Desbloqueo
-		$this->c_Usuario_Desbloqueo = new cField('af_chequeo_det_clientes', 'af_chequeo_det_clientes', 'x_c_Usuario_Desbloqueo', 'c_Usuario_Desbloqueo', '`c_Usuario_Desbloqueo`', '`c_Usuario_Desbloqueo`', 200, -1, FALSE, '`c_Usuario_Desbloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
+		$this->c_Usuario_Desbloqueo = new cField('af_chequeo_det_cuentas', 'af_chequeo_det_cuentas', 'x_c_Usuario_Desbloqueo', 'c_Usuario_Desbloqueo', '`c_Usuario_Desbloqueo`', '`c_Usuario_Desbloqueo`', 200, -1, FALSE, '`c_Usuario_Desbloqueo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT');
 		$this->fields['c_Usuario_Desbloqueo'] = &$this->c_Usuario_Desbloqueo;
 	}
 
@@ -128,7 +133,7 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// Table level SQL
 	function SqlFrom() { // From
-		return "`af_chequeo_det_clientes`";
+		return "`af_chequeo_det_cuentas`";
 	}
 
 	function SqlSelect() { // Select
@@ -300,7 +305,7 @@ class caf_chequeo_det_clientes extends cTable {
 	}
 
 	// Update Table
-	var $UpdateTable = "`af_chequeo_det_clientes`";
+	var $UpdateTable = "`af_chequeo_det_cuentas`";
 
 	// INSERT statement
 	function InsertSQL(&$rs) {
@@ -355,14 +360,16 @@ class caf_chequeo_det_clientes extends cTable {
 		if ($rs) {
 			if (array_key_exists('c_ICliente', $rs))
 				ew_AddFilter($where, ew_QuotedName('c_ICliente') . '=' . ew_QuotedValue($rs['c_ICliente'], $this->c_ICliente->FldDataType));
+			if (array_key_exists('c_ICuenta', $rs))
+				ew_AddFilter($where, ew_QuotedName('c_ICuenta') . '=' . ew_QuotedValue($rs['c_ICuenta'], $this->c_ICuenta->FldDataType));
 			if (array_key_exists('c_IDestino', $rs))
 				ew_AddFilter($where, ew_QuotedName('c_IDestino') . '=' . ew_QuotedValue($rs['c_IDestino'], $this->c_IDestino->FldDataType));
 			if (array_key_exists('c_IChequeo', $rs))
 				ew_AddFilter($where, ew_QuotedName('c_IChequeo') . '=' . ew_QuotedValue($rs['c_IChequeo'], $this->c_IChequeo->FldDataType));
-			if (array_key_exists('c_ICClass', $rs))
-				ew_AddFilter($where, ew_QuotedName('c_ICClass') . '=' . ew_QuotedValue($rs['c_ICClass'], $this->c_ICClass->FldDataType));
 			if (array_key_exists('c_IReseller', $rs))
 				ew_AddFilter($where, ew_QuotedName('c_IReseller') . '=' . ew_QuotedValue($rs['c_IReseller'], $this->c_IReseller->FldDataType));
+			if (array_key_exists('c_ICClass', $rs))
+				ew_AddFilter($where, ew_QuotedName('c_ICClass') . '=' . ew_QuotedValue($rs['c_ICClass'], $this->c_ICClass->FldDataType));
 		}
 		$filter = $this->CurrentFilter;
 		ew_AddFilter($filter, $where);
@@ -381,19 +388,20 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`c_ICliente` = '@c_ICliente@' AND `c_IDestino` = '@c_IDestino@' AND `c_IChequeo` = @c_IChequeo@ AND `c_ICClass` = '@c_ICClass@' AND `c_IReseller` = '@c_IReseller@'";
+		return "`c_ICliente` = '@c_ICliente@' AND `c_ICuenta` = '@c_ICuenta@' AND `c_IDestino` = '@c_IDestino@' AND `c_IChequeo` = @c_IChequeo@ AND `c_IReseller` = '@c_IReseller@' AND `c_ICClass` = '@c_ICClass@'";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
 		$sKeyFilter = str_replace("@c_ICliente@", ew_AdjustSql($this->c_ICliente->CurrentValue), $sKeyFilter); // Replace key value
+		$sKeyFilter = str_replace("@c_ICuenta@", ew_AdjustSql($this->c_ICuenta->CurrentValue), $sKeyFilter); // Replace key value
 		$sKeyFilter = str_replace("@c_IDestino@", ew_AdjustSql($this->c_IDestino->CurrentValue), $sKeyFilter); // Replace key value
 		if (!is_numeric($this->c_IChequeo->CurrentValue))
 			$sKeyFilter = "0=1"; // Invalid key
 		$sKeyFilter = str_replace("@c_IChequeo@", ew_AdjustSql($this->c_IChequeo->CurrentValue), $sKeyFilter); // Replace key value
-		$sKeyFilter = str_replace("@c_ICClass@", ew_AdjustSql($this->c_ICClass->CurrentValue), $sKeyFilter); // Replace key value
 		$sKeyFilter = str_replace("@c_IReseller@", ew_AdjustSql($this->c_IReseller->CurrentValue), $sKeyFilter); // Replace key value
+		$sKeyFilter = str_replace("@c_ICClass@", ew_AdjustSql($this->c_ICClass->CurrentValue), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -407,7 +415,7 @@ class caf_chequeo_det_clientes extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "af_chequeo_det_clienteslist.php";
+			return "af_chequeo_det_cuentaslist.php";
 		}
 	}
 
@@ -417,25 +425,25 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "af_chequeo_det_clienteslist.php";
+		return "af_chequeo_det_cuentaslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			return $this->KeyUrl("af_chequeo_det_clientesview.php", $this->UrlParm($parm));
+			return $this->KeyUrl("af_chequeo_det_cuentasview.php", $this->UrlParm($parm));
 		else
-			return $this->KeyUrl("af_chequeo_det_clientesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			return $this->KeyUrl("af_chequeo_det_cuentasview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 	}
 
 	// Add URL
 	function GetAddUrl() {
-		return "af_chequeo_det_clientesadd.php";
+		return "af_chequeo_det_cuentasadd.php";
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		return $this->KeyUrl("af_chequeo_det_clientesedit.php", $this->UrlParm($parm));
+		return $this->KeyUrl("af_chequeo_det_cuentasedit.php", $this->UrlParm($parm));
 	}
 
 	// Inline edit URL
@@ -445,7 +453,7 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		return $this->KeyUrl("af_chequeo_det_clientesadd.php", $this->UrlParm($parm));
+		return $this->KeyUrl("af_chequeo_det_cuentasadd.php", $this->UrlParm($parm));
 	}
 
 	// Inline copy URL
@@ -455,7 +463,7 @@ class caf_chequeo_det_clientes extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("af_chequeo_det_clientesdelete.php", $this->UrlParm());
+		return $this->KeyUrl("af_chequeo_det_cuentasdelete.php", $this->UrlParm());
 	}
 
 	// Add key value to URL
@@ -464,6 +472,11 @@ class caf_chequeo_det_clientes extends cTable {
 		if ($parm <> "") $sUrl .= $parm . "&";
 		if (!is_null($this->c_ICliente->CurrentValue)) {
 			$sUrl .= "c_ICliente=" . urlencode($this->c_ICliente->CurrentValue);
+		} else {
+			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
+		}
+		if (!is_null($this->c_ICuenta->CurrentValue)) {
+			$sUrl .= "&c_ICuenta=" . urlencode($this->c_ICuenta->CurrentValue);
 		} else {
 			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -477,13 +490,13 @@ class caf_chequeo_det_clientes extends cTable {
 		} else {
 			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->c_ICClass->CurrentValue)) {
-			$sUrl .= "&c_ICClass=" . urlencode($this->c_ICClass->CurrentValue);
+		if (!is_null($this->c_IReseller->CurrentValue)) {
+			$sUrl .= "&c_IReseller=" . urlencode($this->c_IReseller->CurrentValue);
 		} else {
 			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->c_IReseller->CurrentValue)) {
-			$sUrl .= "&c_IReseller=" . urlencode($this->c_IReseller->CurrentValue);
+		if (!is_null($this->c_ICClass->CurrentValue)) {
+			$sUrl .= "&c_ICClass=" . urlencode($this->c_ICClass->CurrentValue);
 		} else {
 			return "javascript:alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -520,10 +533,11 @@ class caf_chequeo_det_clientes extends cTable {
 				$arKeys[$i] = explode($EW_COMPOSITE_KEY_SEPARATOR, $arKeys[$i]);
 		} elseif (isset($_GET)) {
 			$arKey[] = @$_GET["c_ICliente"]; // c_ICliente
+			$arKey[] = @$_GET["c_ICuenta"]; // c_ICuenta
 			$arKey[] = @$_GET["c_IDestino"]; // c_IDestino
 			$arKey[] = @$_GET["c_IChequeo"]; // c_IChequeo
-			$arKey[] = @$_GET["c_ICClass"]; // c_ICClass
 			$arKey[] = @$_GET["c_IReseller"]; // c_IReseller
+			$arKey[] = @$_GET["c_ICClass"]; // c_ICClass
 			$arKeys[] = $arKey;
 
 			//return $arKeys; // Do not return yet, so the values will also be checked by the following code
@@ -532,9 +546,9 @@ class caf_chequeo_det_clientes extends cTable {
 		// Check keys
 		$ar = array();
 		foreach ($arKeys as $key) {
-			if (!is_array($key) || count($key) <> 5)
+			if (!is_array($key) || count($key) <> 6)
 				continue; // Just skip so other keys will still work
-			if (!is_numeric($key[2])) // c_IChequeo
+			if (!is_numeric($key[3])) // c_IChequeo
 				continue;
 			$ar[] = $key;
 		}
@@ -548,10 +562,11 @@ class caf_chequeo_det_clientes extends cTable {
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
 			$this->c_ICliente->CurrentValue = $key[0];
-			$this->c_IDestino->CurrentValue = $key[1];
-			$this->c_IChequeo->CurrentValue = $key[2];
-			$this->c_ICClass->CurrentValue = $key[3];
+			$this->c_ICuenta->CurrentValue = $key[1];
+			$this->c_IDestino->CurrentValue = $key[2];
+			$this->c_IChequeo->CurrentValue = $key[3];
 			$this->c_IReseller->CurrentValue = $key[4];
+			$this->c_ICClass->CurrentValue = $key[5];
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -573,15 +588,16 @@ class caf_chequeo_det_clientes extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->c_ICliente->setDbValue($rs->fields('c_ICliente'));
+		$this->c_ICuenta->setDbValue($rs->fields('c_ICuenta'));
 		$this->c_IDestino->setDbValue($rs->fields('c_IDestino'));
 		$this->c_IChequeo->setDbValue($rs->fields('c_IChequeo'));
 		$this->f_Bloqueo->setDbValue($rs->fields('f_Bloqueo'));
-		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
-		$this->i_Bloqueo->setDbValue($rs->fields('i_Bloqueo'));
 		$this->c_IReseller->setDbValue($rs->fields('c_IReseller'));
-		$this->q_Min_Cliente->setDbValue($rs->fields('q_Min_Cliente'));
-		$this->f_Desbloqueo->setDbValue($rs->fields('f_Desbloqueo'));
+		$this->c_ICClass->setDbValue($rs->fields('c_ICClass'));
+		$this->q_Min_Cuenta->setDbValue($rs->fields('q_Min_Cuenta'));
+		$this->i_Bloqueo->setDbValue($rs->fields('i_Bloqueo'));
 		$this->i_Alerta->setDbValue($rs->fields('i_Alerta'));
+		$this->f_Desbloqueo->setDbValue($rs->fields('f_Desbloqueo'));
 		$this->i_Cuarentena->setDbValue($rs->fields('i_Cuarentena'));
 		$this->c_Usuario_Desbloqueo->setDbValue($rs->fields('c_Usuario_Desbloqueo'));
 	}
@@ -595,21 +611,26 @@ class caf_chequeo_det_clientes extends cTable {
 
    // Common render codes
 		// c_ICliente
+		// c_ICuenta
 		// c_IDestino
 		// c_IChequeo
 		// f_Bloqueo
-		// c_ICClass
-		// i_Bloqueo
 		// c_IReseller
-		// q_Min_Cliente
-		// f_Desbloqueo
+		// c_ICClass
+		// q_Min_Cuenta
+		// i_Bloqueo
 		// i_Alerta
+		// f_Desbloqueo
 		// i_Cuarentena
 		// c_Usuario_Desbloqueo
 		// c_ICliente
 
 		$this->c_ICliente->ViewValue = $this->c_ICliente->CurrentValue;
 		$this->c_ICliente->ViewCustomAttributes = "";
+
+		// c_ICuenta
+		$this->c_ICuenta->ViewValue = $this->c_ICuenta->CurrentValue;
+		$this->c_ICuenta->ViewCustomAttributes = "";
 
 		// c_IDestino
 		$this->c_IDestino->ViewValue = $this->c_IDestino->CurrentValue;
@@ -624,29 +645,29 @@ class caf_chequeo_det_clientes extends cTable {
 		$this->f_Bloqueo->ViewValue = ew_FormatDateTime($this->f_Bloqueo->ViewValue, 9);
 		$this->f_Bloqueo->ViewCustomAttributes = "";
 
+		// c_IReseller
+		$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
+		$this->c_IReseller->ViewCustomAttributes = "";
+
 		// c_ICClass
 		$this->c_ICClass->ViewValue = $this->c_ICClass->CurrentValue;
 		$this->c_ICClass->ViewCustomAttributes = "";
+
+		// q_Min_Cuenta
+		$this->q_Min_Cuenta->ViewValue = $this->q_Min_Cuenta->CurrentValue;
+		$this->q_Min_Cuenta->ViewCustomAttributes = "";
 
 		// i_Bloqueo
 		$this->i_Bloqueo->ViewValue = $this->i_Bloqueo->CurrentValue;
 		$this->i_Bloqueo->ViewCustomAttributes = "";
 
-		// c_IReseller
-		$this->c_IReseller->ViewValue = $this->c_IReseller->CurrentValue;
-		$this->c_IReseller->ViewCustomAttributes = "";
-
-		// q_Min_Cliente
-		$this->q_Min_Cliente->ViewValue = $this->q_Min_Cliente->CurrentValue;
-		$this->q_Min_Cliente->ViewCustomAttributes = "";
+		// i_Alerta
+		$this->i_Alerta->ViewValue = $this->i_Alerta->CurrentValue;
+		$this->i_Alerta->ViewCustomAttributes = "";
 
 		// f_Desbloqueo
 		$this->f_Desbloqueo->ViewValue = $this->f_Desbloqueo->CurrentValue;
 		$this->f_Desbloqueo->ViewCustomAttributes = "";
-
-		// i_Alerta
-		$this->i_Alerta->ViewValue = $this->i_Alerta->CurrentValue;
-		$this->i_Alerta->ViewCustomAttributes = "";
 
 		// i_Cuarentena
 		$this->i_Cuarentena->ViewValue = $this->i_Cuarentena->CurrentValue;
@@ -660,6 +681,11 @@ class caf_chequeo_det_clientes extends cTable {
 		$this->c_ICliente->LinkCustomAttributes = "";
 		$this->c_ICliente->HrefValue = "";
 		$this->c_ICliente->TooltipValue = "";
+
+		// c_ICuenta
+		$this->c_ICuenta->LinkCustomAttributes = "";
+		$this->c_ICuenta->HrefValue = "";
+		$this->c_ICuenta->TooltipValue = "";
 
 		// c_IDestino
 		$this->c_IDestino->LinkCustomAttributes = "";
@@ -676,35 +702,35 @@ class caf_chequeo_det_clientes extends cTable {
 		$this->f_Bloqueo->HrefValue = "";
 		$this->f_Bloqueo->TooltipValue = "";
 
+		// c_IReseller
+		$this->c_IReseller->LinkCustomAttributes = "";
+		$this->c_IReseller->HrefValue = "";
+		$this->c_IReseller->TooltipValue = "";
+
 		// c_ICClass
 		$this->c_ICClass->LinkCustomAttributes = "";
 		$this->c_ICClass->HrefValue = "";
 		$this->c_ICClass->TooltipValue = "";
+
+		// q_Min_Cuenta
+		$this->q_Min_Cuenta->LinkCustomAttributes = "";
+		$this->q_Min_Cuenta->HrefValue = "";
+		$this->q_Min_Cuenta->TooltipValue = "";
 
 		// i_Bloqueo
 		$this->i_Bloqueo->LinkCustomAttributes = "";
 		$this->i_Bloqueo->HrefValue = "";
 		$this->i_Bloqueo->TooltipValue = "";
 
-		// c_IReseller
-		$this->c_IReseller->LinkCustomAttributes = "";
-		$this->c_IReseller->HrefValue = "";
-		$this->c_IReseller->TooltipValue = "";
-
-		// q_Min_Cliente
-		$this->q_Min_Cliente->LinkCustomAttributes = "";
-		$this->q_Min_Cliente->HrefValue = "";
-		$this->q_Min_Cliente->TooltipValue = "";
+		// i_Alerta
+		$this->i_Alerta->LinkCustomAttributes = "";
+		$this->i_Alerta->HrefValue = "";
+		$this->i_Alerta->TooltipValue = "";
 
 		// f_Desbloqueo
 		$this->f_Desbloqueo->LinkCustomAttributes = "";
 		$this->f_Desbloqueo->HrefValue = "";
 		$this->f_Desbloqueo->TooltipValue = "";
-
-		// i_Alerta
-		$this->i_Alerta->LinkCustomAttributes = "";
-		$this->i_Alerta->HrefValue = "";
-		$this->i_Alerta->TooltipValue = "";
 
 		// i_Cuarentena
 		$this->i_Cuarentena->LinkCustomAttributes = "";
@@ -738,29 +764,18 @@ class caf_chequeo_det_clientes extends cTable {
 		if ($Doc->Horizontal) { // Horizontal format, write header
 			$Doc->BeginExportRow();
 			if ($ExportPageType == "view") {
-				if ($this->c_ICliente->Exportable) $Doc->ExportCaption($this->c_ICliente);
-				if ($this->c_IDestino->Exportable) $Doc->ExportCaption($this->c_IDestino);
-				if ($this->c_IChequeo->Exportable) $Doc->ExportCaption($this->c_IChequeo);
-				if ($this->f_Bloqueo->Exportable) $Doc->ExportCaption($this->f_Bloqueo);
-				if ($this->c_ICClass->Exportable) $Doc->ExportCaption($this->c_ICClass);
-				if ($this->i_Bloqueo->Exportable) $Doc->ExportCaption($this->i_Bloqueo);
-				if ($this->c_IReseller->Exportable) $Doc->ExportCaption($this->c_IReseller);
-				if ($this->q_Min_Cliente->Exportable) $Doc->ExportCaption($this->q_Min_Cliente);
-				if ($this->f_Desbloqueo->Exportable) $Doc->ExportCaption($this->f_Desbloqueo);
-				if ($this->i_Alerta->Exportable) $Doc->ExportCaption($this->i_Alerta);
-				if ($this->i_Cuarentena->Exportable) $Doc->ExportCaption($this->i_Cuarentena);
-				if ($this->c_Usuario_Desbloqueo->Exportable) $Doc->ExportCaption($this->c_Usuario_Desbloqueo);
 			} else {
 				if ($this->c_ICliente->Exportable) $Doc->ExportCaption($this->c_ICliente);
+				if ($this->c_ICuenta->Exportable) $Doc->ExportCaption($this->c_ICuenta);
 				if ($this->c_IDestino->Exportable) $Doc->ExportCaption($this->c_IDestino);
 				if ($this->c_IChequeo->Exportable) $Doc->ExportCaption($this->c_IChequeo);
 				if ($this->f_Bloqueo->Exportable) $Doc->ExportCaption($this->f_Bloqueo);
-				if ($this->c_ICClass->Exportable) $Doc->ExportCaption($this->c_ICClass);
-				if ($this->i_Bloqueo->Exportable) $Doc->ExportCaption($this->i_Bloqueo);
 				if ($this->c_IReseller->Exportable) $Doc->ExportCaption($this->c_IReseller);
-				if ($this->q_Min_Cliente->Exportable) $Doc->ExportCaption($this->q_Min_Cliente);
-				if ($this->f_Desbloqueo->Exportable) $Doc->ExportCaption($this->f_Desbloqueo);
+				if ($this->c_ICClass->Exportable) $Doc->ExportCaption($this->c_ICClass);
+				if ($this->q_Min_Cuenta->Exportable) $Doc->ExportCaption($this->q_Min_Cuenta);
+				if ($this->i_Bloqueo->Exportable) $Doc->ExportCaption($this->i_Bloqueo);
 				if ($this->i_Alerta->Exportable) $Doc->ExportCaption($this->i_Alerta);
+				if ($this->f_Desbloqueo->Exportable) $Doc->ExportCaption($this->f_Desbloqueo);
 				if ($this->i_Cuarentena->Exportable) $Doc->ExportCaption($this->i_Cuarentena);
 				if ($this->c_Usuario_Desbloqueo->Exportable) $Doc->ExportCaption($this->c_Usuario_Desbloqueo);
 			}
@@ -792,29 +807,18 @@ class caf_chequeo_det_clientes extends cTable {
 				$this->RenderListRow();
 				$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 				if ($ExportPageType == "view") {
-					if ($this->c_ICliente->Exportable) $Doc->ExportField($this->c_ICliente);
-					if ($this->c_IDestino->Exportable) $Doc->ExportField($this->c_IDestino);
-					if ($this->c_IChequeo->Exportable) $Doc->ExportField($this->c_IChequeo);
-					if ($this->f_Bloqueo->Exportable) $Doc->ExportField($this->f_Bloqueo);
-					if ($this->c_ICClass->Exportable) $Doc->ExportField($this->c_ICClass);
-					if ($this->i_Bloqueo->Exportable) $Doc->ExportField($this->i_Bloqueo);
-					if ($this->c_IReseller->Exportable) $Doc->ExportField($this->c_IReseller);
-					if ($this->q_Min_Cliente->Exportable) $Doc->ExportField($this->q_Min_Cliente);
-					if ($this->f_Desbloqueo->Exportable) $Doc->ExportField($this->f_Desbloqueo);
-					if ($this->i_Alerta->Exportable) $Doc->ExportField($this->i_Alerta);
-					if ($this->i_Cuarentena->Exportable) $Doc->ExportField($this->i_Cuarentena);
-					if ($this->c_Usuario_Desbloqueo->Exportable) $Doc->ExportField($this->c_Usuario_Desbloqueo);
 				} else {
 					if ($this->c_ICliente->Exportable) $Doc->ExportField($this->c_ICliente);
+					if ($this->c_ICuenta->Exportable) $Doc->ExportField($this->c_ICuenta);
 					if ($this->c_IDestino->Exportable) $Doc->ExportField($this->c_IDestino);
 					if ($this->c_IChequeo->Exportable) $Doc->ExportField($this->c_IChequeo);
 					if ($this->f_Bloqueo->Exportable) $Doc->ExportField($this->f_Bloqueo);
-					if ($this->c_ICClass->Exportable) $Doc->ExportField($this->c_ICClass);
-					if ($this->i_Bloqueo->Exportable) $Doc->ExportField($this->i_Bloqueo);
 					if ($this->c_IReseller->Exportable) $Doc->ExportField($this->c_IReseller);
-					if ($this->q_Min_Cliente->Exportable) $Doc->ExportField($this->q_Min_Cliente);
-					if ($this->f_Desbloqueo->Exportable) $Doc->ExportField($this->f_Desbloqueo);
+					if ($this->c_ICClass->Exportable) $Doc->ExportField($this->c_ICClass);
+					if ($this->q_Min_Cuenta->Exportable) $Doc->ExportField($this->q_Min_Cuenta);
+					if ($this->i_Bloqueo->Exportable) $Doc->ExportField($this->i_Bloqueo);
 					if ($this->i_Alerta->Exportable) $Doc->ExportField($this->i_Alerta);
+					if ($this->f_Desbloqueo->Exportable) $Doc->ExportField($this->f_Desbloqueo);
 					if ($this->i_Cuarentena->Exportable) $Doc->ExportField($this->i_Cuarentena);
 					if ($this->c_Usuario_Desbloqueo->Exportable) $Doc->ExportField($this->c_Usuario_Desbloqueo);
 				}
