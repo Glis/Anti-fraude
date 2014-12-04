@@ -431,6 +431,10 @@ Dropdown Submenus
   color: white !important;
 }
 
+.left_align_text{
+	text-align: left;
+}
+
 
 /*
 *  Tooltips

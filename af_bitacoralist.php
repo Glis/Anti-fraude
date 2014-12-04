@@ -7,7 +7,64 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn10.php" ?>
 <?php include_once "af_bitacorainfo.php" ?>
 <?php include_once "userfn10.php" ?>
+<?php include_once "lib/libreriaBD.php" ?>
+
 <?php
+
+if(!isset($_SESSION['USUARIO']))
+{
+  header("Location: login.php");
+  exit;
+} 
+
+function is_On($value){
+  return (intval($value) > 1);
+}
+
+$order="";
+$orderType=" ASC";
+$bitacorasCount = 0;
+
+function toggleOrderType(){
+  if($orderType == " ASC"){
+    $orderType = " DESC";
+  }else{
+    $orderType = " ASC";
+  }
+}
+
+function changeDate($date){
+  $newdate = "";
+  // YYYY-MM-DD
+  $parts = explode("-",$date);
+  $newdate = $parts[2]."/".$parts[1]."/".$parts[0];
+  return $newdate;
+}
+
+if (isset($_POST['initialDateFil']) && isset($_POST['endDateFil']) && isset($_POST['procNameFil'])) {
+
+  $where = "STR_TO_DATE(f_Inicio,'%d/%m/%Y') >= STR_TO_DATE('".changeDate($_POST['initialDateFil'])."','%d/%m/%Y') and STR_TO_DATE(f_Fin,'%d/%m/%Y') <= STR_TO_DATE('".changeDate($_POST['endDateFil'])."','%d/%m/%Y')";
+
+  if($_POST['procNameFil'] <> '0'){
+    $where .= " and t_proc = ".$_POST['procNameFil'];
+  }
+  if(isset($_POST['statusFilt'])){
+    if($_POST['statusFilt'] <> '-1'){
+      $where .= " and st_Bitacora = ".$_POST['statusFilt']; 
+    }
+  }
+  if(isset($_POST['execIdFil'])){
+    if($_POST['execIdFil'] <> ""){
+      $where .= " and c_IEjecucion = ".$_POST['execIdFil'];
+    }
+  }
+  
+  /*echo "<h2>POST: initialDateFil:".$_POST['initialDateFil']." endDateFil:".$_POST['endDateFil']." procNameFil:".$_POST['procNameFil']." statusFilt:".$_POST['statusFilt']." execIdFil:".$_POST['execIdFil']."</h2>";
+  echo "<h2>".print_custom_sql("*","af_bitacora",$where,"", "")."</h2>";*/
+
+  // $bitacoras=select_custom_sql("*","af_bitacora",$where,"", "");
+  // $bitacorasCount = count($bitacoras);
+}
 
 //
 // Page class
@@ -836,11 +893,13 @@ class caf_bitacora_list extends caf_bitacora {
 			$this->c_IEjecucion->ViewCustomAttributes = "";
 
 			// t_proc
-			$this->t_proc->ViewValue = $this->t_proc->CurrentValue;
+			$result = select_sql("select_dominio_low",array("DNIO_TIPO_PROCESO",$this->t_proc->CurrentValue));
+			$this->t_proc->ViewValue = $result[1]['rv_Meaning'];
 			$this->t_proc->ViewCustomAttributes = "";
 
 			// st_Bitacora
-			$this->st_Bitacora->ViewValue = $this->st_Bitacora->CurrentValue;
+			$result = select_sql("select_dominio_low",array("DNIO_ST_BITACORA",$this->st_Bitacora->CurrentValue));
+			$this->st_Bitacora->ViewValue = $result[1]['rv_Meaning'];
 			$this->st_Bitacora->ViewCustomAttributes = "";
 
 			// f_Inicio
@@ -1106,6 +1165,12 @@ class caf_bitacora_list extends caf_bitacora {
 		//$opt->OnLeft = TRUE; // Link on left
 		//$opt->MoveTo(0); // Move to first column
 
+		$opt = &$this->ListOptions->Add("plustoggle");
+		$opt->Header = "";
+		$opt->CssClass = "iconCol";
+		$opt->OnLeft = TRUE; // Link on left
+		// $opt->MoveTo(1); // Move to first column
+
 	}
 
 	// ListOptions Rendered event
@@ -1113,6 +1178,7 @@ class caf_bitacora_list extends caf_bitacora {
 
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
+		$this->ListOptions->Items["plustoggle"]->Body = "<a href='#obs-".$this->c_IEjecucion->CurrentValue."' data-toggle='collapse'><span class='glyphicon glyphicon-plus'></span></a>";
 
 	}
 
@@ -1183,7 +1249,7 @@ faf_bitacoralist.ValidateRequired = false;
 <?php $Breadcrumb->Render(); ?>
 <?php } ?>
 <?php if ($af_bitacora_list->ExportOptions->Visible()) { ?>
-<div class="ewListExportOptions"><?php $af_bitacora_list->ExportOptions->Render("body") ?></div>
+<div id="page_title" class="ewListExportOptions"><?php $af_bitacora_list->ExportOptions->Render("body") ?></div>
 <?php } ?>
 <?php
 	$bSelectLimit = EW_SELECT_LIMIT;
@@ -1206,6 +1272,71 @@ $af_bitacora_list->RenderOtherOptions();
 <?php
 $af_bitacora_list->ShowMessage();
 ?>
+
+							<?/******************************************************
+							************************FILTROS**************************
+							*********************************************************/?>
+
+<form role="form" action="" method="post">
+    <div class="row">
+      <div class="col-xs-3">
+        <div class="form-group">
+          <label for="initialDateFil">Fecha desde</label>
+          <input type="date" required class="form-control" id="initialDateFil" name="initialDateFil">
+        </div>
+      </div>
+      <div class="col-xs-3">
+        <div class="form-group">
+          <label for="endDateFil">Fecha hasta</label>
+          <input type="date" required class="form-control" id="endDateFil"  name="endDateFil">
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+          <label for="procNameFil">Tipo de reporte o proceso</label>
+          <select id= "procNameFil" required class= "form-control" name="procNameFil">
+            <option value='0'>Todos</option>
+            <?php 
+            $dom_tipProc = select_sql('select_dominio', 'DNIO_TIPO_PROCESO');
+            foreach ($dom_tipProc as $tipProc) {
+              echo "<option value= ".$tipProc['rv_Low_Value']. ">". $tipProc['rv_Meaning'] ."</option>";
+            }
+            ?>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-5">
+        <div class="form-group">
+          <label for="statusFilt">Estatus</label>
+          <select id= "statusFilt" name="statusFilt" class= "form-control">
+            <option value ='-1'>Todos</option>
+            <?php 
+            $dom_status = select_sql('select_dominio', 'DNIO_ST_BITACORA');
+            foreach ($dom_status as $status) {
+              echo "<option value= ".$status['rv_Low_Value']. ">". $status['rv_Meaning'] ."</option>";
+            }
+            ?>
+          </select>
+        </div>
+      </div>
+      <div class="col-xs-5">
+        <div class="form-group">
+          <label for="execIdFil">ID de ejecución</label>
+          <input type="text" class="form-control" id="execIdFil" name="execIdFil">
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <button type="submit" class="btn btn-primary" id="submit_filtros">Mostrar</button>
+      </div>
+    </div>
+  </form>
+
+							<?/******************************************************
+							************************ENDFILTROS***********************
+							*********************************************************/?>
+
 <table class="ewGrid"><tr><td class="ewGridContent">
 <form name="faf_bitacoralist" id="faf_bitacoralist" class="ewForm form-inline" action="<?php echo ew_CurrentPage() ?>" method="post">
 <input type="hidden" name="t" value="af_bitacora">
@@ -1383,7 +1514,12 @@ $af_bitacora_list->ListOptions->Render("body", "left", $af_bitacora_list->RowCnt
 $af_bitacora_list->ListOptions->Render("body", "right", $af_bitacora_list->RowCnt);
 ?>
 	</tr>
+	<tr id="obs-<? echo $af_bitacora->c_IEjecucion->ListViewValue(); ?>" class="collapse">
+		<td></td>
+		<td colspan="6" class="left_align_text"><b>Observaciones: </b><? echo $af_bitacora->x_Obs->ListViewValue(); ?></td>
+	</tr>
 <?php
+
 	}
 	if ($af_bitacora->CurrentAction <> "gridadd")
 		$af_bitacora_list->Recordset->MoveNext();
@@ -1476,6 +1612,72 @@ if (EW_DEBUG_ENABLED)
 
 </script>
 <?php } ?>
+
+<script>
+  var now = new Date();
+  var day = ("0" + now.getDate()).slice(-2);
+  var month = ("0" + (now.getMonth() + 1)).slice(-2);
+  var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+  $('#initialDateFil').val(today);
+  $('#endDateFil').val(today);
+  $('#initialDateFil').attr("max",today);
+  $('#endDateFil').attr("max",today);
+
+  //plus icon toggle
+  $("a>span.glyphicon").on('click', function(){
+    console.log("hice click en un mas "+$(this).html());
+    var icon = $(this); 
+    if(icon.hasClass("glyphicon-plus")){
+      icon.removeClass( "glyphicon-plus" ).addClass( "glyphicon-minus" );
+    }else if (icon.hasClass("glyphicon-minus")){
+      setTimeout(function(){
+        icon.removeClass( "glyphicon-minus" ).addClass( "glyphicon-plus" );
+      }, 400);
+    }
+  });
+
+  /*$('#bit_table>tbody>tr>th').on('click',function(){
+    $.ajax ({
+        type: "POST",
+        url: "af_bitacora.php",
+        data: { orderby : $(this).attr("id") }, 
+        success: function( result ) {
+          console.log("HICE CLICK EN UN TH: "+$(this).attr("id")+"");
+        }
+    });
+});*/
+</script>
+
+<?php 
+  if(isset($_POST['initialDateFil']) && isset($_POST['endDateFil'])){
+?>
+  <script>
+  var initDate = "<?php echo $_POST['initialDateFil'] ?>";
+  var endDate = "<?php echo $_POST['endDateFil'] ?>";
+  var typeProcess = "<?php echo $_POST['procNameFil'] ?>";
+  var status = "<?php echo $_POST['statusFilt'] ?>";
+  var execID = "<?php echo $_POST['execIdFil'] ?>";
+  
+  if(initDate != ""){
+    $('#initialDateFil').val(initDate);
+  }
+  if(endDate != ""){
+    $('#endDateFil').val(endDate);  
+  }
+  if(typeProcess != ""){
+    $('#procNameFil').val(typeProcess);  
+  }
+  if(status != ""){
+    $('#statusFilt').val(status);  
+  }
+  if(execID != ""){
+    $('#execIdFil').val(execID);  
+  }
+  </script>
+<?php 
+  }
+?>
+
 <?php include_once "footer.php" ?>
 <?php
 $af_bitacora_list->Page_Terminate();
