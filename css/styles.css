@@ -432,3 +432,16 @@ Dropdown Submenus
 }
 
 
+/*
+*  Tooltips
+*/
+
+.tooltip_info{
+	color: white;
+	font-size: 10px;
+}
+
+div.tooltip-inner {
+	max-width: 350px;
+}
+

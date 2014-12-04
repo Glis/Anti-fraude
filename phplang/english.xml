@@ -519,7 +519,22 @@
 <field id="c_usuario_ult_mod"><phrase id="fldcaption" value="Usuario Ult Modificación"/>
 </field>
 </table>
-<table id="af_bitacora"/>
+<table id="af_bitacora"><phrase id="tblcaption" value="Bitácora"/>
+<field id="c_iejecucion"><phrase id="fldcaption" value="ID Ejecución"/>
+</field>
+<field id="f_inicio"><phrase id="fldcaption" value="Fecha Inicio"/>
+</field>
+<field id="f_fin"><phrase id="fldcaption" value="Fecha Fin"/>
+</field>
+<field id="t_proc"><phrase id="fldcaption" value="Tipo de Proceso o Reporte"/>
+</field>
+<field id="st_bitacora"><phrase id="fldcaption" value="Estatus"/>
+</field>
+<field id="c_usuario"><phrase id="fldcaption" value="Usuario"/>
+</field>
+<field id="x_obs"><phrase id="fldcaption" value="Detalle"/>
+</field>
+</table>
 <table id="af_chequeo_det"/>
 <table id="af_chequeo_det_cclass"/>
 <table id="af_chequeo_det_clientes"/>

@@ -1368,9 +1368,16 @@ faf_acc_cclassadd.Lists["x_c_ICClass"].Options = <?php echo (is_array($af_acc_cc
 <?php } ?>
 <?php if ($af_acc_cclass->x_Titulo->Visible) { // x_Titulo ?>
 	<tr id="r_x_Titulo">
-		<td><span id="elh_af_acc_cclass_x_Titulo"><?php echo $af_acc_cclass->x_Titulo->FldCaption() ?></span></td>
+		<td>
+			<a rel="tooltip" data-placement="left"data-html="true" data-toggle="tooltip" class="tooltipLink" title="#tooltip_info">
+			  <span class="glyphicon glyphicon-info-sign"></span>
+			</a>
+			<span id="elh_af_acc_cclass_x_Titulo"><?php echo $af_acc_cclass->x_Titulo->FldCaption() ?></span>
+
+		</td>
 		<td<?php echo $af_acc_cclass->x_Titulo->CellAttributes() ?>>
 <span id="el_af_acc_cclass_x_Titulo" class="control-group">
+
 <input class="form-control"type="text" data-field="x_x_Titulo" name="x_x_Titulo" id="x_x_Titulo" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($af_acc_cclass->x_Titulo->PlaceHolder) ?>" value="<?php echo $af_acc_cclass->x_Titulo->EditValue ?>"<?php echo $af_acc_cclass->x_Titulo->EditAttributes() ?>>
 </span>
 <?php echo $af_acc_cclass->x_Titulo->CustomMsg ?></td>
@@ -1402,12 +1409,69 @@ if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
 <script type="text/javascript">
+$( document ).ready(function() {
 
+$("a.tooltipLink").attr('title', $('#tooltip_info').html());
+$("a.tooltipLink").tooltip();
+});
 // Write your table-specific startup script here
 // document.write("page loaded");
 
 </script>
 <?php include_once "footer.php" ?>
+<div>
+<table id="tooltip_info" style="display:none;">
+<tr>
+	<td>Nombre</td>
+	<td>Descripción</td>
+</tr>
+<tr>
+	<td>[/NB_CLIENTE]</td>
+	<td>Nombre del cliente, campo name del Customer</td>
+</tr>
+<tr>
+	<td>[/C_IDCHEQUEO]</td>
+	<td>Código del chequeo</td>
+</tr>
+<tr>
+	<td>[/NB_CL_ACCION]</td>
+	<td>Nombre de la clase de la acción. Los valores válidos son: Alerta y Cuarentena</td>
+</tr>
+<tr>
+	<td>[/NB_NV_ACCION]</td>
+	<td>Nombre del nivel de la acción. Los valores válidos son: Plataforma, Reseller, Customer Class, Cliente, Cuenta</td>
+</tr>
+<tr>
+	<td>[/NB_COD_NV_ACCION]</td>
+	<td>Nombre asociado al nivel de la acción:
+		<ul>
+			<li>Para Reseller: Nombre del reseller</li>
+			<li>Para Customer Class: Nombre del customer class</li>
+			<li>Para Customers: Nombre del cliente, campo "Company Name" del Customer</li>
+			<li>Para Accounts: Id de la cuenta</li>
+		</ul>
+	</td>
+</tr>
+<tr>
+	<td>[/NB_IDESTINO]</td>
+	<td>Nombre del destino, campo description de Tabla porta-billing.Destinations</td>
+</tr>
+<tr>
+	<td>[/Q_MINUTOS]</td>
+	<td>Cantidad de minutos que fueron detectados para la clase y el nivel de acción</td>
+</tr>
+<tr>
+	<td>[/F_INICIO_CHEQUEO]</td>
+	<td>Fecha/Hora de inicio de la ventana de chequeo</td>
+</tr>
+<tr>
+	<td>[/F_FIN_CHEQUEO]</td>
+	<td>Fecha/Hora de fin de la ventana de chequeo</td>
+</tr>
+</table>
+</div>
 <?php
 $af_acc_cclass_add->Page_Terminate();
 ?>
+
+
