@@ -108,10 +108,69 @@ class caf_bitacora extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			$_SESSION['filtros_bit']['desde']=""; 
+			$_SESSION['filtros_bit']['hasta']=""; 
+  			$_SESSION['filtros_bit']['proceso']=""; 
+  			$_SESSION['filtros_bit']['status']=""; 
+  			$_SESSION['filtros_bit']['cheq']=""; 
+
+		}else{
+				// echo "Los Filtros fueron PRESERVADOS\n";
+				$_SESSION['preserve_filter'] = false;
+		}
+
+
+		$where = "";
+		if($_SESSION['filtros_bit']['desde'] == "" && $_SESSION['filtros_bit']['hasta'] == "" && $_SESSION['filtros_bit']['proceso'] == "" &&
+			$_SESSION['filtros_bit']['status'] == "" && $_SESSION['filtros_bit']['cheq'] == ""){
+
+			$sWhere = "";
+			$this->TableFilter = "";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}else{
+
+			if(($_SESSION['filtros_bit']['desde'] != "") && ($_SESSION['filtros_bit']['hasta'] != "")){
+				$where = $this->SqlFrom() . ".`f_Inicio` BETWEEN '" . $_SESSION['filtros_bit']['desde'] . "' AND '" . $_SESSION['filtros_bit']['hasta'] . "' AND " . $this->SqlFrom() . ".`f_Fin` BETWEEN '" . $_SESSION['filtros_bit']['desde'] . "' AND '". $_SESSION['filtros_bit']['hasta'] . "'";
+			}else{
+				if ($_SESSION['filtros_bit']['desde'] != ""){
+					$where = $this->SqlFrom() . ".`f_Inicio` = '" . $_SESSION['filtros_bit']['desde'] . "'";
+				}else{
+					if ($_SESSION['filtros_bit']['hasta'] != "") {
+						$where = $this->SqlFrom() . ".`f_Fin` = '" . $_SESSION['filtros_bit']['desde'] . "'";
+					}
+				}
+			}
+
+			if($_SESSION['filtros_bit']['proceso'] != ""){
+				if($where != ""){
+					$where .= " AND " . $this->SqlFrom() . ".`t_proc`=" . $_SESSION['filtros_bit']['proceso'];					
+				}else{
+					$where = $this->SqlFrom() . ".`t_proc`=" . $_SESSION['filtros_bit']['proceso'];
+				}
+			}
+
+			if($_SESSION['filtros_bit']['status'] != ""){
+				if($where != ""){
+					$where .= " AND " . $this->SqlFrom() . ".`st_Bitacora`=" . $_SESSION['filtros_bit']['status'];					
+				}else{
+					$where = $this->SqlFrom() . ".`st_Bitacora`=" . $_SESSION['filtros_bit']['status'];
+				}
+			}
+
+
+			if($_SESSION['filtros_bit']['cheq'] != ""){
+				if($where != ""){
+					$where .= " AND " . $this->SqlFrom() . ".`c_IEjecucion`=" . $_SESSION['filtros_bit']['cheq'];					
+				}else{
+					$where = $this->SqlFrom() . ".`c_IEjecucion`=" . $_SESSION['filtros_bit']['cheq'];
+				}
+			}
+			return $where;
+		}
 	}
 
 	function SqlGroupBy() { // Group By

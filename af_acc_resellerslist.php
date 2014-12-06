@@ -1,5 +1,5 @@
 <?php
-if (session_id() == "") {session_set_cookie_params(0); session_start();} // Initialize Session data
+if (session_id() == "") {session_start();} // Initialize Session data
 ob_start(); // Turn on output buffering
 ?>
 <?php include_once "ewcfg10.php" ?>

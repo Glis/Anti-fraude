@@ -1332,14 +1332,34 @@ $(document).on('click','#submit_filtros',function(){
         success: function(html) {  
 	      // alert(html);
 	      // location.reload();
-          window.location="af_chequeo_det_cuentaslist.php";
+          window.location="af_chequeo_det_cuentaslist.php?start=1";
         }
       });
 });
 
+$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_chequeo_det_cuentaslist.php";
+		  }
+		});
+	});
+
+$(document).ready(function() {
+
+		var resellerv= "<?php echo $_SESSION['filtro_cuentas_bloq'];?>";
+		
+		$('#resellerName option[value=' + resellerv +']').attr("selected",true);
+	
+});
+
 </script>
 <div class="row">
-  <div class="col-sm-5 col-sm-offset-2">
+  <div class="col-sm-4 col-sm-offset-2">
     <div class="form-group">
       <label for="resellerName">Resellers</label>
       <select id= "resellerName" class= "form-control">
@@ -1358,8 +1378,11 @@ $(document).on('click','#submit_filtros',function(){
       </select>
     </div>
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-2">
     <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
+  </div>
+  <div class="col-sm-2">
+	<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
   </div>
 </div>
 

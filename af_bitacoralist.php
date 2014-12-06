@@ -1,5 +1,5 @@
 <?php
-if (session_id() == "") {session_set_cookie_params(0); session_start();} // Initialize Session data
+if (session_id() == "") {session_start();} // Initialize Session data
 ob_start(); // Turn on output buffering
 ?>
 <?php include_once "ewcfg10.php" ?>
@@ -1277,21 +1277,21 @@ $af_bitacora_list->ShowMessage();
 							************************FILTROS**************************
 							*********************************************************/?>
 
-<form role="form" action="" method="post">
+<div class="filterContainer">
     <div class="row">
-      <div class="col-xs-3">
+      <div class="col-xs-4">
         <div class="form-group">
           <label for="initialDateFil">Fecha desde</label>
           <input type="date" required class="form-control" id="initialDateFil" name="initialDateFil">
         </div>
       </div>
-      <div class="col-xs-3">
+      <div class="col-xs-4">
         <div class="form-group">
           <label for="endDateFil">Fecha hasta</label>
           <input type="date" required class="form-control" id="endDateFil"  name="endDateFil">
         </div>
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         <div class="form-group">
           <label for="procNameFil">Tipo de reporte o proceso</label>
           <select id= "procNameFil" required class= "form-control" name="procNameFil">
@@ -1307,7 +1307,7 @@ $af_bitacora_list->ShowMessage();
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-5">
+      <div class="col-xs-4 col-xs-offset-2">
         <div class="form-group">
           <label for="statusFilt">Estatus</label>
           <select id= "statusFilt" name="statusFilt" class= "form-control">
@@ -1321,17 +1321,25 @@ $af_bitacora_list->ShowMessage();
           </select>
         </div>
       </div>
-      <div class="col-xs-5">
+      <div class="col-xs-4">
         <div class="form-group">
           <label for="execIdFil">ID de ejecución</label>
           <input type="text" class="form-control" id="execIdFil" name="execIdFil">
         </div>
       </div>
-      <div class="col-xs-2">
-        <button type="submit" class="btn btn-primary" id="submit_filtros">Mostrar</button>
-      </div>
+
     </div>
-  </form>
+
+    <div class="row">
+		<div class="col-sm-2 col-sm-offset-4">
+			<button type="button" class="btn btn-primary" id="submit_filtros">Buscar</button>
+		</div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
+		</div>
+	</div>
+</div>
+
 
 							<?/******************************************************
 							************************ENDFILTROS***********************
@@ -1677,6 +1685,89 @@ if (EW_DEBUG_ENABLED)
 <?php 
   }
 ?>
+
+<script>
+
+  $(document).on('click', '#submit_filtros', function() { 
+
+
+    var proceso = $('#procNameFil').find("option:selected").val();
+    var status = $('#statusFilt').find("option:selected").val();
+    var desde = $('#initialDateFil').val();
+    var hasta = $('#endDateFil').val();
+    var cheq = $('#execIdFil').val();
+
+    var dataString = "pag=bitacora&filtro=x";
+    if (proceso == 0){
+      dataString = dataString + "&proceso=vacio";
+    }else{
+      dataString = dataString + "&proceso=" + proceso;
+    }
+
+    if (status == -1){
+      dataString = dataString + "&status=vacio";
+    }else{
+      dataString = dataString + "&status=" + status;
+    }
+
+    if (desde == ""){
+      dataString = dataString + "&desde=vacio";
+    }else{
+      dataString = dataString + "&desde=" + desde;
+    }
+
+    if (hasta == ""){
+      dataString = dataString + "&hasta=vacio";
+    }else{
+      dataString = dataString + "&hasta=" + hasta;
+    }
+
+    if (cheq == ""){
+      dataString = dataString + "&cheq=vacio";
+    }else{
+      dataString = dataString + "&cheq=" + cheq;
+    }
+
+
+    alert(dataString);
+    $.ajax({  
+      type: "POST",  
+      url: "lib/functions.php",  
+      data: dataString,  
+      success: function(html) {  
+      window.location="af_bitacoralist.php?start=1";
+      }
+    });
+});
+
+$(document).on('click','#reset_fil',function(){
+    dataString= "pag=clear_filters";
+    $.ajax({  
+      type: "POST",  
+      url: "lib/functions.php",  
+      data: dataString,  
+      success: function(html) { 
+      window.location="af_bitacoralist.php";
+      }
+    });
+  });
+
+$(document).ready(function() {
+
+    var desdev = "<?php echo $_SESSION['filtros_bit']['desde'];?>";
+	var hastav = "<?php echo $_SESSION['filtros_bit']['hasta'];?>";
+	var st = "<?php echo $_SESSION['filtros_bit']['status'];?>";
+	var cheqv = "<?php echo $_SESSION['filtros_bit']['cheq'];?>";
+	var proc = "<?php echo $_SESSION['filtros_bit']['proceso'];?>";
+	
+	$('#initialDateFil').val(desdev);
+	$('#endDateFil').val(hastav);
+	$('#procNameFil option[value=' + proc +']').attr("selected",true);
+	$('#statusFilt option[value=' + st +']').attr("selected",true);
+	$('#execIdFil').text(cheqv);
+  
+});
+</script>
 
 <?php include_once "footer.php" ?>
 <?php

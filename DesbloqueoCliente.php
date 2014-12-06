@@ -44,11 +44,11 @@ update_sql("update_af_chequeo_Det_Clientes", array('c_ICliente'           => $i_
 goto fin;
 
 fin1:
-echo "ERROR de conexion al API" . "<br>";
+echo "ERROR CONEXION";
 goto fin;
 
 fin3:
-echo "ERROR Desbloqueando al cliente en paso1 (API)" . "<br>";
+echo "ERROR PASO 1 (API)" . "<br>";
 goto fin;
 
 fin:

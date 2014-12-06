@@ -624,6 +624,43 @@ switch ($pagina) {
 		
 		break;
 
+	case 'bitacora':
+		if($_POST['desde'] == 'vacio'){
+			$_SESSION['filtros_bit']['desde']="";
+		}else{		
+			$_SESSION['filtros_bit']['desde'] = $_POST['desde'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['hasta'] == 'vacio'){
+			$_SESSION['filtros_bit']['hasta']="";
+		}else{		
+			$_SESSION['filtros_bit']['hasta'] = $_POST['hasta'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['proceso'] == 'vacio'){
+			$_SESSION['filtros_bit']['proceso']="";
+		}else{		
+			$_SESSION['filtros_bit']['proceso'] = $_POST['proceso'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['status'] == 'vacio'){
+			$_SESSION['filtros_bit']['status']="";
+		}else{		
+			$_SESSION['filtros_bit']['status'] = $_POST['status'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+
+		if($_POST['cheq'] == 'vacio'){
+			$_SESSION['filtros_bit']['cheq']="";
+		}else{		
+			$_SESSION['filtros_bit']['cheq'] = $_POST['cheq'];
+			$_SESSION['tipofiltro'] = $_POST['filtro'];
+		}
+		
+		break;
 	default:
 		# code...
 		break;

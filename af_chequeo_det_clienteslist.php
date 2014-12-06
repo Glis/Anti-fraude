@@ -1302,7 +1302,6 @@ $(document).on('click','#submit_filtros',function(){
       }else{
         dataString = dataString + "&reseller=" + reseller;
       }
-
      
       // alert(dataString);
       $.ajax({  
@@ -1312,15 +1311,35 @@ $(document).on('click','#submit_filtros',function(){
         success: function(html) {  
           // alert(html);
           // location.reload();
-          window.location="af_chequeo_det_clienteslist.php";
+          window.location="af_chequeo_det_clienteslist.php?start=1";
         }
       });
+});
+
+$(document).on('click','#reset_fil',function(){
+		dataString= "pag=clear_filters";
+		$.ajax({  
+		  type: "POST",  
+		  url: "lib/functions.php",  
+		  data: dataString,  
+		  success: function(html) { 
+			window.location="af_chequeo_det_clienteslist.php";
+		  }
+		});
+	});
+
+$(document).ready(function() {
+
+		var resellerv= "<?php echo $_SESSION['filtro_clientes_bloq'];?>";
+		
+		$('#resellerName option[value=' + resellerv +']').attr("selected",true);
+	
 });
 
 </script>
 
 <div class="row">
-  <div class="col-sm-5 col-sm-offset-2">
+  <div class="col-sm-4 col-sm-offset-2">
     <div class="form-group">
       <label for="resellerName">Resellers</label>
       <select id= "resellerName" class= "form-control">
@@ -1340,8 +1359,11 @@ $(document).on('click','#submit_filtros',function(){
       </select>
     </div>
   </div>
-  <div class="col-sm-3">
+  <div class="col-sm-2">
     <button type="submit" class="btn btn-primary" id="submit_filtros">Buscar</button>
+  </div>
+  <div class="col-sm-2">
+	<button type="button" class="btn btn-primary submit_filtros" id="reset_fil">Resetear Filtro</button>
   </div>
 </div>
 
@@ -1615,6 +1637,7 @@ if (EW_DEBUG_ENABLED)
       //$(location).attr('href',"DesbloqueoCliente.php?i_customer=" + $(this).attr('class'));
    
     var dataString = "i_customer=" + $(this).attr('class') + "&usuario=" + $("#logged_user").html();
+    alert(dataString);
     $.ajax({  
       type: "POST",  
       url: "DesbloqueoCliente.php",  
@@ -1622,7 +1645,7 @@ if (EW_DEBUG_ENABLED)
       success: function(response) {
         element.hide();
       // alert ("termino: "+response);
-        $('#unlock_modal').find('.modal-title').text('Cliente desbloqueado satisfactoriamente');
+        $('#unlock_modal').find('.modal-title').text('Cliente desbloqueado satisfactoriamente' + response);
       	setTimeout(function(){
 	      	$('#unlock_modal').modal('hide');
         	window.location="af_chequeo_det_clienteslist.php";

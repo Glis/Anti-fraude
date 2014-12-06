@@ -141,10 +141,28 @@ class caf_chequeo_det_cuentas extends cTable {
 	}
 
 	function SqlWhere() { // Where
-		$sWhere = "";
-		$this->TableFilter = "`i_Bloqueo` = 1";
-		ew_AddFilter($sWhere, $this->TableFilter);
-		return $sWhere;
+		if(!isset($_SESSION['preserve_filter']) && !isset($_GET['start'])){
+			// echo "Los Filtros fueron VACIADOS\n";
+			$_SESSION['filtro_cuentas_bloq'] = "";
+		}else{
+			// echo "Los Filtros fueron PRESERVADOS\n";
+			$_SESSION['preserve_filter'] = false;
+		}
+
+		if($_SESSION['filtro_cuentas_bloq']!= "" ){
+				// echo "\nFiltro: ".$_SESSION['filtros_umb']['destino'];
+			
+				$where = $this->SqlFrom().".`c_IReseller` = " . $_SESSION['filtro_cuentas_bloq'] . " AND `i_Bloqueo` = 1";
+				return $where; 
+			
+		}else{
+			// echo "Filtros vacios.";
+
+			$sWhere = "";
+			$this->TableFilter = "`i_Bloqueo` = 1";
+			ew_AddFilter($sWhere, $this->TableFilter);
+			return $sWhere;
+		}
 	}
 
 	function SqlGroupBy() { // Group By
