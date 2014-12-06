@@ -129,6 +129,12 @@ date_default_timezone_set('America/Caracas');
                                         $_SESSION['filtros_m']['hasta']="";
                                         $_SESSION['filtro_clientes_bloq'] = "";
                                         $_SESSION['filtro_cuentas_bloq'] = "";
+                                        $_SESSION['filtros_bit']['desde']="";
+                                        $_SESSION['filtros_bit']['hasta']="";
+                                        $_SESSION['filtros_bit']['estatus']="";
+                                        $_SESSION['filtros_bit']['proceso']="";
+                                        $_SESSION['filtros_bit']['cheq']="";
+
                                         
                                         abrirConexion_PO();
 
